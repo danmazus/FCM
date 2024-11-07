@@ -1,5 +1,6 @@
 # FCM
 Programming Assignments and Custom Functions used in FCM Class
+This repository is not open for pull requests. This is to document projects I have done within my FCM Class. If you want to make a contribution or have a better idea of how to write the code, please submit a review or pull request review so I can better the code itself.
 
 ## My Package
 This includes a function storage file that can be called and installed locally in the desired location. This is storing functions used within the programming assignments and will be updated as new functions are created.
