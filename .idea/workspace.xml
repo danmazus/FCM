@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/least_squares/house_holder_reflector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/FCM.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/FCM.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added Householder Reflector Routine and added the function to the function storage package. Also updated the README file with the Least Squares folder description.">
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_package/functions_storage.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_package/functions_storage.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +15,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "danmazus"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/danmazus/FCM.git",
+    "accountId": "d5d8acdc-4189-47fa-bff2-6c1a3c206cac"
+  }
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
@@ -66,11 +73,24 @@
       <updated>1729692620921</updated>
       <workItem from="1729692623047" duration="93000" />
       <workItem from="1729692767035" duration="14000" />
-      <workItem from="1731362497841" duration="1400000" />
+      <workItem from="1731362497841" duration="1575000" />
     </task>
+    <task id="LOCAL-00001" summary="Added Householder Reflector Routine and added the function to the function storage package. Also updated the README file with the Least Squares folder description.">
+      <option name="closed" value="true" />
+      <created>1731363963364</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731363963364</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added Householder Reflector Routine and added the function to the function storage package. Also updated the README file with the Least Squares folder description." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Householder Reflector Routine and added the function to the function storage package. Also updated the README file with the Least Squares folder description." />
   </component>
 </project>
