@@ -316,3 +316,167 @@ def compute_house(v, nj):
     u = w / w2norm
 
     return u, rho
+
+
+### Numpy-based functions that preserve above computations ###
+
+def generate_unit_lower_triangular_np(a, b, n):
+    """Generate a unit lower triangular matrix using numpy arrays but manual filling"""
+    L = np.zeros((n, n))
+    for i in range(n):
+        for k in range(n):
+            if i == k:
+                L[i, k] = 1
+            elif i > k:
+                L[i, k] = randint(a, b)
+    return L
+
+
+def generate_cond_unit_lower_triangular_np(a, n):
+    """Generate a conditioned unit lower triangular matrix using numpy arrays"""
+    L = np.zeros((n, n))
+    for i in range(n):
+        for k in range(n):
+            if i == k:
+                L[i, k] = 1.0
+            elif i > k:
+                L[i, k] = np.random.uniform(-0.99999, 0.9999)
+    return L
+
+
+def Lv_mult_np(L, v, n):
+    """Unit lower triangular matrix-vector product using numpy arrays but manual computation"""
+    m = np.zeros(n)
+
+    for i in range(n):
+        for k in range(i):
+            m[i] += L[i, k] * v[k]
+        m[i] += v[i]  # Adding diagonal element
+
+    return m
+
+
+def Lv_mult_banded_np(W, v, n):
+    """2-bandwidth banded matrix-vector product using numpy arrays"""
+    m = np.zeros(n)
+
+    for i in range(n):
+        m[i] += v[i]  # Diagonal of 1 * v
+
+        if i >= 1:  # First sub-diagonal
+            m[i] += W[1, i - 1] * v[i - 1]
+
+        if i >= 2:  # Second sub-diagonal
+            m[i] += W[0, i - 1] * v[i - 2]
+
+    return m
+
+
+def generate_unit_upper_triangular_np(a, b, n):
+    """Generate unit upper triangular matrix using numpy arrays"""
+    U = np.zeros((n, n))
+    for i in range(n):
+        for k in range(n):
+            if i == k:
+                U[i, k] = 1
+            elif i < k:
+                U[i, k] = randint(a, b)
+    return U
+
+
+def generate_upper_triangular_np(a, b, n):
+    """Generate upper triangular matrix using numpy arrays"""
+    U = np.zeros((n, n))
+    for i in range(n):
+        for k in range(i, n):  # Only iterate over upper triangle
+            U[i, k] = randint(a, b)
+    return U
+
+
+def generate_nonsingular_upper_triangular_np(a, b, n, ratio):
+    """Generate nonsingular upper triangular matrix using numpy arrays"""
+    U = np.zeros((n, n))
+
+    for i in range(n):
+        # Set diagonal elements
+        U[i, i] = np.random.uniform(a, b)
+        while -1 < U[i, i] < 1:
+            U[i, i] = np.random.uniform(a, b)
+
+        # Set off-diagonal elements
+        for k in range(i + 1, n):
+            max_value = abs(U[i, i]) * ratio
+            U[i, k] = random.uniform(-max_value, max_value)
+
+    return U
+
+
+def UL_mult_COMB_np(LU, n):
+    """Unit lower triangular and upper triangular matrix product using numpy arrays"""
+    M = np.zeros((n, n))
+
+    for i in range(n):
+        for k in range(n):
+            if i == k:
+                # Diagonal case
+                M[i, k] += LU[i, k]
+                for j in range(i):
+                    M[i, k] += LU[i, j] * LU[j, k]
+            elif i > k:
+                # Lower triangular part
+                for j in range(k + 1):
+                    M[i, k] += LU[i, j] * LU[j, k]
+            else:
+                # Upper triangular part
+                M[i, k] += LU[i, k]
+                for j in range(i):
+                    M[i, k] += LU[i, j] * LU[j, k]
+    return M
+
+
+def combine_upper_lower_np(L, U, n):
+    """Combine lower and upper triangular matrices using numpy arrays"""
+    LU = np.zeros((n, n))
+    for i in range(n):
+        for k in range(n):
+            if i > k:
+                LU[i, k] = L[i, k]  # Lower triangular part
+            else:
+                LU[i, k] = U[i, k]  # Upper triangular and diagonal
+    return LU
+
+
+def compute_house_np(v, nj):
+    """Compute Householder vector and scalar using numpy arrays but manual computation"""
+    w = np.copy(v[:nj])
+    mu = np.sum(v[1:nj] ** 2)  # Sum of squares of elements after first
+    rho = np.sqrt(v[0] ** 2 + mu)
+
+    # Update first element based on sign
+    if v[0] <= 0:
+        w[0] -= rho
+    else:
+        w[0] = -mu / (v[0] - rho)
+
+    w2norm = np.sqrt(np.sum(w ** 2))  # Manual 2-norm computation
+    u = w / w2norm  # Normalize
+
+    return u, rho
+
+
+def gen_euclidean_norm_np(L):
+    """Generalized Euclidean norm for matrices using numpy arrays but manual computation"""
+    return np.sqrt(np.sum(L ** 2))
+
+
+def vec_2_norm_np(v):
+    """Euclidean norm of a vector using numpy arrays but manual computation"""
+    return np.sqrt(np.sum(v ** 2))
+
+
+def frob_norm_np(M):
+    """Frobenius norm using numpy arrays but manual computation"""
+    return np.sqrt(np.sum(M ** 2))
+
+def generate_float_1D_vector_np(a, b, n):
+    return np.random.uniform(a, b, n)
