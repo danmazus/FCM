@@ -69,19 +69,19 @@ def least_squares_solver_interactive():
 
     # Initialize problem matrices using custom generation functions
     if problem_type == 1:
-        # Simple test case using unit upper triangular with modifications
+        # Simple test case using unit upper triangular, that is k x k, with modifications
         R = generate_unit_upper_triangular_np(1, 10, k)
         for i in range(k):
             R[i, i] = 10.0  # Strengthen diagonal
         c = np.ones(k)
 
     elif problem_type == 2:
-        # Uniform random case using nonsingular upper triangular
+        # Uniform random case using nonsingular upper triangular, that is 'k x k' and vector that has 'k' elements
         R = generate_nonsingular_upper_triangular_np(dmin, dmax, k, ratio_factor)
         c = generate_float_1D_vector_np(dmin, dmax, k)
 
     else: # problem_type == 3
-        # Normal random case using nonsingular upper triangular with wider range
+        # Normal random case using nonsingular upper triangular with wider range, that is 'k x k'
         R = generate_nonsingular_upper_triangular_np(dmin, dmax, k, ratio_factor)
         c = generate_float_1D_vector_np(dmin, dmax, k)
 
@@ -101,9 +101,9 @@ def least_squares_solver_interactive():
     # Construct full system matrix
     A = np.vstack([R, np.zeros((n - k, k))])
 
-    # Apply random reflectors using custom operations
+    # Apply random reflectors using custom operations and NumPy Functions
     for j in range(s):
-        # Generate random reflection vector
+        # Generate random reflection vector that has 'n' elements
         v = generate_float_1D_vector_np(dmin, dmax, n)
         v = v / vec_2_norm_np(v)
 
@@ -120,10 +120,10 @@ def least_squares_solver_interactive():
 
     print("\nSolving least squares problem...")
 
-    # Apply Householder transformations using custom operations
+    # Apply Householder transformations using custom operations and NumPy Functions
     for j in range(k - 1):
-        nj = n - j
-        nk = k - j - 1
+        nj = n - j      # Number of rows in active matrix
+        nk = k - j - 1  # Number of columns that are updated by H_j which is one less than the active part of 'A'
 
         # Compute Householder vector using custom function
         u, rho = compute_house_np(A[j:n, j], nj)
