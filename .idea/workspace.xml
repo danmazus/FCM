@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added description of driver">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/least_squares/least_squares_driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/least_squares/least_squares_driver.py" afterDir="false" />
-    </list>
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Updated Least Squares Driver" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,7 +72,7 @@
       <updated>1729692620921</updated>
       <workItem from="1729692623047" duration="93000" />
       <workItem from="1729692767035" duration="14000" />
-      <workItem from="1731362497841" duration="7514000" />
+      <workItem from="1731362497841" duration="7683000" />
     </task>
     <task id="LOCAL-00001" summary="Added Householder Reflector Routine and added the function to the function storage package. Also updated the README file with the Least Squares folder description.">
       <option name="closed" value="true" />
@@ -125,7 +122,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731368647527</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Updated Least Squares Driver">
+      <option name="closed" value="true" />
+      <created>1731419025793</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731419025793</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -137,7 +142,8 @@
     <MESSAGE value="Updated Functions to include numpy versions using numpy arrays." />
     <MESSAGE value="Added Least Squares Solver Driver" />
     <MESSAGE value="Added description of driver" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added description of driver" />
+    <MESSAGE value="Updated Least Squares Driver" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Least Squares Driver" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FCM$least_squares_driver.coverage" NAME="least_squares_driver Coverage Results" MODIFIED="1731367886066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/least_squares" />
