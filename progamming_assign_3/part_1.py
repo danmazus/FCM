@@ -136,13 +136,14 @@ def steep_descent(A, b, x0, x_tilde, tol, max_iter):
     return x, iter_num, residual_list, err_list
 
 ## CG
-def conj_grad(A, b, x0, x_tilde, tol, max_iter):
+def conj_grad(A, b, x0, tol, max_iter):
     """
     Conjugate Gradient Method Function:
     Parameters:
         x0: Prediction Vector of Solution
         A: Matrix or Vector to be examined
         b: Solution of Ax = b
+        x_tilde: True Solution of Ax = b
         tol: Error tolerance
         max_iter: Maximum number of iterations
 
@@ -228,6 +229,7 @@ def get_user_inputs():
             print("\nSet Maximum Number of Iterations to be Ran:")
             max_iter = int(input("Enter maximum number of iterations (default=1000): ") or "1000")
 
+            lambda_min, lambda_max = None, None
 
             if problem_type in [4, 5]:
                 print("\nChoose Minimum and Maximum for Eigenvalues (Must be positive): ")
@@ -236,16 +238,10 @@ def get_user_inputs():
                 if lambda_max <= lambda_min:
                     print("Error: Maximum value must be less than minimum value")
                     continue
-                debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
-                return n, problem_type, dmin, dmax, tol, max_iter, lambda_min, lambda_max, debug
-
-
-            # New input for ratio factor (to scale the random matrices)
-            #ratio_factor = float(input("\nEnter ratio factor for random matrix scaling [default=0.5]: ") or "0.5")
 
             debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
 
-            return n, problem_type, dmin, dmax, tol, max_iter, debug
+            return n, problem_type, dmin, dmax, tol, max_iter, lambda_min, lambda_max, debug
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -254,13 +250,7 @@ def part_1_driver():
     # Setting User Inputs
     inputs = get_user_inputs()
 
-    # Case when problem type 4 or 5 is selected
-    if len(inputs) >= 7:
-        n, problem_type, dmin, dmax, tol, max_iter, lambda_min, lambda_max, debug = inputs
-
-    # Case when problem types 1, 2, or 3 are selected
-    else:
-        n, problem_type, dmin, dmax, tol, max_iter, debug = inputs
+    n, problem_type, dmin, dmax, tol, max_iter, lambda_min, lambda_max, debug = inputs
 
     # Sets seed for reproducibility
     #np.random.seed(42)
@@ -269,18 +259,21 @@ def part_1_driver():
     if problem_type == 1:
         Lambda = generate_float_1D_vector_np(5, 5, n)     # Eigenvalue, diagonal matrix (created as a vector)
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
-        #b_tilde = np.dot(Lambda, x_tilde)  # Lambda * x_tilde
         b_tilde = Lambda * x_tilde  # Lambda * x_tilde
 
     # k distinct eigenvalues with random multiplicities
     elif problem_type == 2:
-        Lambda = generate_float_1D_vector_np(dmin, dmin, n)     # Eigenvalue, diagonal matrix (created as a vector)
+        Lambda = np.zeros(n)     # Eigenvalue, diagonal matrix (created as a vector)
+        for i in range(n):
+
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
 
     # k distinct eigenvalues with random distributions around each k distinct eigenvalue
     elif problem_type == 3:
-        Lambda = generate_float_1D_vector_np(dmin, dmax, n)     # Eigenvalue, diagonal matrix (created as a vector)
+        Lambda = np.zeros(n)    # Eigenvalue, diagonal matrix (created as a vector)
+        for i in range(n):
+
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
 
@@ -298,19 +291,22 @@ def part_1_driver():
 
 
     # Printing Lambda, x_tilde, and b_tilde
-    print(f"\nMatrix Lambda: {Lambda}")
-    print(f"\nMatrix x_tilde is: {x_tilde}")
-    print(f"\nMatrix b_tilde is: {b_tilde}")
+    if debug:
+        print(f"\nMatrix Lambda: {Lambda}")
+        print(f"\nMatrix x_tilde is: {x_tilde}")
+        print(f"\nMatrix b_tilde is: {b_tilde}")
 
     # Initial Guess Vector x0
     x0 = np.random.randn(n)
-    print(f"\nInitial Guess x0 is: {x0}")
+
+    if debug:
+        print(f"\nInitial Guess x0 is: {x0}")
 
 
     # Computing each method with resulting solution, # of iterations, and list of residuals for plotting at each iteration
     solution_1, iterations_1, residuals_1, errors_1 = richard_first(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
     solution_2, iterations_2, residuals_2, errors_2 = steep_descent(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
-    solution_3, iterations_3, residuals_3, errors_3 = conj_grad(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
+    solution_3, iterations_3, residuals_3 = conj_grad(Lambda, b_tilde, x0, tol, max_iter)
 
     # Print Results for solution, number of iterations, and error of converged solution and true solution
     print("\nResults:")
