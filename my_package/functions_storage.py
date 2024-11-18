@@ -480,3 +480,13 @@ def frob_norm_np(M):
 
 def generate_float_1D_vector_np(a, b, n):
     return np.random.uniform(a, b, n)
+
+def generate_float_1D_uniform_vector_np(a, b, n):
+    Lambda = np.zeros(n)
+
+    Lambda[0] = a
+    Lambda[-1] = b
+
+    Lambda[1:-1] = np.random.uniform(a, b, n-2)
+
+    return Lambda
