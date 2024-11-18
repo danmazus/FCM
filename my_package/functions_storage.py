@@ -490,3 +490,16 @@ def generate_float_1D_uniform_vector_np(a, b, n):
     Lambda[1:-1] = np.random.uniform(a, b, n-2)
 
     return Lambda
+
+def generate_float_normal_vector_np(a, b, n):
+    Lambda = np.zeros(n)
+
+    Lambda[0] = a
+    Lambda[-1] = b
+
+    mean = (a + b) / 2
+    stan_dev = (a + b) / 6  # Put values within 3 standard deviations
+
+    Lambda[1:-1] = np.clip(np.random.normal(mean, stan_dev, n - 2), a, b)
+
+    return Lambda
