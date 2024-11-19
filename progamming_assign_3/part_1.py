@@ -264,7 +264,7 @@ def part_1_driver():
     # k distinct eigenvalues with random multiplicities
     elif problem_type == 2:
         Lambda = np.zeros(n)     # Eigenvalue, diagonal matrix (created as a vector)
-        for i in range(n):
+        #for i in range(n):
 
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
@@ -272,7 +272,7 @@ def part_1_driver():
     # k distinct eigenvalues with random distributions around each k distinct eigenvalue
     elif problem_type == 3:
         Lambda = np.zeros(n)    # Eigenvalue, diagonal matrix (created as a vector)
-        for i in range(n):
+        #for i in range(n):
 
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
@@ -304,37 +304,41 @@ def part_1_driver():
 
 
     # Computing each method with resulting solution, # of iterations, and list of residuals for plotting at each iteration
-    solution_1, iterations_1, residuals_1, errors_1 = richard_first(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
-    solution_2, iterations_2, residuals_2, errors_2 = steep_descent(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
-    solution_3, iterations_3, residuals_3 = conj_grad(Lambda, b_tilde, x0, tol, max_iter)
+    solution_1, iterations_1, residuals_richardson, errors_richardson = richard_first(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
+    solution_2, iterations_2, residuals_steep_descent, errors_steep_descent = steep_descent(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
+    solution_3, iterations_3, residuals_conj_grad = conj_grad(Lambda, b_tilde, x0, tol, max_iter)
 
     # Print Results for solution, number of iterations, and error of converged solution and true solution
-    print("\nResults:")
-    print("---------")
-    solutions = {
-        'Richardson': solution_1,
-        'Steepest descent': solution_2,
-        'Conjugate Gradient': solution_3,
-    }
-    iterations = {
-        'Richardson': iterations_1,
-        'Steepest descent': iterations_2,
-        'Conjugate Gradient': iterations_3,
-    }
-    errors = {
-        'Richardson error': vec_2_norm_np(solution_1 - x_tilde),
-        'Steepest Descent Error': vec_2_norm_np(solution_2 - x_tilde),
-        'Conjugate Gradient Error': vec_2_norm_np(solution_3 - x_tilde)
-    }
+    if debug:
+        print("\nResults:")
+        print("---------")
+        solutions = {
+            'Richardson Iteration Solution' : solution_1,
+            'Steepest Descent Iteration Solution': solution_2,
+            'Conjugate Gradient Iteration Solution': solution_3,
+        }
+        iterations = {
+            'Number of Iterations for Richardson`s Method' : iterations_1,
+            'Number of Iterations for Steepest Descent': iterations_2,
+            'Number of Iterations for Conjugate Gradient': iterations_3,
+        }
+        errors = {
+            'Final Richardson error': vec_2_norm_np(solution_1 - x_tilde),
+            'Final Steepest Descent Error': vec_2_norm_np(solution_2 - x_tilde),
+            'Final Conjugate Gradient Error': vec_2_norm_np(solution_3 - x_tilde)
+        }
+        for name, solution in solutions.items():
+            print(f'{name}: {solution}')
+        for name, iterations in iterations.items():
+            print(f'{name}: {iterations}')
+        for name, error in errors.items():
+            print(f'{name}: {error}')
 
-    for name, solution in solutions.items():
-        print(f'{name}: {solution}')
 
-    for name, iterations in iterations.items():
-        print(f'{name}: {iterations}')
-
-    for name, error in errors.items():
-        print(f'{name}: {error}')
+    # Setting Bounds and Condition Number
+    kappa = np.max(Lambda)/np.min(Lambda)
+    bound_rich_steep = (kappa - 1)/(kappa + 1)
+    bound_conj = (np.sqrt(kappa) - 1)/(np.sqrt(kappa) + 1)
 
 
     """ PLOTS """
@@ -343,7 +347,7 @@ def part_1_driver():
 
     # Richardson's Method
     plt.subplot(1, 3, 1)
-    plt.semilogy(residuals_1, label="Residual Norm")
+    plt.semilogy(residuals_richardson, label="Residual Norm")
     #plt.plot(residuals_1, label="Residual Norm")
     plt.xlabel("Iteration")
     plt.ylabel("Residual Norm (log scale)")
@@ -354,7 +358,7 @@ def part_1_driver():
 
     # Steepest Descent Method
     plt.subplot(1, 3, 2)
-    plt.semilogy(residuals_2, label="Residual Norm")
+    plt.semilogy(residuals_steep_descent, label="Residual Norm")
     #plt.plot(residuals_2, label="Residual Norm")
     plt.xlabel("Iteration")
     plt.ylabel("Residual Norm (log scale)")
@@ -365,7 +369,7 @@ def part_1_driver():
 
     # Conjugate Gradient Method
     plt.subplot(1, 3, 3)
-    plt.semilogy(residuals_3, label="Residual Norm")
+    plt.semilogy(residuals_conj_grad, label="Residual Norm")
     #plt.plot(residuals_3, label="Residual Norm")
     plt.xlabel("Iteration")
     plt.ylabel("Residual Norm (log scale)")
@@ -375,6 +379,20 @@ def part_1_driver():
     plt.grid(True)
 
     plt.suptitle("Residuals for Each Method with the Same Input Values", fontsize=18)
+    plt.show()
+
+    plt.figure(figsize=(10,6))
+    plt.plot(errors_richardson, label="Richardson Error")
+    plt.plot(errors_steep_descent, label="Steepest Descent Error")
+    #plt.semilogy(errors_richardson, label = "Richardson Error")
+    #plt.semilogy(errors_steep_descent, label = "Steepest Descent Error")
+    plt.axhline(y=bound_rich_steep, color="r", linestyle="--", label = "Bound of Error")
+    plt.xlabel("Iteration")
+    plt.ylabel("Relative Error")
+    #plt.ylabel("Relative Error (log scale)")
+    plt.title("Relative Error for Each Method with the Same Input Values")
+    plt.grid(True, which="both", linestyle="--", linewidth=0.8)
+    plt.legend(title="Method")
     plt.show()
 
     return solution_1, solution_2, solution_3, iterations_1, iterations_2, iterations_3
