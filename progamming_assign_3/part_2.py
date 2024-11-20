@@ -125,7 +125,6 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
         '''Symmetric Gauss-Seidel'''
         rel_err_list = []
         iter_num = 0
-        D_inv = 1 / D
         Lower = D - L
         Upper = D - U
 
@@ -138,7 +137,103 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
             if rel_err < tol:
                 return x, iter_num + 1, rel_err_list
 
-            z_1 = solve_Ux_np(Upper, r)
-            z_2 = D_inv * r
-            z_3 = solve_Lb_np(Lower, r)
+            # First the Lower Solve is computed first (D - L)^(-1) * r_k = z_1
+            z_1 = solve_Lb_np(Lower, r)
+
+            # Scale of the diagonal D * (D - L)^(-1) * r_k = z_2
+            z_2 = D * z_1
+
+            # Upper Solve is finally computed (D - U)^(-1) * z_2 = z_3
+            z_3 = solve_Ux_np(Upper, z_2)
+
+            # Computing the next x
+            x_next = x + z_3
+
+            # Update the residual
+            r_next = b - np.dot(A, x_next)
+
+            # Correcting variables for next iteration
+            x = x_next
+            r = r_next
+            iter_num += 1
+
+        return x, iter_num, rel_err_list
+
+def get_user_inputs():
+    """
+    Get problem parameters from user input.
+
+    Prompts user for:
+    - Matrix dimensions (n rows x n columns)
+    - Matrix to be passed (A0 through A9)
+    - Range for random values for solution vectors (smin, smax)
+    - Number of initial guess vectors (g)
+    - Range of for random values for initial guess vectors (ig_min_value, ig_max_value)
+    - Tolerance level for convergence to happen (tol)
+    - Maximum number of iterations before stopping (max_iter)
+    - Debug output preference
+    """
+
+    print("\nJacobi, Gauss-Seidel, Symmetric Gauss-Seidel Construction")
+    print("----------------------------------")
+
+    while True:
+        try:
+            n = int(input("Enter dimensions for matrices and vectors (n) [default=10]: ") or "10")
+
+            print("\nChoose which matrix to use:")
+            print("1. Matrix A_0")
+            print("2. Matrix A_1")
+            print("3. Matrix A_2")
+            print("4. Matrix A_3")
+            print("5. Matrix A_4")
+            print("6. Matrix A_5")
+            print("7. Matrix A_6")
+            print("8. Matrix A_7")
+            print("9. Matrix A_8")
+            problem_type = int(input("Enter Matrix [default=1 (Matrix A_0)]: ") or "1")
+
+            if problem_type not in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+                print("Error: Invalid problem type")
+                continue
+
+            # New inputs for random reflector range
+            print("\nSet range for random values of Solution Vectors:")
+            smin = float(input("Enter minimum value (default=-10.0): ") or "-10.0")
+            smax = float(input("Enter maximum value (default=10.0): ") or "10.0")
+
+            if smin >= smax:
+                print("Error: Minimum value must be less than maximum value")
+                continue
+
+            print("\nChoose How Many Initial Guess Vectors:")
+            g = int(input("Enter number of Initial Guess Vectors (default=10): ") or "10")
+
+            print("\nSet range of values for Initial Guess Vectors:")
+            ig_value_min = float(input("Enter minimum value (default=0.0): ") or "0.0")
+            ig_value_max = float(input("Enter maximum value (default=0.0): ") or "0.0")
+
+            print("\nSet Tolerance Level for Convergence to Hit:")
+            tol = float(input("Enter tolerance (default=1e-6): ") or "1e-6")
+
+            print("\nSet Maximum Number of Iterations to be Ran:")
+            max_iter = int(input("Enter maximum number of iterations (default=1000): ") or "1000")
+
+
+            debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
+
+            return n, problem_type, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, debug
+
+        except ValueError:
+            print("Error: Please enter valid numbers")
+
+def part_2_driver():
+    # Getting user inputs
+    inputs = get_user_inputs()
+
+    n, problem_type, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, debug = inputs
+
+    # Sets random seed for reproducibility
+    #np.random.seed(42)
+
 
