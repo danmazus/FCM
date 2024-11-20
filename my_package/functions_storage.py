@@ -591,7 +591,7 @@ def solve_Lb_np(LU, b):
 
 
 # Upper Triangular Solve using numpy arrays
-def solve_Ux_np(LU, y, n):
+def solve_Ux_np(LU, y):
     """Solves the Equation Ux = y with Backward Substitution
 
     Parameters include:
@@ -602,6 +602,8 @@ def solve_Ux_np(LU, y, n):
     Returns:
     x: the solution vector.
     """
+    n = range(len(LU))
+
     # Initialize x as a NumPy array
     x = np.zeros(n)
 
