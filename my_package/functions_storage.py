@@ -317,6 +317,64 @@ def compute_house(v, nj):
 
     return u, rho
 
+# Lower Triangular Solve
+def solve_Lb(LU, b, n):
+    """Solves the equation Ly = b (forward substitution)
+
+    Parameters include:
+    LU: a combination matrix of unit lower and upper triangular matrices stored in single 2D array
+    b: the vector from the equation Ax = b
+    n: the dimension of vector and matrix given by user
+
+    Returns:
+    y: the vector to use in Ux solver (Ux = y)
+    """
+    # Initializing vector y
+    y = [0 for i in range(n)]
+
+    # Setting the first element
+    y[0] = b[0]
+
+    for i in range(n):
+        # Initializing temp_sum variable
+        temp_sum = 0
+
+        # Summing the L[i][k] * y[k]
+        for k in range(i):
+            # Accumulating the sum before updating
+            temp_sum += LU[i][k] * y[k]
+        y[i] = b[i] - temp_sum
+
+    return y
+
+# Upper Triangular Solve
+def solve_Ux(LU, y, n):
+    """Solves the Equation Ux = y with Backwards Substitution
+
+    Parameters include:
+    LU: a combination matrix of unit lower and upper triangular matrices stored in single 2D array
+    y: the output vector from Lb_solver
+    n: the dimension specified by user.
+
+    Returns:
+    x: the solution vector.
+    """
+    # Initialize x
+    x = [0 for i in range(n)]
+
+    # Starting from last row going upwards (Backward Substitution)
+    for i in range(n-1, -1, -1):
+        temp_sum = 0
+
+        # Calculate the sums for k > i
+        for k in range(i + 1, n):
+            temp_sum += LU[i][k] * x[k]
+
+        # Solving for x[i]
+        x[i] = (y[i] - temp_sum)/LU[i][i]
+
+    return x
+
 
 ### Numpy-based functions that preserve above computations ###
 
