@@ -92,7 +92,9 @@ def steep_descent(A, b, x0, x_tilde, tol, max_iter):
     # Setting initial values for solution, residual, v, and iteration
     x = x0
     x_true = x_tilde
-    err = vec_2_norm_np(x - x_true)
+    err0 = x - x_true
+    err01 = A * err0
+    err = np.dot(err0, err01)
     err_list = []
 
     r = b - A * x
@@ -110,8 +112,10 @@ def steep_descent(A, b, x0, x_tilde, tol, max_iter):
         x_next = x + alpha * r
 
         # Updating the Error and Appending to the list to store at each iteration
-        err_next = vec_2_norm_np(x_next - x_true)
-        rel_err = err_next / err
+        err_next0 = x_next - x_true
+        err_next1 = A * err_next0
+        err_next_full = np.dot(err_next0, err_next1)
+        rel_err = err_next_full / err
         err_list.append(rel_err)
 
         # Updating the residual
@@ -128,7 +132,7 @@ def steep_descent(A, b, x0, x_tilde, tol, max_iter):
 
         # Preparing next iteration values
         x = x_next
-        err = err_next
+        err = err_next_full
         r = r_next
         v = v_next
         iter_num += 1
