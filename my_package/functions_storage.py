@@ -561,3 +561,61 @@ def generate_float_normal_vector_np(a, b, n):
     Lambda[1:-1] = np.clip(np.random.normal(mean, stan_dev, n - 2), a, b)
 
     return Lambda
+
+# Lower Triangular Solve using numpy arrays
+def solve_Lb_np(LU, b, n):
+    """Solves the equation Ly = b (forward substitution)
+
+    Parameters include:
+    LU: a combination matrix of unit lower and upper triangular matrices stored in single 2D array
+    b: the vector from the equation Ax = b
+    n: the dimension of vector and matrix given by user
+
+    Returns:
+    y: the vector to use in Ux solver (Ux = y)
+    """
+    # Initializing vector y as a NumPy array
+    y = np.zeros(n)
+
+    # Setting the first element
+    y[0] = b[0]
+
+    for i in range(n):
+        # Compute temp_sum using an explicit loop
+        temp_sum = 0
+        for k in range(i):
+            temp_sum += LU[i, k] * y[k]
+        y[i] = b[i] - temp_sum
+
+    return y
+
+
+# Upper Triangular Solve using numpy arrays
+def solve_Ux_np(LU, y, n):
+    """Solves the Equation Ux = y with Backward Substitution
+
+    Parameters include:
+    LU: a combination matrix of unit lower and upper triangular matrices stored in single 2D array
+    y: the output vector from Lb_solver
+    n: the dimension specified by user.
+
+    Returns:
+    x: the solution vector.
+    """
+    # Initialize x as a NumPy array
+    x = np.zeros(n)
+
+    # Starting from last row going upwards (Backward Substitution)
+    for i in range(n-1, -1, -1):
+        temp_sum = 0
+
+        # Calculate the sums for k > i
+        for k in range(i + 1, n):
+            temp_sum += LU[i, k] * x[k]
+
+        # Solving for x[i]
+        x[i] = (y[i] - temp_sum) / LU[i, i]
+
+    return x
+
+
