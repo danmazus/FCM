@@ -563,7 +563,7 @@ def generate_float_normal_vector_np(a, b, n):
     return Lambda
 
 # Lower Triangular Solve using numpy arrays
-def solve_Lb_np(LU, b, n):
+def solve_Lb_np(LU, b):
     """Solves the equation Ly = b (forward substitution)
 
     Parameters include:
@@ -575,12 +575,12 @@ def solve_Lb_np(LU, b, n):
     y: the vector to use in Ux solver (Ux = y)
     """
     # Initializing vector y as a NumPy array
-    y = np.zeros(n)
+    y = np.zeros(range(len(LU)))
 
     # Setting the first element
     y[0] = b[0]
 
-    for i in range(n):
+    for i in range(len(LU)):
         # Compute temp_sum using an explicit loop
         temp_sum = 0
         for k in range(i):
