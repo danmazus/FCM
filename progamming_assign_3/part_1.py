@@ -136,7 +136,7 @@ def steep_descent(A, b, x0, x_tilde, tol, max_iter):
     return x, iter_num, residual_list, err_list
 
 ## CG
-def conj_grad(A, b, x0, tol, max_iter):
+def conj_grad(A, b, x0, x_tilde, tol, max_iter):
     """
     Conjugate Gradient Method Function:
     Parameters:
@@ -153,11 +153,16 @@ def conj_grad(A, b, x0, tol, max_iter):
     """
 
     x = x0
+    x_true = x_tilde
     r = b - (A * x)
     r0_norm = vec_2_norm_np(r)
     residual_list = [r0_norm]
     d = r
     sigma = np.dot(r, r)
+    err0 = x - x_true
+    err01 = A * err0
+    err = np.dot(err0, err01)
+    err_list = []
     iter_num = 0
 
     while iter_num < max_iter:
@@ -167,10 +172,17 @@ def conj_grad(A, b, x0, tol, max_iter):
         x_next = x + alpha * d
         r_next = r - alpha * v
 
+        # Error for Conjugate Gradient
+        err_next0 = x_next - x_true
+        err_next1 = A * err_next0
+        err_next_full = np.dot(err_next0, err_next1)
+        rel_err = err_next_full / err
+        err_list.append(rel_err)
+
         r_next_norm = vec_2_norm_np(r_next)
         residual_list.append(r_next_norm)
         if r_next_norm / r0_norm < tol:
-            return x_next, iter_num + 1, residual_list
+            return x_next, iter_num + 1, residual_list, err_list
 
         sigma_next = np.dot(r_next, r_next)
         beta = sigma_next/sigma
@@ -180,9 +192,10 @@ def conj_grad(A, b, x0, tol, max_iter):
         r = r_next
         sigma = sigma_next
         d = d_next
+        err = err_next_full
         iter_num += 1
 
-    return x, iter_num, residual_list
+    return x, iter_num, residual_list, err_list
 
 ## User Input Function
 def get_user_inputs():
@@ -223,6 +236,9 @@ def get_user_inputs():
                 print("Error: Minimum value must be less than maximum value")
                 continue
 
+            print("\nChoose How Many Initial Guess Vectors:")
+            g = int(input("Enter number of Initial Guess Vectors (default=10): ") or "10")
+
             print("\nSet Tolerance Level for Convergence to Hit:")
             tol = float(input("Enter tolerance (default=1e-6): ") or "1e-6")
 
@@ -241,7 +257,7 @@ def get_user_inputs():
 
             debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
 
-            return n, problem_type, dmin, dmax, tol, max_iter, lambda_min, lambda_max, debug
+            return n, problem_type, dmin, dmax, g, tol, max_iter, lambda_min, lambda_max, debug
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -250,7 +266,7 @@ def part_1_driver():
     # Setting User Inputs
     inputs = get_user_inputs()
 
-    n, problem_type, dmin, dmax, tol, max_iter, lambda_min, lambda_max, debug = inputs
+    n, problem_type, dmin, dmax, g, tol, max_iter, lambda_min, lambda_max, debug = inputs
 
     # Sets seed for reproducibility
     #np.random.seed(42)
@@ -296,110 +312,147 @@ def part_1_driver():
         print(f"\nMatrix x_tilde is: {x_tilde}")
         print(f"\nMatrix b_tilde is: {b_tilde}")
 
-    # Initial Guess Vector x0
-    x0 = np.random.randn(n)
-
-    if debug:
-        print(f"\nInitial Guess x0 is: {x0}")
-
-
-    # Computing each method with resulting solution, # of iterations, and list of residuals for plotting at each iteration
-    solution_1, iterations_1, residuals_richardson, errors_richardson = richard_first(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
-    solution_2, iterations_2, residuals_steep_descent, errors_steep_descent = steep_descent(Lambda, b_tilde, x0, x_tilde, tol, max_iter)
-    solution_3, iterations_3, residuals_conj_grad = conj_grad(Lambda, b_tilde, x0, tol, max_iter)
-
-    # Print Results for solution, number of iterations, and error of converged solution and true solution
-    if debug:
-        print("\nResults:")
-        print("---------")
-        solutions = {
-            'Richardson Iteration Solution' : solution_1,
-            'Steepest Descent Iteration Solution': solution_2,
-            'Conjugate Gradient Iteration Solution': solution_3,
-        }
-        iterations = {
-            'Number of Iterations for Richardson`s Method' : iterations_1,
-            'Number of Iterations for Steepest Descent': iterations_2,
-            'Number of Iterations for Conjugate Gradient': iterations_3,
-        }
-        errors = {
-            'Final Richardson error': vec_2_norm_np(solution_1 - x_tilde),
-            'Final Steepest Descent Error': vec_2_norm_np(solution_2 - x_tilde),
-            'Final Conjugate Gradient Error': vec_2_norm_np(solution_3 - x_tilde)
-        }
-        for name, solution in solutions.items():
-            print(f'{name}: {solution}')
-        for name, iterations in iterations.items():
-            print(f'{name}: {iterations}')
-        for name, error in errors.items():
-            print(f'{name}: {error}')
-
-
-    # Setting Bounds and Condition Number
+    # Bounds and Condition Number for Richardson's, SD, and CG
     kappa = np.max(Lambda)/np.min(Lambda)
     bound_rich_steep = (kappa - 1)/(kappa + 1)
     bound_conj = (np.sqrt(kappa) - 1)/(np.sqrt(kappa) + 1)
 
+    # Initializing lists to append the solutions and iterations from output below
+    solution_richard = []
+    solution_steep = []
+    solution_conj = []
+    iteration_richard = []
+    iteration_steep = []
+    iteration_conj = []
 
-    """ PLOTS """
-    # Plot the residuals of each method
-    plt.figure(figsize=(24,6))
+    # Creating Subplots for Errors that will be added each iteration and each initial guess
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18,6))
 
-    # Richardson's Method
-    plt.subplot(1, 3, 1)
-    plt.semilogy(residuals_richardson, label="Residual Norm")
-    #plt.plot(residuals_1, label="Residual Norm")
-    plt.xlabel("Iteration")
-    plt.ylabel("Residual Norm (log scale)")
-    #plt.ylabel("Residual Norm")
-    plt.title("Convergence of Richardson Iteration")
-    plt.legend()
-    plt.grid(True)
+    # Richardson Error Plot Initialization
+    ax1.set_xlabel("Iterations")
+    ax1.set_ylabel("Relative Error")
+    ax1.set_title("Relative Error for Richardson")
+    ax1.axhline(y = bound_rich_steep, linestyle = "--", color = "black")
+    ax1.grid(True)
 
-    # Steepest Descent Method
-    plt.subplot(1, 3, 2)
-    plt.semilogy(residuals_steep_descent, label="Residual Norm")
-    #plt.plot(residuals_2, label="Residual Norm")
-    plt.xlabel("Iteration")
-    plt.ylabel("Residual Norm (log scale)")
-    #plt.ylabel("Residual Norm")
-    plt.title("Convergence of Steepest Descent Iteration")
-    plt.legend()
-    plt.grid(True)
+    # Steepest Descent Error Plot Initialization
+    ax2.set_xlabel("Iterations")
+    ax2.set_ylabel("Relative Error")
+    ax2.set_title("Relative Error for Steepest Descent")
+    ax2.axhline(y = bound_rich_steep, linestyle = "--", color = "black")
+    ax2.grid(True)
 
-    # Conjugate Gradient Method
-    plt.subplot(1, 3, 3)
-    plt.semilogy(residuals_conj_grad, label="Residual Norm")
-    #plt.plot(residuals_3, label="Residual Norm")
-    plt.xlabel("Iteration")
-    plt.ylabel("Residual Norm (log scale)")
-    #plt.ylabel("Residual Norm")
-    plt.title("Convergence of Conjugate Gradient Iteration")
-    plt.legend()
-    plt.grid(True)
+    # Conjugate Gradient Error Plot Initialization
+    ax3.set_xlabel("Iterations")
+    ax3.set_ylabel("Relative Error")
+    ax3.set_title("Relative Error for Conjugate Gradient")
+    ax3.axhline(y = bound_conj, linestyle = "--", color = "black")
+    ax3.grid(True)
 
-    plt.suptitle("Residuals for Each Method with the Same Input Values", fontsize=18)
+    # g-number of initial guesses to pass through each method to compare for each x_tilde, b_tilde, Lambda
+    for i in range(g):
+        # Initial Guess Vector
+        x0 = np.random.uniform(dmin,dmax,n)
+
+        # Computing Each method for each Initial Guess Vector
+        solution_1, iterations_1, residuals_richardson, errors_richardson = richard_first(Lambda, b_tilde, x0, x_tilde,
+                                                                                          tol, max_iter)
+        solution_2, iterations_2, residuals_steep_descent, errors_steep_descent = steep_descent(Lambda, b_tilde, x0,
+                                                                                                x_tilde, tol, max_iter)
+        solution_3, iterations_3, residuals_conj_grad, errors_conj_grad = conj_grad(Lambda, b_tilde, x0, x_tilde, tol,
+                                                                                    max_iter)
+
+        # Creating x-axis, number of iterations, for plots below
+        steps_rich = range(len(errors_richardson))
+        steps_steep = range(len(errors_steep_descent))
+        steps_conj = range(len(errors_conj_grad))
+
+        # Richardson Error plot with log values of errors taken
+        ax1.semilogy(steps_rich, errors_richardson, label="Richardson's Method" if i == 0 else "")
+
+        # Steepest Descent error plot with log values of errors taken
+        ax2.semilogy(steps_steep, errors_steep_descent, label="Steepest Descent" if i == 0 else "")
+
+        # Conjugate Gradient error plot with log values of errors taken
+        ax3.semilogy(steps_conj, errors_conj_grad, label="Conjugate Gradient" if i == 0 else "")
+
+        # Appending lists from the outputs of the methods for solution vector and number of iterations taken
+        solution_richard.append(solution_1)
+        solution_steep.append(solution_2)
+        solution_conj.append(solution_3)
+        iteration_richard.append(iterations_1)
+        iteration_steep.append(iterations_2)
+        iteration_conj.append(iterations_3)
+
+        # Debug Output
+        if debug:
+            print(f"\nInitial Guess Vector Iteration: {i+1}:")
+            print(f"Initial Guess Vector: {x0}")
+            print(f"Richardson Solution Vector: {solution_1}")
+            print(f"Steepest Descent Solution Vector: {solution_2}")
+            print(f"Conjugate Guess Vector: {solution_3}")
+
+
+    # Creating legends and showing the plot itself
+    ax1.legend(title="Method", loc = "best")
+    ax2.legend(title="Method", loc = "best")
+    ax3.legend(title="Method", loc = "best")
     plt.show()
 
+    # Creating plots for amount of iterations taken for each initial guess vector to converge for each method #
+    # Ticks is created to have integers on x-axis
+    ticks = range(g+1)
+
+    # Creating the figure for each method plotted on the same graph with x-axis as initial guess vector and y-axis as
+    # number of iterations taken to converge for given initial guess vector
     plt.figure(figsize=(10,6))
-    plt.plot(errors_richardson, label="Richardson Error")
-    plt.plot(errors_steep_descent, label="Steepest Descent Error")
-    #plt.semilogy(errors_richardson, label = "Richardson Error")
-    #plt.semilogy(errors_steep_descent, label = "Steepest Descent Error")
-    plt.axhline(y=bound_rich_steep, color="r", linestyle="--", label = "Bound of Error")
-    plt.xlabel("Iteration")
-    plt.ylabel("Relative Error")
-    #plt.ylabel("Relative Error (log scale)")
-    plt.title("Relative Error for Each Method with the Same Input Values")
-    plt.grid(True, which="both", linestyle="--", linewidth=0.8)
-    plt.legend(title="Method")
+    plt.plot(range(len(iteration_richard)), iteration_richard, color = 'blue', marker = "o", label="Richardson's Method")
+    plt.plot(range(len(iteration_steep)), iteration_steep, color = 'red', marker = "x", label="Steepest Descent")
+    plt.plot(range(len(iteration_conj)), iteration_conj, color = 'green', marker = "s", label="Conjugate Gradient")
+    plt.xticks(ticks)
+    plt.xlabel("Initial Guess Vector")
+    plt.ylabel("Number of Iterations")
+    plt.title("Number of Iterations to Hit Convergence for Richardson's, SD, and CG")
+    plt.legend(title="Method", loc = "best")
+    plt.grid(True)
     plt.show()
 
-    return solution_1, solution_2, solution_3, iterations_1, iterations_2, iterations_3
+    # # Print Results for solution, number of iterations, and error of converged solution and true solution
+    # if debug:
+    #     print("\nResults:")
+    #     print("---------")
+    #     solutions = {
+    #         'Richardson Iteration Solution' : solution_1,
+    #         'Steepest Descent Iteration Solution': solution_2,
+    #         'Conjugate Gradient Iteration Solution': solution_3,
+    #     }
+    #     iterations = {
+    #         'Number of Iterations for Richardson`s Method' : iterations_1,
+    #         'Number of Iterations for Steepest Descent': iterations_2,
+    #         'Number of Iterations for Conjugate Gradient': iterations_3,
+    #     }
+    #     errors = {
+    #         'Final Richardson error': vec_2_norm_np(solution_1 - x_tilde),
+    #         'Final Steepest Descent Error': vec_2_norm_np(solution_2 - x_tilde),
+    #         'Final Conjugate Gradient Error': vec_2_norm_np(solution_3 - x_tilde)
+    #     }
+    #     for name, solution in solutions.items():
+    #         print(f'{name}: {solution}')
+    #     for name, iterations in iterations.items():
+    #         print(f'{name}: {iterations}')
+    #     for name, error in errors.items():
+    #         print(f'{name}: {error}')
 
+
+    # Setting Bounds and Condition Number
+
+
+    return solution_richard, solution_steep, solution_conj, iteration_richard, iteration_steep, iteration_conj
+
+# Main function that will have the outputs from the methods and asks user if another run is wanting to be taken
 if __name__ == "__main__":
     while True:
-        solution_1, solution_2, solution_3, iterations_1, iterations_2, iterations_3 = part_1_driver()
+        solution_richard, solution_steep, solution_conj, iteration_richard, iteration_steep, iteration_conj = part_1_driver()
 
         user_input = input("\nRun another problem? (y/n) [default=n]: ").strip().lower()
         if user_input != 'y':
