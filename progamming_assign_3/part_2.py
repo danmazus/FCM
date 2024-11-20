@@ -12,8 +12,9 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
             tol: Convergence tolerance
             max_iter: Maximum number of iterations
             flag: Flag to indicate which stationary method should be used (1: Jacobi,
-                                                                           2: Gauss-Seidel,
-                                                                           3: Symmetric Gauss-Seidel)
+                                                                           2: Forward Gauss-Seidel,
+                                                                           3: Backward Gauss-Seidel,
+                                                                           4: Symmetric Gauss-Seidel)
 
         Returns:
             x: Solution vector to iteration
@@ -28,6 +29,7 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
     L = np.tril(A, k=-1)
     U = np.triu(A, k=1)
 
+    # Jacobi Method
     if flag == 1:
         """Jacobi"""
         rel_err_list = []
@@ -54,8 +56,9 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
             x = x_next
             iter_num += 1
 
-            return x, iter_num, rel_err_list
+        return x, iter_num, rel_err_list
 
+    # Forward Gauss-Seidel
     elif flag == 2:
         '''Gauss-Seidel (Forward)'''
         rel_err_list = []
@@ -85,9 +88,39 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
             x = x_next
             iter_num += 1
 
-            return x, iter_num, rel_err_list
+        return x, iter_num, rel_err_list
 
+    # Backward Gauss-Seidel
+    elif flag == 3:
+        rel_err_list = []
+        iter_num = 0
+        pre_cond = D - U
 
+        while iter_num < max_iter:
+            rel_err = (vec_2_norm_np(x - x_true)) / (vec_2_norm_np(x_true))
+            rel_err_list.append(rel_err)
+
+            # Checking if Relative Error is below Tolerance Level, if so return
+            if rel_err < tol:
+                return x, iter_num + 1, rel_err_list
+
+            # Solve Upper Triangular for P^(-1) * r_k
+            z = solve_Ux_np(pre_cond, r)
+
+            # Compute next x
+            x_next = x + z
+
+            # Compute next residual
+            r_next = b - np.dot(A, x_next)
+
+            # Update Values
+            r = r_next
+            x = x_next
+            iter_num += 1
+
+        return x, iter_num, rel_err_list
+
+    # Symmetric Gauss-Seidel
     else: # STILL WORKING ON THIS FUNCTION DO NOT USE
         '''Symmetric Gauss-Seidel'''
         rel_err_list = []
