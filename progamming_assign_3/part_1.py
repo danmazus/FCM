@@ -368,13 +368,13 @@ def part_1_driver():
         steps_conj = range(len(errors_conj_grad))
 
         # Richardson Error plot with log values of errors taken
-        ax1.semilogy(steps_rich, errors_richardson, label="Richardson's Method" if i == 0 else "")
+        ax1.semilogy(steps_rich, errors_richardson)#, label="Richardson's Method" if i == 0 else "")
 
         # Steepest Descent error plot with log values of errors taken
-        ax2.semilogy(steps_steep, errors_steep_descent, label="Steepest Descent" if i == 0 else "")
+        ax2.semilogy(steps_steep, errors_steep_descent)#, label="Steepest Descent" if i == 0 else "")
 
         # Conjugate Gradient error plot with log values of errors taken
-        ax3.semilogy(steps_conj, errors_conj_grad, label="Conjugate Gradient" if i == 0 else "")
+        ax3.semilogy(steps_conj, errors_conj_grad)#, label="Conjugate Gradient" if i == 0 else "")
 
         # Appending lists from the outputs of the methods for solution vector and number of iterations taken
         solution_richard.append(solution_1)
@@ -389,14 +389,14 @@ def part_1_driver():
             print(f"\nInitial Guess Vector Iteration: {i+1}:")
             print(f"Initial Guess Vector: {x0}")
             print(f"Richardson Solution Vector: {solution_1}")
+            print(f"Richardson Error List: {errors_richardson}")
             print(f"Steepest Descent Solution Vector: {solution_2}")
-            print(f"Conjugate Guess Vector: {solution_3}")
+            print(f"Steepest Descent Error List: {errors_steep_descent}")
+            print(f"Conjugate Gradient Guess Vector: {solution_3}")
+            print(f"Conjugate Gradient Error List: {errors_conj_grad}")
 
 
-    # Creating legends and showing the plot itself
-    ax1.legend(title="Method", loc = "best")
-    ax2.legend(title="Method", loc = "best")
-    ax3.legend(title="Method", loc = "best")
+    # Showing the plot
     plt.show()
 
     # Creating plots for amount of iterations taken for each initial guess vector to converge for each method #
