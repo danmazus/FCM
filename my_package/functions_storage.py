@@ -575,7 +575,7 @@ def solve_Lb_np(LU, b):
     y: the vector to use in Ux solver (Ux = y)
     """
 
-    n = range(len(LU))
+    n = len(LU)
 
     # Initializing vector y as a NumPy array
     y = np.zeros(n)
@@ -605,7 +605,7 @@ def solve_Ux_np(LU, y):
     Returns:
     x: the solution vector.
     """
-    n = range(len(LU))
+    n = len(LU)
 
     # Initialize x as a NumPy array
     x = np.zeros(n)

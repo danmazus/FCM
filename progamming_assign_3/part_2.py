@@ -291,6 +291,10 @@ def part_2_driver():
     x_tilde = np.ones(k)
     b = np.dot(selected_matrix, x_tilde)
 
+    solution_list = []
+    iteration_list = []
+    relative_error_list = []
+
     for i in range(g):
         x0 = np.random.uniform(ig_value_min, ig_value_max, k)
         # Jacobi Method
@@ -313,13 +317,22 @@ def part_2_driver():
             print("\nUsing Symmetric Gauss-Seidel Method with selected matrix:")
             solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
-    # Printing 1-time results
-    print(f"Results")
-    print(f"Solution vector is: {solution}")
-    print(f"Number of iterations: {iteration}")
-    print(f"Relative error: {relative_error}")
+        solution_list.append(solution)
+        iteration_list.append(iteration)
+        relative_error_list.append(relative_error)
 
-    return solution, iteration, relative_error
+        print(f"Results for Initial Guess Vector #{i}:")
+        print(f"Solution: {solution}")
+        print(f"Iteration: {iteration}")
+        print(f"Relative Error: {relative_error}")
+
+    # Printing 1-time results
+    print(f"Overall Results:")
+    print(f"Solution vector is: {solution_list}")
+    print(f"Number of iterations: {iteration_list}")
+    print(f"Relative error: {relative_error_list}")
+
+    return solution_list, iteration_list, relative_error_list
 
 # Main function
 if __name__ == "__main__":
