@@ -583,11 +583,9 @@ def solve_Lb_np(LU, b):
     # Setting the first element
     y[0] = b[0]
 
-    for i in range(len(LU)):
+    for i in range(n):
         # Compute temp_sum using an explicit loop
-        temp_sum = 0
-        for k in range(i):
-            temp_sum += LU[i, k] * y[k]
+        temp_sum = np.dot(LU[i, :i], y[:i])
         y[i] = b[i] - temp_sum
 
     return y
