@@ -610,11 +610,7 @@ def solve_Ux_np(LU, y):
 
     # Starting from last row going upwards (Backward Substitution)
     for i in range(n-1, -1, -1):
-        temp_sum = 0
-
-        # Calculate the sums for k > i
-        for k in range(i + 1, n):
-            temp_sum += LU[i, k] * x[k]
+        temp_sum = np.dot(LU[i, :i], x[:i])
 
         # Solving for x[i]
         x[i] = (y[i] - temp_sum) / LU[i, i]
