@@ -2,6 +2,7 @@ import numpy as np
 from my_package import vec_2_norm_np, solve_Lb_np, solve_Ux_np
 
 
+# Stationary Methods Function that includes Jacobi, Gauss-Seidel, Symmetric Gauss-Seidel Methods
 def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
     """
         Stationary Methods Function which has parameters consisting of:
@@ -159,6 +160,7 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
 
         return x, iter_num, rel_err_list
 
+# User input function
 def get_user_inputs():
     """
     Get problem parameters from user input.
@@ -272,6 +274,7 @@ def get_user_inputs():
         except ValueError:
             print("Error: Please enter valid numbers")
 
+# Driver function for the methods
 def part_2_driver():
     # Getting user inputs
     inputs = get_user_inputs()
@@ -315,6 +318,7 @@ def part_2_driver():
 
     return solution, iteration, relative_error
 
+# Main function
 if __name__ == "__main__":
     while True:
         solution, iteration, relative_error = part_2_driver()
@@ -324,26 +328,3 @@ if __name__ == "__main__":
             break
 
     print("Thank you for using the Solver!")
-
-
-
-
-
-
-
-
-
-# A_0 = np.array([3, 7, -1,
-#                 7, 4, 1,
-#                 -1, 1, 2]).reshape(3, 3)
-# x_tilde = np.array([1, 1, 1])
-# b = np.dot(A_0, x_tilde)
-# x0 = np.array([0, 0, 0])
-# print(x_tilde)
-# print(b)
-#
-# solution, iteration, rel_err_jac = stationary_method(A_0, b, x0, x_tilde, tol=1e-6, max_iter=1000, flag=1)
-#
-# print(f"The solution vector is: {solution}")
-# print(f"The iteration number is: {iteration}")
-# print(f"The relative error is: {rel_err_jac}")
