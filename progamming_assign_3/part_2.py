@@ -177,25 +177,60 @@ def get_user_inputs():
     print("\nJacobi, Gauss-Seidel, Symmetric Gauss-Seidel Construction")
     print("----------------------------------")
 
+    matrices = {
+        "A_0": np.array([3, 7, -1, 7, 4, 1, -1, 1, 2]).reshape(3, 3),
+        "A_1": np.array([3, 0, 4, 7, 4, 2, -1, -1, 2]).reshape(3, 3),
+        "A_2": np.array([-3, 3, -6, -4, 7, -8, 5, 7, -9]).reshape(3, 3),
+        "A_3": np.array([4, 1, 1, 2, -9, 0, 0, -8, -6]).reshape(3, 3),
+        "A_4": np.array([7, 6, 9, 4, 5, -4, -7, -3, 8]).reshape(3, 3),
+        "A_5": np.array([6, -2, 0, -1, 2, -1, 0, -6 / 5, 1]).reshape(3, 3),
+        "A_6": np.array([5, -1, 0, -1, 2, -1, 0, -3 / 2, 1]).reshape(3, 3),
+        "A_7": np.array([4, -1, 0, 0, 0, 0, 0,
+                    -1, 4, -1, 0, 0, 0, 0,
+                    0, -1, 4, -1, 0, 0, 0,
+                    0, 0, -1, 4, -1, 0, 0,
+                    0, 0, 0, -1, 4, -1, 0,
+                    0, 0, 0, 0, -1, 4, -1,
+                    0, 0, 0, 0, 0, -1, 4]).reshape(7, 7),
+        "A_8": np.array([2, -1, 0, 0, 0, 0, 0,
+                    -1, 2, -1, 0, 0, 0, 0,
+                    0, -1, 2, -1, 0, 0, 0,
+                    0, 0, -1, 2, -1, 0, 0,
+                    0, 0, 0, -1, 2, -1, 0,
+                    0, 0, 0, 0, -1, 2, -1,
+                    0, 0, 0, 0, 0, -1, 2]).reshape(7, 7)
+    }
+
     while True:
         try:
             n = int(input("Enter dimensions for matrices and vectors (n) [default=10]: ") or "10")
 
             print("\nChoose which matrix to use:")
-            print("1. Matrix A_0")
-            print("2. Matrix A_1")
-            print("3. Matrix A_2")
-            print("4. Matrix A_3")
-            print("5. Matrix A_4")
-            print("6. Matrix A_5")
-            print("7. Matrix A_6")
-            print("8. Matrix A_7")
-            print("9. Matrix A_8")
-            problem_type = int(input("Enter Matrix [default=1 (Matrix A_0)]: ") or "1")
 
-            if problem_type not in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
-                print("Error: Invalid problem type")
+            # Dynamically selecting which matrix to use from the dictionary above
+            for index, key in enumerate(matrices.keys(), start = 1):
+                print(f"{index}. Matrix {key}")
+            problem_type = int(input("Enter Matrix [default=1 (Matrix A_0)]: ") or "1")
+            # print("1. Matrix A_0")
+            # print("2. Matrix A_1")
+            # print("3. Matrix A_2")
+            # print("4. Matrix A_3")
+            # print("5. Matrix A_4")
+            # print("6. Matrix A_5")
+            # print("7. Matrix A_6")
+            # print("8. Matrix A_7")
+            # print("9. Matrix A_8")
+
+
+            if problem_type not in range(1, len(matrices) + 1):
+                print("Error: Invalid Matrix selection. Please try again.")
                 continue
+
+            # Selecting the matrix from the user input, converts the keys to a list and then subtracts 1 from problem type since matrices start at 0
+            selected_matrix_key = list(matrices.keys())[problem_type - 1]
+
+            # Selecting the matrix from the key retrieved above
+            selected_matrix = matrices[selected_matrix_key]
 
             # New inputs for random reflector range
             print("\nSet range for random values of Solution Vectors:")
@@ -219,10 +254,21 @@ def get_user_inputs():
             print("\nSet Maximum Number of Iterations to be Ran:")
             max_iter = int(input("Enter maximum number of iterations (default=1000): ") or "1000")
 
+            print("\nChoose which method to run:")
+            print("1. Jacobi Method")
+            print("2. Forward Gauss-Seidel Method")
+            print("3. Backward Gauss-Seidel Method")
+            print("4. Symmetric Gauss-Seidel Method")
+            flag = int(input("Enter Method [default=1 (Jacobi Method)]: " or "1"))
+
+            if flag not in [1, 2, 3, 4]:
+                print("Error: Invalid method")
+                continue
+
 
             debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
 
-            return n, problem_type, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, debug
+            return n, selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -231,9 +277,48 @@ def part_2_driver():
     # Getting user inputs
     inputs = get_user_inputs()
 
-    n, problem_type, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, debug = inputs
+    n, selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug = inputs
 
     # Sets random seed for reproducibility
     #np.random.seed(42)
 
 
+
+    if flag == 1:
+        print("\nUsing Jacobi Method with selected matrix:")
+        stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+
+    elif flag == 2:
+        print("\nUsing Forward Gauss-Seidel Method with selected matrix:")
+        stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+
+    elif flag == 3:
+        print("\nUsing Backward Gauss-Seidel Method with selected matrix:")
+        stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+
+    else: # flag == 4
+        print("\nUsing Symmetric Gauss-Seidel Method with selected matrix:")
+        stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+
+
+
+
+
+
+
+
+
+A_0 = np.array([3, 7, -1,
+                7, 4, 1,
+                -1, 1, 2]).reshape(3, 3)
+x_tilde = np.array([1, 1, 1])
+b = np.dot(A_0, x_tilde)
+x0 = np.array([0, 0, 0])
+print(x_tilde)
+print(b)
+
+solution, iteration, rel_err_jac = stationary_method(A_0, b, x0, x_tilde, tol=1e-6, max_iter=1000, flag=1)
+
+print(f"The solution vector is: {solution}")
+print(f"The iteration number is: {iteration}")
+print(f"The relative error is: {rel_err_jac}")
