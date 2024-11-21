@@ -1,4 +1,5 @@
 import numpy as np
+from numpy import random
 from my_package import vec_2_norm_np, solve_Lb_np, solve_Ux_np
 
 
@@ -286,29 +287,31 @@ def part_2_driver():
 
     # Setting Initial Conditions
     k = len(selected_matrix)
-    x0 = np.array(k)
+    #x0 = np.array(k)
     x_tilde = np.ones(k)
     b = np.dot(selected_matrix, x_tilde)
 
-    # Jacobi Method
-    if flag == 1:
-        print("\nUsing Jacobi Method with selected matrix:")
-        solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+    for i in range(g):
+        x0 = np.random.uniform(ig_value_min, ig_value_max, k)
+        # Jacobi Method
+        if flag == 1:
+            print("\nUsing Jacobi Method with selected matrix:")
+            solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
-    # Forward Gauss-Seidel Method
-    elif flag == 2:
-        print("\nUsing Forward Gauss-Seidel Method with selected matrix:")
-        solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+        # Forward Gauss-Seidel Method
+        elif flag == 2:
+            print("\nUsing Forward Gauss-Seidel Method with selected matrix:")
+            solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
-    # Backward Gauss-Seidel Method
-    elif flag == 3:
-        print("\nUsing Backward Gauss-Seidel Method with selected matrix:")
-        solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+        # Backward Gauss-Seidel Method
+        elif flag == 3:
+            print("\nUsing Backward Gauss-Seidel Method with selected matrix:")
+            solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
-    # Symmetric Gauss-Seidel Method
-    else: # flag == 4
-        print("\nUsing Symmetric Gauss-Seidel Method with selected matrix:")
-        solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
+        # Symmetric Gauss-Seidel Method
+        else: # flag == 4
+            print("\nUsing Symmetric Gauss-Seidel Method with selected matrix:")
+            solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
     # Printing 1-time results
     print(f"Results")
