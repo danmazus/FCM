@@ -1,4 +1,6 @@
 import numpy as np
+
+import my_package
 from my_package import solve_Lb_np, solve_Ux_np
 from scipy.linalg import solve_triangular
 
@@ -287,13 +289,13 @@ def get_user_inputs():
                 continue
 
             # Choosing how many initial guess vectors will be taken
-            print("\nChoose How Many Initial Guess Vectors:")
-            g = int(input("Enter number of Initial Guess Vectors (default=10): ") or "10")
+            print("\nChoose How Many Solution Vectors:")
+            g = int(input("Enter number of Solution Vectors (default=10): ") or "10")
 
-            # Random value range for the initial guess vectors
-            print("\nSet range of values for Initial Guess Vectors:")
-            ig_value_min = float(input("Enter minimum value (default=0.0): ") or "0.0")
-            ig_value_max = float(input("Enter maximum value (default=0.0): ") or "0.0")
+            # # Random value range for the initial guess vectors
+            # print("\nSet range of values for Initial Guess Vectors:")
+            # ig_value_min = float(input("Enter minimum value (default=0.0): ") or "0.0")
+            # ig_value_max = float(input("Enter maximum value (default=0.0): ") or "0.0")
 
             # Tolerance level for convergence
             print("\nSet Tolerance Level for Convergence to Hit:")
@@ -319,7 +321,7 @@ def get_user_inputs():
             # Enable debug input
             debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
 
-            return selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug
+            return selected_matrix, smin, smax, g, tol, max_iter, flag, debug
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -329,7 +331,7 @@ def part_2_driver():
     # Getting user inputs
     inputs = get_user_inputs()
 
-    selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug = inputs
+    selected_matrix, smin, smax, g, tol, max_iter, flag, debug = inputs
 
     # Sets random seed for reproducibility
     #np.random.seed(42)
@@ -338,14 +340,10 @@ def part_2_driver():
     rows, cols = selected_matrix.shape
     k = rows
     x0 = np.zeros(k)
-    x_tilde = np.ones(k)
-    b = np.dot(selected_matrix, x_tilde)
-    I = np.eye(k)
 
     if debug:
-        print(f"Matrix is: {selected_matrix}")
-        print(f"x_tilde is: {x_tilde}")
-        print(f"b is: {b}")
+        print(f"Matrix Selected is: \n{selected_matrix}")
+        print(f"x0 is: {x0}")
 
     solution_list = []
     iteration_list = []
@@ -355,7 +353,14 @@ def part_2_driver():
     G_matrix_norms_list = []
 
     for i in range(g):
-        print(f"Initial Guess Vector x0 = {x0}")
+        # Setting a new x_tilde (solution vector) time to test over multiple solution vectors for same matrix and same initial guess vector
+        x_tilde = my_package.generate_float_1D_vector_np(smin, smax, k)
+        b = np.dot(selected_matrix, x_tilde)
+        if debug:
+            print(f"Initial Guess Vector x0 = {x0}")
+            print(f"True Solution Vector x_tilde = {x_tilde}")
+            print(f"Ax = b is: {b}")
+
         # Jacobi Method
         if flag == 1:
             print(f"\nUsing Jacobi Method with selected matrix: {selected_matrix}")
@@ -394,9 +399,9 @@ def part_2_driver():
         spectral_radius_list.append(spectral_radius)
 
         if debug:
-            print(f"Results for Initial Guess Vector #{i}:")
+            print(f"Results for Solution Vector #{i}:")
             print(f"Solution: {solution}")
-            print(f"Iteration: {iteration}")
+            print(f"Iterations for convergence: {iteration}")
             print(f"Relative Error: {relative_error}")
             print(f"G Error Matrix: \n{G_matrix}")
             print(f"Spectral Radius of G is: {spectral_radius}")
