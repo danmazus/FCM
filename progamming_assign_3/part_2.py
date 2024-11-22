@@ -355,9 +355,12 @@ def part_2_driver():
 
     # For loop running over multiple solution vectors for same matrix and initial guess vector
     for i in range(g):
+
         # Setting a new x_tilde (solution vector) time to test over multiple solution vectors for same matrix and same initial guess vector
         x_tilde = my_package.generate_float_1D_vector_np(smin, smax, k)
         b = np.dot(selected_matrix, x_tilde)
+
+        # Debug print statements for initial guess, true solution, and b vectors
         if debug:
             print(f"Initial Guess Vector x0 = {x0}")
             print(f"True Solution Vector x_tilde = {x_tilde}")
@@ -400,6 +403,7 @@ def part_2_driver():
         spectral_radius = spectral_radi(G_matrix)
         spectral_radius_list.append(spectral_radius)
 
+        # Debug Statements for each run of the for loop (each solution vector)
         if debug:
             print(f"Results for Solution Vector #{i}:")
             print(f"Solution: {solution}")
