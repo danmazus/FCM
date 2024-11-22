@@ -345,6 +345,7 @@ def part_2_driver():
         print(f"Matrix Selected is: \n{selected_matrix}")
         print(f"x0 is: {x0}")
 
+    # Initializing lists to hold values for output
     solution_list = []
     iteration_list = []
     relative_error_list = []
@@ -352,6 +353,7 @@ def part_2_driver():
     spectral_radius_list = []
     G_matrix_norms_list = []
 
+    # For loop running over multiple solution vectors for same matrix and initial guess vector
     for i in range(g):
         # Setting a new x_tilde (solution vector) time to test over multiple solution vectors for same matrix and same initial guess vector
         x_tilde = my_package.generate_float_1D_vector_np(smin, smax, k)
@@ -406,10 +408,10 @@ def part_2_driver():
             print(f"G Error Matrix: \n{G_matrix}")
             print(f"Spectral Radius of G is: {spectral_radius}")
 
-    # Printing 1-time results
-    print(f"\nOverall Results:")
+    # Printing Overall results
+    print(f"\nOverall Results for {g} solution vectors:")
     #print(f"Solution vectors are: {solution_list}")
-    print(f"Number of iterations for each initial guess: {iteration_list}")
+    print(f"Number of iterations for each solution vector: {iteration_list}")
     #print(f"Relative errors are: {relative_error_list}")
     #print(f"G error matrices are: {G_matrix_list}")
     print(f"Spectral Radii of G's are: {spectral_radius_list}")
