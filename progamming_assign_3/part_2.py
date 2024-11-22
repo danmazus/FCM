@@ -1,6 +1,6 @@
 import numpy as np
 from my_package import solve_Lb_np, solve_Ux_np
-import scipy as sp
+from scipy.linalg import solve_triangular
 
 
 # Stationary Methods Function that includes Jacobi, Gauss-Seidel, Symmetric Gauss-Seidel Methods
@@ -23,7 +23,6 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
             iter_num: Number of iterations for convergence
             rel_err_list: List of Relative Errors during each iteration
     """
-
     x = x0
     x_true = x_tilde
     r = b - (np.dot(A, x))
@@ -156,6 +155,61 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
 
         return x, iter_num, rel_err_list
 
+# G matrix computation function
+def G_error_matrix(A, k, flag):
+    """
+    Computes the matrix G which is related to ||Ge_k|| = G^k * ||e_0||
+
+    Parameters:
+        A: Given Matrix
+        k: size of given matrix
+        flag: Flag to indicate which stationary method is being used so corresponding G can be computed
+
+    Returns:
+        G: The matrix G relating to ||Ge_k||
+    """
+    I = np.eye(k)
+    D = np.diag(A)
+    L = np.tril(A)
+    U = np.triu(A)
+
+    if flag == 1:
+        D_inv = 1 / D
+        B = np.dot(D_inv, A)
+        G = I - B
+
+    elif flag == 2:
+        B = solve_triangular(L, A, lower=True)
+        G = I - B
+
+    elif flag == 3:
+        B = solve_triangular(U, A, lower=False)
+        G = I - B
+
+    else:
+        B_1 = solve_triangular(L, A, lower=True)
+        B_2 = np.dot(D, B_1)
+        B_3 = solve_triangular(U, B_2, lower=False)
+        G = I - B_3
+
+    return G
+
+# Spectral Radii Function
+def spectral_radi(G):
+    """
+    Computes the spectral radius of a given matrix
+
+    Parameters:
+        G: The given matrix which the spectral radius is wanting to be computed
+
+    Returns:
+        spectral: the spectral radius of given matrix
+    """
+    eigenvalues = np.linalg.eigvals(G)
+    spectral = np.max(np.abs(eigenvalues))
+
+    return spectral
+
 # User input function
 def get_user_inputs():
     """
@@ -286,6 +340,7 @@ def part_2_driver():
     x0 = np.zeros(k)
     x_tilde = np.ones(k)
     b = np.dot(selected_matrix, x_tilde)
+    I = np.eye(k)
 
     if debug:
         print(f"Matrix is: {selected_matrix}")
@@ -295,6 +350,9 @@ def part_2_driver():
     solution_list = []
     iteration_list = []
     relative_error_list = []
+    G_matrix_list = []
+    spectral_radius_list = []
+    G_matrix_norms_list = []
 
     for i in range(g):
         print(f"Initial Guess Vector x0 = {x0}")
@@ -318,20 +376,39 @@ def part_2_driver():
             print("\nUsing Symmetric Gauss-Seidel Method with selected matrix:")
             solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
+        # Appending lists that are the output of the methods
         solution_list.append(solution)
         iteration_list.append(iteration)
         relative_error_list.append(relative_error)
 
-        print(f"Results for Initial Guess Vector #{i}:")
-        print(f"Solution: {solution}")
-        print(f"Iteration: {iteration}")
-        print(f"Relative Error: {relative_error}")
+        # Computing the matrix G from ||Ge_k|| for the method selected and appending the list for each initial guess
+        G_matrix = G_error_matrix(selected_matrix, k, flag)
+        G_matrix_list.append(G_matrix)
+
+        # Computing the 2-norm of the G matrix and appending its list for each initial guess
+        G_matrix_norm = np.linalg.norm(G_matrix, 2)
+        G_matrix_norms_list.append(G_matrix_norm)
+
+        # Computes the spectral radius of G and appending the list for each initial guess
+        spectral_radius = spectral_radi(G_matrix)
+        spectral_radius_list.append(spectral_radius)
+
+        if debug:
+            print(f"Results for Initial Guess Vector #{i}:")
+            print(f"Solution: {solution}")
+            print(f"Iteration: {iteration}")
+            print(f"Relative Error: {relative_error}")
+            print(f"G Error Matrix: \n{G_matrix}")
+            print(f"Spectral Radius of G is: {spectral_radius}")
 
     # Printing 1-time results
     print(f"\nOverall Results:")
-    print(f"Solution vectors are: {solution_list}")
+    #print(f"Solution vectors are: {solution_list}")
     print(f"Number of iterations for each initial guess: {iteration_list}")
-    print(f"Relative errors are: {relative_error_list}")
+    #print(f"Relative errors are: {relative_error_list}")
+    #print(f"G error matrices are: {G_matrix_list}")
+    print(f"Spectral Radii of G's are: {spectral_radius_list}")
+    print(f"2-Norm of the G matrices are: {G_matrix_norms_list}")
 
     return solution_list, iteration_list, relative_error_list
 
