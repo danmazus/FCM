@@ -196,7 +196,7 @@ def conj_grad(A, b, x0, x_tilde, tol, max_iter):
         r = r_next
         sigma = sigma_next
         d = d_next
-        err = err_next_full
+        #err = err_next_full
         iter_num += 1
 
     return x, iter_num, residual_list, err_list
@@ -389,7 +389,6 @@ def part_1_driver():
     # Bounds and Condition Number for Richardson's, SD, and CG
     kappa = np.max(Lambda)/np.min(Lambda)
     bound_rich_steep = (kappa - 1)/(kappa + 1)
-    bound_conj = (np.sqrt(kappa) - 1)/(np.sqrt(kappa) + 1)
 
     # Initializing lists to append the solutions and iterations from output below
     solution_richard = []
@@ -420,7 +419,6 @@ def part_1_driver():
     ax3.set_xlabel("Iterations")
     ax3.set_ylabel("Relative Error")
     ax3.set_title("Relative Error for Conjugate Gradient")
-    ax3.axhline(y = bound_conj, linestyle = "--", color = "black")
     ax3.grid(True)
 
     fig.suptitle(f"Relative Errors for Each Method under Problem Type: {problem_type}")
@@ -443,6 +441,10 @@ def part_1_driver():
         steps_steep = range(len(errors_steep_descent))
         steps_conj = range(len(errors_conj_grad))
 
+        kap = np.max(Lambda)/np.min(Lambda)
+        bound_conj = (np.sqrt(kap) - 1) / (np.sqrt(kap) + 1)
+        alpha_bound = [2 * (bound_conj ** k) for k in steps_conj]
+
         # Richardson Error plot with log values of errors taken
         ax1.semilogy(steps_rich, errors_richardson)#, label="Richardson's Method" if i == 0 else "")
 
@@ -450,7 +452,9 @@ def part_1_driver():
         ax2.semilogy(steps_steep, errors_steep_descent)#, label="Steepest Descent" if i == 0 else "")
 
         # Conjugate Gradient error plot with log values of errors taken
+        ax3.semilogy(steps_conj, alpha_bound, linestyle = "--", color = "black")
         ax3.semilogy(steps_conj, errors_conj_grad)#, label="Conjugate Gradient" if i == 0 else "")
+
 
         # Appending lists from the outputs of the methods for solution vector and number of iterations taken
         solution_richard.append(solution_1)
