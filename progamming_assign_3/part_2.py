@@ -1,7 +1,5 @@
 import numpy as np
-
-import my_package
-from my_package import solve_Lb_np, solve_Ux_np
+from my_package import solve_Lb_np, solve_Ux_np, generate_float_1D_vector_np
 from scipy.linalg import solve_triangular
 
 
@@ -357,7 +355,7 @@ def part_2_driver():
     for i in range(g):
 
         # Setting a new x_tilde (solution vector) time to test over multiple solution vectors for same matrix and same initial guess vector
-        x_tilde = my_package.generate_float_1D_vector_np(smin, smax, k)
+        x_tilde = generate_float_1D_vector_np(smin, smax, k)
         b = np.dot(selected_matrix, x_tilde)
 
         # Debug print statements for initial guess, true solution, and b vectors
