@@ -1,6 +1,6 @@
 import numpy as np
-from numpy import random
-from my_package import vec_2_norm_np, solve_Lb_np, solve_Ux_np
+from my_package import solve_Lb_np, solve_Ux_np
+import scipy as sp
 
 
 # Stationary Methods Function that includes Jacobi, Gauss-Seidel, Symmetric Gauss-Seidel Methods
@@ -26,10 +26,10 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
 
     x = x0
     x_true = x_tilde
-    r = b - np.dot(A, x)
+    r = b - (np.dot(A, x))
     D = np.diag(A)
-    L = np.tril(A, k=-1)
-    U = np.triu(A, k=1)
+    L = np.tril(A)
+    U = np.triu(A)
 
     # Jacobi Method
     if flag == 1:
@@ -40,7 +40,7 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
 
         while iter_num < max_iter:
             # Computing relative error ||x_k - x_true|| / ||x_true||
-            rel_err = (vec_2_norm_np(x - x_true)) / (vec_2_norm_np(x_true))
+            rel_err = (np.linalg.norm(x - x_true)) / (np.linalg.norm(x_true))
             rel_err_list.append(rel_err)
 
             # Checking if Relative Error is below Tolerance Level, if so return
@@ -65,29 +65,27 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
         '''Gauss-Seidel (Forward)'''
         rel_err_list = []
         iter_num = 0
-        pre_cond = D - L
+        pre_cond = L
+        true_err_norm = np.linalg.norm(x_true)
 
 
         while iter_num < max_iter:
-            rel_err = (vec_2_norm_np(x - x_true)) / (vec_2_norm_np(x_true))
-            rel_err_list.append(rel_err)
-
-            # Checking if Relative Error is below Tolerance Level, if so return
-            if rel_err < tol:
-                return x, iter_num + 1, rel_err_list
-
             # Lower triangular solve for P^(-1) * r_k
             z = solve_Lb_np(pre_cond, r)
 
             # Compute the next x term
             x_next = x + z
 
-            # Compute next residual
-            r_next = b - np.dot(A, x_next)
+            rel_err = (np.linalg.norm(x_next - x_true)) / true_err_norm
+            rel_err_list.append(rel_err)
+
+            # Checking if Relative Error is below Tolerance Level, if so return
+            if rel_err < tol:
+                return x, iter_num + 1, rel_err_list
 
             # Update next values
-            r = r_next
             x = x_next
+            r = b - np.dot(A, x)
             iter_num += 1
 
         return x, iter_num, rel_err_list
@@ -96,10 +94,10 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
     elif flag == 3:
         rel_err_list = []
         iter_num = 0
-        pre_cond = D - U
+        pre_cond = np.diag(D) - U
 
         while iter_num < max_iter:
-            rel_err = (vec_2_norm_np(x - x_true)) / (vec_2_norm_np(x_true))
+            rel_err = (np.linalg.norm(x - x_true)) / (np.linalg.norm(x_true))
             rel_err_list.append(rel_err)
 
             # Checking if Relative Error is below Tolerance Level, if so return
@@ -126,19 +124,12 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
     else: # STILL WORKING ON THIS FUNCTION DO NOT USE
         '''Symmetric Gauss-Seidel'''
         rel_err_list = []
+        true_err_norm = np.linalg.norm(x_true)
         iter_num = 0
-        Lower = D - L
-        Upper = D - U
+        Lower = L
+        Upper = U
 
         while iter_num < max_iter:
-            # Compute Relative error ||x_k - x|| / ||x||
-            rel_err = (vec_2_norm_np(x - x_true)) / (vec_2_norm_np(x_true))
-            rel_err_list.append(rel_err)
-
-            # Checking if Relative Error is below Tolerance Level, if so return
-            if rel_err < tol:
-                return x, iter_num + 1, rel_err_list
-
             # First the Lower Solve is computed first (D - L)^(-1) * r_k = z_1
             z_1 = solve_Lb_np(Lower, r)
 
@@ -149,14 +140,18 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
             z_3 = solve_Ux_np(Upper, z_2)
 
             # Computing the next x
-            x_next = x + z_3
+            x = x + z_3
 
-            # Update the residual
-            r_next = b - np.dot(A, x_next)
+            # Compute Relative error ||x_k - x|| / ||x||
+            rel_err = (np.linalg.norm(x - x_true)) / true_err_norm
+            rel_err_list.append(rel_err)
+
+            # Checking if Relative Error is below Tolerance Level, if so return
+            if rel_err < tol:
+                return x, iter_num + 1, rel_err_list
 
             # Correcting variables for next iteration
-            x = x_next
-            r = r_next
+            r = b - np.dot(A, x)
             iter_num += 1
 
         return x, iter_num, rel_err_list
@@ -207,22 +202,22 @@ def get_user_inputs():
 
     while True:
         try:
-            n = int(input("Enter dimensions for vectors (n) [default=10]: ") or "10")
+            #n = int(input("Enter dimensions for vectors (n) [default=10]: ") or "10")
 
             print("\nChoose which matrix to use:")
 
             # Dynamically selecting which matrix to use from the dictionary above
-            for index, key in enumerate(matrices.keys(), start = 1):
+            for index, key in enumerate(matrices.keys(), start = 0):
                 print(f"{index}. Matrix {key}")
-            problem_type = int(input("Enter Matrix [default=1 (Matrix A_0)]: ") or "1")
+            problem_type = int(input("Enter Matrix (0-8) [default=0 (Matrix A_0)]: ") or "0")
 
             # Making sure a correct value was chosen for problem_type
-            if problem_type not in range(1, len(matrices) + 1):
+            if problem_type < 0 or problem_type > len(matrices) - 1:
                 print("Error: Invalid Matrix selection. Please try again.")
                 continue
 
             # Selecting the matrix from the user input, converts the keys to a list and then subtracts 1 from problem type since matrices start at 0
-            selected_matrix_key = list(matrices.keys())[problem_type - 1]
+            selected_matrix_key = list(matrices.keys())[problem_type]
 
             # Selecting the matrix from the key retrieved above
             selected_matrix = matrices[selected_matrix_key]
@@ -270,7 +265,7 @@ def get_user_inputs():
             # Enable debug input
             debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
 
-            return n, selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug
+            return selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -280,26 +275,32 @@ def part_2_driver():
     # Getting user inputs
     inputs = get_user_inputs()
 
-    n, selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug = inputs
+    selected_matrix, smin, smax, g, ig_value_min, ig_value_max, tol, max_iter, flag, debug = inputs
 
     # Sets random seed for reproducibility
     #np.random.seed(42)
 
     # Setting Initial Conditions
-    k = len(selected_matrix)
-    #x0 = np.array(k)
+    rows, cols = selected_matrix.shape
+    k = rows
+    x0 = np.zeros(k)
     x_tilde = np.ones(k)
     b = np.dot(selected_matrix, x_tilde)
+
+    if debug:
+        print(f"Matrix is: {selected_matrix}")
+        print(f"x_tilde is: {x_tilde}")
+        print(f"b is: {b}")
 
     solution_list = []
     iteration_list = []
     relative_error_list = []
 
     for i in range(g):
-        x0 = np.random.uniform(ig_value_min, ig_value_max, k)
+        print(f"Initial Guess Vector x0 = {x0}")
         # Jacobi Method
         if flag == 1:
-            print("\nUsing Jacobi Method with selected matrix:")
+            print(f"\nUsing Jacobi Method with selected matrix: {selected_matrix}")
             solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
         # Forward Gauss-Seidel Method
@@ -327,17 +328,17 @@ def part_2_driver():
         print(f"Relative Error: {relative_error}")
 
     # Printing 1-time results
-    print(f"Overall Results:")
-    print(f"Solution vector is: {solution_list}")
-    print(f"Number of iterations: {iteration_list}")
-    print(f"Relative error: {relative_error_list}")
+    print(f"\nOverall Results:")
+    print(f"Solution vectors are: {solution_list}")
+    print(f"Number of iterations for each initial guess: {iteration_list}")
+    print(f"Relative errors are: {relative_error_list}")
 
     return solution_list, iteration_list, relative_error_list
 
 # Main function
 if __name__ == "__main__":
     while True:
-        solution, iteration, relative_error = part_2_driver()
+        solution, iteration, relative_error_list = part_2_driver()
 
         user_input = input("\nRun another problem? (y/n) [default=n]: ").strip().lower()
         if user_input != 'y':
