@@ -201,6 +201,59 @@ def conj_grad(A, b, x0, x_tilde, tol, max_iter):
 
     return x, iter_num, residual_list, err_list
 
+# Distinct Eigenvalues with Random Multiplicities function
+def create_distinct_eigenvalues(n, k, lambda_min, lambda_max):
+    """Create k distinct eigenvalues with random multiplicities"""
+    # Generate k distinct eigenvalues from lambda_min to lambda_max across uniform distribution
+    eigenvals = np.random.uniform(lambda_min, lambda_max, k)
+
+    # Generate multiplicities of the eigenvalues to fill in rest, n - k
+    multiplicities = np.random.multinomial(n, [1/k] * k)
+
+    # Create the diagonal vector using the eigenvalues and random multiplicities
+    diag = np.repeat(eigenvals, multiplicities)
+
+    return diag, eigenvals, multiplicities
+
+# Distinct Clusters of Eigenvalues function
+def create_distinct_cluster(n, k, lambda_min, lambda_max, var_type):
+    # Generate k distinct eigenvalues from lambda_min to lambda_max across uniform distribution
+    eigenvals = np.random.uniform(lambda_min, lambda_max, k)
+
+    # Generate multiplicities of the eigenvalues to fill in rest, n - k
+    multiplicities = np.random.multinomial(n, [1 / k] * k)
+
+    # Create the diagonal list that is created from k distinct clusters and values taken from normal distribution
+    diagonal = []
+    for i in range(k):
+        if var_type == 1:
+            clust_var = 0.01 * (lambda_max - lambda_min)
+            # Generates the clusters of values for each k distinct eigenvalue and given multiplicity
+            cluster = np.random.normal(eigenvals[i], clust_var, multiplicities[i])
+
+            # Add all elements of cluster to diagonal at once (avoids for loop for appending)
+            diagonal.extend(cluster)
+
+        elif var_type == 2:
+            clust_var = 0.1 * (lambda_max - lambda_min)
+            # Generates the clusters of values for each k distinct eigenvalue and given multiplicity
+            cluster = np.random.normal(eigenvals[i], clust_var, multiplicities[i])
+
+            # Add all elements of cluster to diagonal at once (avoids for loop for appending)
+            diagonal.extend(cluster)
+
+        else:
+            clust_var = 0.25 * (lambda_max - lambda_min)
+            # Generates the clusters of values for each k distinct eigenvalue and given multiplicity
+            cluster = np.random.normal(eigenvals[i], clust_var, multiplicities[i])
+
+            # Add all elements of cluster to diagonal at once (avoids for loop for appending)
+            diagonal.extend(cluster)
+
+    diagonal = np.array(diagonal)
+
+    return diagonal, eigenvals, multiplicities
+
 ## User Input Function
 def get_user_inputs():
     """Get problem parameters from user input.
@@ -249,9 +302,13 @@ def get_user_inputs():
             print("\nSet Maximum Number of Iterations to be Ran:")
             max_iter = int(input("Enter maximum number of iterations (default=1000): ") or "1000")
 
-            lambda_min, lambda_max = None, None
+            lambda_min, lambda_max, distinct_eig, var_type = None, None, None, None
 
-            if problem_type in [4, 5]:
+            if problem_type in [2, 3]:
+                print("\nChoose how many distinct eigenvalues to use:")
+                distinct_eig = int(input("Enter number of distinct eigenvalues (default=5): ") or "5")
+
+            if problem_type in [2, 3, 4, 5]:
                 print("\nChoose Minimum and Maximum for Eigenvalues (Must be positive): ")
                 lambda_min = float(input("Enter lambda min (default=1.0): ") or "1.0")
                 lambda_max = float(input("Enter lambda max (default=10.0): ") or "10.0")
@@ -259,9 +316,16 @@ def get_user_inputs():
                     print("Error: Maximum value must be less than minimum value")
                     continue
 
+            if problem_type in [3]:
+                print("\nChoose variance of clustering from Normal Distribution (Relative to Eigenvalue Range):")
+                print("1. Tight Clustering/Spread")
+                print("2. Moderate Clustering/Spread")
+                print("3. Large Clustering/Spread")
+                var_type = int(input("Enter cluster variance (1-3) (default=1): ") or "1")
+
             debug = input("\nEnable debug output? (y/n) [default=n]: ").lower().startswith('y')
 
-            return n, problem_type, dmin, dmax, g, tol, max_iter, lambda_min, lambda_max, debug
+            return n, problem_type, dmin, dmax, g, tol, max_iter, distinct_eig, lambda_min, lambda_max, var_type, debug
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -270,7 +334,7 @@ def part_1_driver():
     # Setting User Inputs
     inputs = get_user_inputs()
 
-    n, problem_type, dmin, dmax, g, tol, max_iter, lambda_min, lambda_max, debug = inputs
+    n, problem_type, dmin, dmax, g, tol, max_iter, distinct_eig, lambda_min, lambda_max, var_type, debug = inputs
 
     # Sets seed for reproducibility
     #np.random.seed(42)
@@ -283,19 +347,25 @@ def part_1_driver():
 
     # k distinct eigenvalues with random multiplicities
     elif problem_type == 2:
-        Lambda = np.zeros(n)     # Eigenvalue, diagonal matrix (created as a vector)
-        #for i in range(n):
-
+        Lambda, eigvals, multiplic = create_distinct_eigenvalues(n, distinct_eig, lambda_min, lambda_max)
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
+        if debug:
+            print("\nProblem type 2 values:")
+            print(f"Diagonal Vector Lambda = {Lambda}")
+            print(f"Distinct Eigenvalues: {eigvals}")
+            print(f"Multiplicities of Eigenvalues: {multiplic}")
 
     # k distinct eigenvalues with random distributions around each k distinct eigenvalue
     elif problem_type == 3:
-        Lambda = np.zeros(n)    # Eigenvalue, diagonal matrix (created as a vector)
-        #for i in range(n):
-
+        Lambda, eigvals, multiplic = create_distinct_cluster(n, distinct_eig, lambda_min, lambda_max, var_type)   # Eigenvalue, diagonal matrix (created as a vector)
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
+        if debug:
+            print("\nProblem type 3 values:")
+            print(f"Diagonal Vector Lambda = {Lambda}")
+            print(f"Distinct Eigenvalues: {eigvals}")
+            print(f"Multiplicities of Eigenvalues: {multiplic}")
 
     # Eigenvalues generated from a Uniform Distribution (specified lambda_min, lambda_max) for conditioning purposes
     elif problem_type == 4:
@@ -352,6 +422,8 @@ def part_1_driver():
     ax3.set_title("Relative Error for Conjugate Gradient")
     ax3.axhline(y = bound_conj, linestyle = "--", color = "black")
     ax3.grid(True)
+
+    fig.suptitle(f"Relative Errors for Each Method under Problem Type: {problem_type}")
 
     # g-number of initial guesses to pass through each method to compare for each x_tilde, b_tilde, Lambda
     for i in range(g):
@@ -416,7 +488,7 @@ def part_1_driver():
     plt.xticks(ticks)
     plt.xlabel("Initial Guess Vector")
     plt.ylabel("Number of Iterations")
-    plt.title("Number of Iterations to Hit Convergence for Richardson's, SD, and CG")
+    plt.title(f"Number of Iterations to Hit Convergence for Richardson's, SD, and CG with Problem Type {problem_type} Selected")
     plt.legend(title="Method", loc = "best")
     plt.grid(True)
     plt.show()
