@@ -3,8 +3,8 @@ import scipy.linalg as sp
 from my_package import *
 
 def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
-    # Initialize Matrix L that will be updated to a Lower Triangular Matrix
-    L = np.zeros((n,n))
+    # Initialize Matrix A that will be updated to a Lower Triangular Matrix
+    A = np.zeros((n,n))
 
     for i in range(n):
         # Creates a control variable that controls the number of nonzero elements in the ith row
@@ -17,16 +17,12 @@ def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
         # Selects the lower triangular part in each row of the controlled size variable
         ind = np.random.choice(i, size=nonzero, replace=False)
 
-        # Fills elements of L with random values to the positions stated in the variable 'ind'
-        L[i, ind] = np.random.uniform(a, b, size=nonzero)
+        # Fills elements of A with random values to the positions stated in the variable 'ind'
+        A[i, ind] = np.random.uniform(a, b, size=nonzero)
 
-        # Making L Symmetric by implicitly computing the transpose
+        # Making A Symmetric by implicitly computing the transpose
         for j in ind:
-            L[j, i] = L[i, j]
-
-    # "Initializes" our diagonal elements and creates matrix A from D + L
-    D = np.diag(np.diag(L))
-    A = D + L
+            A[j, i] = A[i, j]
 
     # Creating random values for our diagonal elements and then assigning them to the diagonal elements of A
     diag_values = generate_float_1D_vector_np(a, b, n)
@@ -53,11 +49,45 @@ def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
 
     return A
 
+def nonzero_elements_counter(A):
+    count = 0
+    for i in range(1, n):
+        for k in range(i):
+            if A[i, k] != 0:
+                count += 1
+
+    return count
+
+def compressed_sparse_row(A, n):
+    size = nonzero_elements_counter(A)
+    aa = np.zeros(size)
+    ja = np.zeros(size)
+    ia = np.zeros(len(aa))
+
+    nonzero_counter = 0
+    ia[0] = 0
+
+    for i in range(n):
+        for k in range(i):
+            if A[i, k] != 0:
+                aa[nonzero_counter] = A[i, k]
+                ja[nonzero_counter] = k
+                nonzero_counter += 1
+        ia[i + 1] = nonzero_counter
+
+    return aa, ja, ia
+
 # Test Case
-n = 5
+n = 6
 a = 5
 b = 10
 density = 0.7
 boost_factor = 2
 A = generate_spd_sparse_matrix(a, b, n, density, boost_factor)
 print(f"Matrix A is: \n{A}")
+
+aa, ja, ia = compressed_sparse_row(A, n)
+
+print(f"Compressed sparse row A is: \n{aa}")
+print(f"Column Indicies are: \n{ja}")
+print(f"Range of indices are: \n{ia}")
