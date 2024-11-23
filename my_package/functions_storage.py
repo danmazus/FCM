@@ -539,6 +539,7 @@ def frob_norm_np(M):
 def generate_float_1D_vector_np(a, b, n):
     return np.random.uniform(a, b, n)
 
+# Problem Type 4 generation in programming assignment 3, part 1
 def generate_float_1D_uniform_vector_np(a, b, n):
     Lambda = np.zeros(n)
 
@@ -549,6 +550,7 @@ def generate_float_1D_uniform_vector_np(a, b, n):
 
     return Lambda
 
+# Problem Type 5 generation in programming assignment 3, part 1
 def generate_float_normal_vector_np(a, b, n):
     Lambda = np.zeros(n)
 
