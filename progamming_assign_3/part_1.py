@@ -201,9 +201,11 @@ def conj_grad(A, b, x0, x_tilde, tol, max_iter):
 
     return x, iter_num, residual_list, err_list
 
-# Distinct Eigenvalues with Random Multiplicities function
+# (Problem Type 2 function) Distinct Eigenvalues with Random Multiplicities function
 def create_distinct_eigenvalues(n, k, lambda_min, lambda_max):
-    """Create k distinct eigenvalues with random multiplicities"""
+    """
+    Create k distinct eigenvalues with random multiplicities for problem type 2 in tester
+    """
     # Generate k distinct eigenvalues from lambda_min to lambda_max across uniform distribution
     eigenvals = np.random.uniform(lambda_min, lambda_max, k)
 
@@ -215,7 +217,7 @@ def create_distinct_eigenvalues(n, k, lambda_min, lambda_max):
 
     return diag, eigenvals, multiplicities
 
-# Distinct Clusters of Eigenvalues function
+# (Problem Type 3 Function) Distinct Clusters of Eigenvalues function
 def create_distinct_cluster(n, k, lambda_min, lambda_max, var_type):
     # Generate k distinct eigenvalues from lambda_min to lambda_max across uniform distribution
     eigenvals = np.random.uniform(lambda_min, lambda_max, k)
@@ -226,6 +228,7 @@ def create_distinct_cluster(n, k, lambda_min, lambda_max, var_type):
     # Create the diagonal list that is created from k distinct clusters and values taken from normal distribution
     diagonal = []
     for i in range(k):
+        # Tight Clustering
         if var_type == 1:
             clust_var = 0.01 * (lambda_max - lambda_min)
             # Generates the clusters of values for each k distinct eigenvalue and given multiplicity
@@ -234,6 +237,7 @@ def create_distinct_cluster(n, k, lambda_min, lambda_max, var_type):
             # Add all elements of cluster to diagonal at once (avoids for loop for appending)
             diagonal.extend(cluster)
 
+        # Moderate Clustering
         elif var_type == 2:
             clust_var = 0.1 * (lambda_max - lambda_min)
             # Generates the clusters of values for each k distinct eigenvalue and given multiplicity
@@ -242,6 +246,7 @@ def create_distinct_cluster(n, k, lambda_min, lambda_max, var_type):
             # Add all elements of cluster to diagonal at once (avoids for loop for appending)
             diagonal.extend(cluster)
 
+        # Large/Loose Clustering
         else:
             clust_var = 0.25 * (lambda_max - lambda_min)
             # Generates the clusters of values for each k distinct eigenvalue and given multiplicity
@@ -369,12 +374,14 @@ def part_1_driver():
 
     # Eigenvalues generated from a Uniform Distribution (specified lambda_min, lambda_max) for conditioning purposes
     elif problem_type == 4:
+        # Custom Function from functions_storage file
         Lambda = generate_float_1D_uniform_vector_np(lambda_min, lambda_max, n)     # Eigenvalue, diagonal matrix (created as a vector)
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
 
     # Eigenvalues generated from a Normal Distribution
     else: # problem_type == 5
+        # Custom Function from functions_storage file
         Lambda = generate_float_normal_vector_np(lambda_min, lambda_max, n)     # Eigenvalue, diagonal matrix (created as a vector)
         x_tilde = generate_float_1D_vector_np(dmin, dmax, n)    # Random Solution Vector
         b_tilde = Lambda * x_tilde   # Lambda * x_tilde
@@ -386,7 +393,7 @@ def part_1_driver():
         print(f"\nMatrix x_tilde is: {x_tilde}")
         print(f"\nMatrix b_tilde is: {b_tilde}")
 
-    # Bounds and Condition Number for Richardson's, SD, and CG
+    # Bounds and Condition Number for Richardson's, SD
     kappa = np.max(Lambda)/np.min(Lambda)
     bound_rich_steep = (kappa - 1)/(kappa + 1)
 
@@ -443,6 +450,8 @@ def part_1_driver():
 
         kap = np.max(Lambda)/np.min(Lambda)
         bound_conj = (np.sqrt(kap) - 1) / (np.sqrt(kap) + 1)
+
+        # Error Bound line for conjugate gradient descent for each iteration specified in the list under steps_conj
         alpha_bound = [2 * (bound_conj ** k) for k in steps_conj]
 
         # Richardson Error plot with log values of errors taken
