@@ -168,7 +168,7 @@ def G_error_matrix(A, k, flag):
     Returns:
         G: The matrix G relating to ||Ge_k||
     """
-    I = np.eye(k)
+    I = np.identity(k)
     D = np.diag(A)
     L = np.tril(A)
     U = np.triu(A)
@@ -188,7 +188,7 @@ def G_error_matrix(A, k, flag):
 
     else:
         B_1 = solve_triangular(L, A, lower=True)
-        B_2 = np.dot(D, B_1)
+        B_2 = np.dot(np.diag(D), B_1)
         B_3 = solve_triangular(U, B_2, lower=False)
         G = I - B_3
 
