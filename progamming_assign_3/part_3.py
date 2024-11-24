@@ -68,9 +68,21 @@ def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
 # Compressed sparse row function
 
 # Compressed Sparse Row Storage function for storing the lower triangular part of a sparse SPD matrix
-def compressed_sparse_row(A, n):
+def compressed_sparse_row_lower_tri(A):
+    """
+    This function takes a sparse matrix and stores the nonzero elements below the diagonal in a compressed format
+
+    Parameters:
+        A: Sparse Matrix
+
+    Returns:
+        aa: the nonzero elements of the given matrix below the diagonal (the lower triangular)
+        ja: the column indices of the nonzero elements
+        ia: the amount of nonzero elements in each row
+    """
     # Initializes the size of the compressed sparse row storage size by the nonzero elements determined by the nonzero elements function
     #size = nonzero_elements_counter(A)
+    n = len(A)
 
     # aa is initialized as a list that we will append with the nonzero elements
     aa = []
@@ -124,6 +136,30 @@ def compressed_sparse_mat_vec_prod(aa, ia, ja, x):
 
     return y
 
+# A lower triangular solve function for CSR
+def csr_lower_solve(aa, ia, ja, b, D):
+    # Initializes n as the length of b (could also do len(D))
+    n = len(b)
+
+    # Initialize the solution vector y
+    y = np.zeros(n)
+
+    # Set the first element of y as the division of b divided by the diagonal element D
+    y[0] = b[0] / D[0]
+
+    # Loops over values below the diagonal (skips the first element in aa)
+    for i in range(1, n):
+        # Start index for row i
+        k1 = ia[i]
+        # Ending index for row i
+        k2 = ia[i + 1]
+        # Computes the dot product of the "matrix" and vector
+        temp_sum = np.dot(aa[k1:k2], y[ja[k1:k2]])
+        # Sets the equivalent y[i] value
+        y[i] = (b[i] - temp_sum) / D[i]
+
+    return y
+
 # Test Case
 n = 6
 a = 5
@@ -136,7 +172,7 @@ print(f"Matrix A is: \n{A}")
 D = np.diag(A)
 print(f"Diagonal elements of A are: \n{D}")
 
-aa, ja, ia = compressed_sparse_row(A, n)
+aa, ja, ia = compressed_sparse_row_lower_tri(A)
 
 print(f"Compressed sparse row A is: \n{aa}")
 print(f"Column Indicies are: \n{ja}")
@@ -151,3 +187,15 @@ D_x = D * x
 print(f"Vector D_x is: \n{D_x}")
 y_final = y + D_x
 print(f"Vector y_final is: \n{y_final}")
+
+b_tilde = np.dot(A, x)
+print(f"Vector b_tilde is: \n{b_tilde}")
+
+x_tilde = csr_lower_solve(aa, ia, ja, b_tilde, D)
+print(f"Vector x_tilde is: \n{x_tilde}")
+
+D_L = np.tril(A)
+print(f"Lower triangular matrix D_L is: \n{D_L}")
+
+x_back = np.dot(D_L, x_tilde)
+print(f"Vector x_back is: \n{x_back}")
