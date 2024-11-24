@@ -49,33 +49,80 @@ def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
 
     return A
 
-def nonzero_elements_counter(A):
-    count = 0
-    for i in range(1, n):
-        for k in range(i):
-            if A[i, k] != 0:
-                count += 1
+# Counter function for how many nonzero elements are in a given matrix
+# def nonzero_elements_counter(A):
+#     # Initialize the count variable
+#     count = 0
+#
+#     # Loop over the rows of i below the diagonal
+#     for i in range(1, n):
+#         # Loop over the columns up to row i (this gives us all values below the diagonal)
+#         for k in range(i):
+#             # Checking to see if the value is nonzero
+#             if A[i, k] != 0:
+#                 # if the value is nonzero, add the counter by 1
+#                 count += 1
+#
+#     return count
 
-    return count
+# Compressed sparse row function
 
+# Compressed Sparse Row Storage function for storing the lower triangular part of a sparse SPD matrix
 def compressed_sparse_row(A, n):
-    size = nonzero_elements_counter(A)
-    aa = np.zeros(size)
-    ja = np.zeros(size)
-    ia = np.zeros(len(aa))
+    # Initializes the size of the compressed sparse row storage size by the nonzero elements determined by the nonzero elements function
+    #size = nonzero_elements_counter(A)
 
+    # aa is initialized as a list that we will append with the nonzero elements
+    aa = []
+
+    # ja is initialized that will hold the column indices for the nonzero elements
+    ja = []
+
+    # ia is initialized to hold the amount of nonzero elements in each row
+    ia = np.zeros(n+1, dtype=int)
+
+    # initialize the nonzero element counter
     nonzero_counter = 0
+
+    # Explicitly setting the initial index/starting point
     ia[0] = 0
 
+    # Looping over the rows of A
     for i in range(n):
+        # Loops over the columns of A up to the ith row (gets all elements below the diagonal)
         for k in range(i):
+            # Checks if element is nonzero of not
             if A[i, k] != 0:
-                aa[nonzero_counter] = A[i, k]
-                ja[nonzero_counter] = k
+                # If element is nonzero, append aa with that element, ja with the column index and add one to the nonzero counter
+                aa.append(A[i, k])
+                ja.append(k)
                 nonzero_counter += 1
+        # Update the next element in ia with the current amount in the nonzero counter after completing the for loop over the columns
         ia[i + 1] = nonzero_counter
 
+    # Converting aa and ja to numpy arrays
+    aa = np.array(aa)
+    ja = np.array(ja)
+
     return aa, ja, ia
+
+def compressed_sparse_mat_vec_prod(aa, ia, ja, x):
+    # Setting n as the length of the vector x
+    n = len(x)
+
+    # Initializing the resulting matrix-vector product
+    y = np.zeros(n)
+
+    # Looping over the rows
+    for i in range(n):
+        # Start index for row i (ia[i] is the row indices)
+        k1 = ia[i]
+        # Go to the ending index for row i (ia[i + 1] - ia[i] gives how many nonzero elements)
+        k2 = ia[i + 1]
+        # Compute the dot product from aa[ia[i] : ia[i+1]] and the corresponding column indices for x (x[ja[ia[i] : ia[i+1]]])
+        y[i] = np.dot(aa[k1:k2], x[ja[k1:k2]])
+
+    return y
 
 # Test Case
 n = 6
@@ -86,8 +133,21 @@ boost_factor = 2
 A = generate_spd_sparse_matrix(a, b, n, density, boost_factor)
 print(f"Matrix A is: \n{A}")
 
+D = np.diag(A)
+print(f"Diagonal elements of A are: \n{D}")
+
 aa, ja, ia = compressed_sparse_row(A, n)
 
 print(f"Compressed sparse row A is: \n{aa}")
 print(f"Column Indicies are: \n{ja}")
 print(f"Range of indices are: \n{ia}")
+
+x = np.ones(n)
+print(f"Vector x is: {x}")
+
+y = compressed_sparse_mat_vec_prod(aa, ia, ja, x)
+print(f"Vector y is: \n{y}")
+D_x = D * x
+print(f"Vector D_x is: \n{D_x}")
+y_final = y + D_x
+print(f"Vector y_final is: \n{y_final}")
