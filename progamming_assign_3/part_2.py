@@ -282,7 +282,7 @@ def get_user_inputs():
             smax = float(input("Enter maximum value (default=10.0): ") or "10.0")
 
             # Checking condition to make sure input is valid
-            if smin >= smax:
+            if smin > smax:
                 print("Error: Minimum value must be less than maximum value")
                 continue
 
@@ -366,22 +366,22 @@ def part_2_driver():
 
         # Jacobi Method
         if flag == 1:
-            print(f"\nUsing Jacobi Method with selected matrix: {selected_matrix}")
+            print(f"\nUsing Jacobi Method with selected matrix: \n{selected_matrix}")
             solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
         # Forward Gauss-Seidel Method
         elif flag == 2:
-            print("\nUsing Forward Gauss-Seidel Method with selected matrix:")
+            print(f"\nUsing Forward Gauss-Seidel Method with selected matrix: \n{selected_matrix}")
             solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
         # Backward Gauss-Seidel Method
         elif flag == 3:
-            print("\nUsing Backward Gauss-Seidel Method with selected matrix:")
+            print(f"\nUsing Backward Gauss-Seidel Method with selected matrix: \n{selected_matrix}")
             solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
         # Symmetric Gauss-Seidel Method
         else: # flag == 4
-            print("\nUsing Symmetric Gauss-Seidel Method with selected matrix:")
+            print(f"\nUsing Symmetric Gauss-Seidel Method with selected matrix: \n{selected_matrix}")
             solution, iteration, relative_error = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, flag)
 
         # Appending lists that are the output of the methods
