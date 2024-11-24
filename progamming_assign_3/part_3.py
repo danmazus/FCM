@@ -118,7 +118,7 @@ def compressed_sparse_row_lower_tri(A):
 
     return aa, ja, ia
 
-def compressed_sparse_mat_vec_prod(aa, ia, ja, x):
+def compressed_sparse_symmetric_mat_vec_prod(aa, ia, ja, x, D):
     # Setting n as the length of the vector x
     n = len(x)
 
@@ -127,12 +127,27 @@ def compressed_sparse_mat_vec_prod(aa, ia, ja, x):
 
     # Looping over the rows
     for i in range(n):
+        y[i] += D[i] * x[i]
+
         # Start index for row i (ia[i] is the row indices)
         k1 = ia[i]
+
         # Go to the ending index for row i (ia[i + 1] - ia[i] gives how many nonzero elements)
         k2 = ia[i + 1]
-        # Compute the dot product from aa[ia[i] : ia[i+1]] and the corresponding column indices for x (x[ja[ia[i] : ia[i+1]]])
-        y[i] = np.dot(aa[k1:k2], x[ja[k1:k2]])
+
+        for k in range(k1, k2):
+            # Column index for the current element
+            col_index = ja[k]
+
+            # Value of the current column index element
+            value = aa[k]
+
+            # Update y with the lower triangular part
+            y[i] += value * x[col_index]
+
+            # Update y with the symmetric upper triangular part (column index refers to k element in A[i, k]
+            y[col_index] += value * x[i]
+
 
     return y
 
@@ -160,6 +175,22 @@ def csr_lower_solve(aa, ia, ja, b, D):
 
     return y
 
+def csr_upper_solve(aa, ia, ja, y, D):
+    n = len(y)
+
+    x = np.zeros(n)
+
+    for i in range(n-1, -1, -1):
+        if i == n-1:
+            x[i] = y[i] / D[i]
+        else:
+            k1 = ia[i]
+            k2 = ia[i+1]
+            temp_sum = np.dot(aa[k1:k2], x[ja[k1:k2]])
+            x[i] = (y[i] - temp_sum) / D[i]
+
+    return x
+
 # Test Case
 n = 6
 a = 5
@@ -179,23 +210,9 @@ print(f"Column Indicies are: \n{ja}")
 print(f"Range of indices are: \n{ia}")
 
 x = np.ones(n)
-print(f"Vector x is: {x}")
 
-y = compressed_sparse_mat_vec_prod(aa, ia, ja, x)
-print(f"Vector y is: \n{y}")
-D_x = D * x
-print(f"Vector D_x is: \n{D_x}")
-y_final = y + D_x
-print(f"Vector y_final is: \n{y_final}")
 
-b_tilde = np.dot(A, x)
-print(f"Vector b_tilde is: \n{b_tilde}")
 
-x_tilde = csr_lower_solve(aa, ia, ja, b_tilde, D)
-print(f"Vector x_tilde is: \n{x_tilde}")
 
-D_L = np.tril(A)
-print(f"Lower triangular matrix D_L is: \n{D_L}")
 
-x_back = np.dot(D_L, x_tilde)
-print(f"Vector x_back is: \n{x_back}")
+
