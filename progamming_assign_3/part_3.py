@@ -1,5 +1,7 @@
 import numpy as np
 import scipy.linalg as sp
+from scipy.sparse.linalg import spsolve_triangular
+
 from my_package import *
 
 def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
@@ -67,7 +69,7 @@ def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
 
 # Compressed sparse row function
 
-# Compressed Sparse Row Storage function for storing the lower triangular part of a sparse SPD matrix
+"""Compressed Sparse Row Storage function for storing the lower triangular part of a sparse SPD matrix"""
 def compressed_sparse_row_lower_tri(A):
     """
     This function takes a sparse matrix and stores the nonzero elements below the diagonal in a compressed format
@@ -97,10 +99,10 @@ def compressed_sparse_row_lower_tri(A):
     nonzero_counter = 0
 
     # Explicitly setting the initial index/starting point
-    ia[0] = 0
+    #ia[0] = 0
 
     # Looping over the rows of A
-    for i in range(n):
+    for i in range(1, n):
         # Loops over the columns of A up to the ith row (gets all elements below the diagonal)
         for k in range(i):
             # Checks if element is nonzero of not
@@ -123,11 +125,11 @@ def compressed_sparse_symmetric_mat_vec_prod(aa, ia, ja, x, D):
     n = len(x)
 
     # Initializing the resulting matrix-vector product
-    y = np.zeros(n)
+    b = np.zeros(n)
 
     # Looping over the rows
     for i in range(n):
-        y[i] += D[i] * x[i]
+        b[i] += D[i] * x[i]
 
         # Start index for row i (ia[i] is the row indices)
         k1 = ia[i]
@@ -143,13 +145,13 @@ def compressed_sparse_symmetric_mat_vec_prod(aa, ia, ja, x, D):
             value = aa[k]
 
             # Update y with the lower triangular part
-            y[i] += value * x[col_index]
+            b[i] += value * x[col_index]
 
             # Update y with the symmetric upper triangular part (column index refers to k element in A[i, k]
-            y[col_index] += value * x[i]
+            b[col_index] += value * x[i]
 
 
-    return y
+    return b
 
 # A lower triangular solve function for CSR
 def csr_lower_solve(aa, ia, ja, b, D):
@@ -175,41 +177,102 @@ def csr_lower_solve(aa, ia, ja, b, D):
 
     return y
 
-def csr_upper_solve(aa, ia, ja, y, D):
-    n = len(y)
 
+def csr_upper_solve(aa, ia, ja, y, D):
+    """
+    Solve Ux = y where U is upper triangular and stored as transpose of lower triangular CSR format
+    """
+    n = len(y)
     x = np.zeros(n)
 
-    for i in range(n-1, -1, -1):
-        if i == n-1:
-            x[i] = y[i] / D[i]
-        else:
-            k1 = ia[i]
-            k2 = ia[i+1]
-            temp_sum = np.dot(aa[k1:k2], x[ja[k1:k2]])
-            x[i] = (y[i] - temp_sum) / D[i]
+    # Process from bottom to top
+    for j in range(n - 1, -1, -1):
+        sum_val = y[j]
+
+        start = ia[j]
+        end = ia[j+1]
+
+        for index in range(start, end):
+            i = ja[index]
+            if i < j:
+                sum_val -= aa[index] * x[i]
+
+        x[j] = sum_val / D[j]
 
     return x
 
-# Test Case
-n = 6
+
+# Test Case 1: Generate SPD Matrix and Check its Structure
+n = 5
 a = 5
-b = 10
+c = 10
 density = 0.7
 boost_factor = 2
-A = generate_spd_sparse_matrix(a, b, n, density, boost_factor)
-print(f"Matrix A is: \n{A}")
 
+# Generate a sparse positive definite matrix
+A = generate_spd_sparse_matrix(a, c, n, density, boost_factor)
+print("Generated Sparse Positive Definite Matrix A:")
+print(A)
+
+# Extract and print the diagonal elements of A
 D = np.diag(A)
-print(f"Diagonal elements of A are: \n{D}")
+print("\nDiagonal elements of A:")
+print(D)
 
+# Check compressed sparse row format of lower triangular part of A
 aa, ja, ia = compressed_sparse_row_lower_tri(A)
+print("\nCompressed Sparse Row (CSR) of Lower Triangular A:")
+print("Values (aa):", aa)
+print("Column indices (ja):", ja)
+print("Row pointers (ia):", ia)
 
-print(f"Compressed sparse row A is: \n{aa}")
-print(f"Column Indicies are: \n{ja}")
-print(f"Range of indices are: \n{ia}")
+# Test Case 2: Matrix-Vector Multiplication (Compressed Sparse Row vs Dense)
+x = np.ones(n)  # Test vector
 
-x = np.ones(n)
+# Matrix-vector product using compressed sparse row format
+b_true = compressed_sparse_symmetric_mat_vec_prod(aa, ia, ja, x, D)
+print("\nMatrix-vector product (Compressed Sparse Row) b_true:")
+print(b_true)
+
+# Matrix-vector product using dense matrix for comparison
+b_tilde = np.dot(A, x)
+print("\nMatrix-vector product (Dense Matrix) b_tilde:")
+print(b_tilde)
+
+# Check the difference between the two results
+print("\nNorm of the difference between b_true and b_tilde:")
+print(np.linalg.norm(b_true - b_tilde))
+
+# Test Case 3: Lower Triangular Solve (Compressed Sparse Row vs Dense)
+y_comp = csr_lower_solve(aa, ia, ja, b_true, D)
+print("\nSolution of Lower Triangular System (Compressed Sparse Row) y_comp:")
+print(y_comp)
+
+L_dense = np.tril(A)  # Dense lower triangular matrix
+y_dense = np.linalg.solve(L_dense, b_tilde)
+print("\nSolution of Lower Triangular System (Dense Matrix) y_dense:")
+print(y_dense)
+
+# Check the difference between the two solutions
+print("\nNorm of the difference between y_comp and y_dense:")
+print(np.linalg.norm(y_comp - y_dense))
+
+# Test Case 4: Upper Triangular Solve (Compressed Sparse Row vs Dense)
+x_tilde = csr_upper_solve(aa, ia, ja, y_comp, D)
+print("\nSolution of Upper Triangular System (Compressed Sparse Row) x_tilde:")
+print(x_tilde)
+
+U_dense = np.triu(A)  # Dense upper triangular matrix
+x_dense = np.linalg.solve(U_dense, y_dense)
+print("\nSolution of Upper Triangular System (Dense Matrix) x_dense:")
+print(x_dense)
+
+# Check the difference between the two solutions
+print("\nDifference between x_tilde and x_dense:")
+print(np.abs(x_tilde - x_dense))
+
+print("\nDifference norm between x_tilde and x_dense")
+print(np.linalg.norm(x_tilde - x_dense))
 
 
 
