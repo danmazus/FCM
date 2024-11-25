@@ -333,7 +333,7 @@ def get_user_inputs():
             print("Error: Please enter valid numbers")
 
 # Driver function for the methods
-def part_2_driver(selected_matrix, smin, smax, g, tol, max_iter, debug, flag):
+def part_2_driver_one(selected_matrix, smin, smax, g, tol, max_iter, debug, flag):
     # Getting user inputs
     #inputs = get_user_inputs()
 
@@ -430,7 +430,7 @@ def part_2_driver(selected_matrix, smin, smax, g, tol, max_iter, debug, flag):
     return solution_list, iteration_list, relative_error_list
 
 # Driver function for the methods
-def part_2_driver_fixed(selected_matrix, smin, smax, g, tol, max_iter, debug):
+def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug):
     # Getting user inputs
     #inputs = get_user_inputs()
 
@@ -636,11 +636,11 @@ if __name__ == "__main__":
         if not ini:
             (solution_list_jac, solution_list_fgs, solution_list_bgs, solution_list_sgs,
              iteration_list_jac, iteration_list_fgs,
-             iteration_list_bgs, iteration_list_sgs) = part_2_driver_fixed(selected_matrix,
+             iteration_list_bgs, iteration_list_sgs) = part_2_driver_multiple(selected_matrix,
                                                                            smin, smax, g, tol,
                                                                            max_iter, debug)
         else:
-            solution, iteration, relative_error_list = part_2_driver(selected_matrix, smin, smax,
+            solution, iteration, relative_error_list = part_2_driver_one(selected_matrix, smin, smax,
                                                                      g, tol, max_iter, debug, flag)
 
         user_input = input("\nRun another problem? (y/n) [default=n]: ").strip().lower()
