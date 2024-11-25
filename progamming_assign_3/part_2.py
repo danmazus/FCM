@@ -97,18 +97,19 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
         pre_cond = U
 
         while iter_num < max_iter:
+            # Solve Upper Triangular for P^(-1) * r_k
+            z = solve_Ux_np(pre_cond, r)
+
+            # Compute next x
+            x_next = x + z
+
+            # Computing the relative error and appending
             rel_err = (np.linalg.norm(x - x_true)) / (np.linalg.norm(x_true))
             rel_err_list.append(rel_err)
 
             # Checking if Relative Error is below Tolerance Level, if so return
             if rel_err < tol:
                 return x, iter_num + 1, rel_err_list
-
-            # Solve Upper Triangular for P^(-1) * r_k
-            z = solve_Ux_np(pre_cond, r)
-
-            # Compute next x
-            x_next = x + z
 
             # Compute next residual
             r_next = b - np.dot(A, x_next)
@@ -121,7 +122,7 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
         return x, iter_num, rel_err_list
 
     # Symmetric Gauss-Seidel
-    else: # STILL WORKING ON THIS FUNCTION DO NOT USE
+    else:
         '''Symmetric Gauss-Seidel'''
         rel_err_list = []
         true_err_norm = np.linalg.norm(x_true)
