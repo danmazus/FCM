@@ -64,7 +64,7 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
         '''Gauss-Seidel (Forward)'''
         rel_err_list = []
         iter_num = 0
-        pre_cond = L
+        pre_cond = L    # (D - L)
         true_err_norm = np.linalg.norm(x_true)
 
 
@@ -93,7 +93,7 @@ def stationary_method(A, b, x0, x_tilde, tol, max_iter, flag):
     elif flag == 3:
         rel_err_list = []
         iter_num = 0
-        pre_cond = np.diag(D) - U
+        pre_cond = U
 
         while iter_num < max_iter:
             rel_err = (np.linalg.norm(x - x_true)) / (np.linalg.norm(x_true))
