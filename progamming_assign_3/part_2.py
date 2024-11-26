@@ -292,6 +292,9 @@ def get_user_inputs():
             print("\nChoose How Many Solution Vectors:")
             g = int(input("Enter number of Solution Vectors (default=10): ") or "10")
 
+            print("\nChoose How Many Initial Guess Vectors for each Solution Vector:")
+            num_x0 = int(input("Enter number of Initial Guess Vectors (default=10): ") or "10")
+
             # # Random value range for the initial guess vectors
             # print("\nSet range of values for Initial Guess Vectors:")
             # ig_value_min = float(input("Enter minimum value (default=0.0): ") or "0.0")
@@ -313,7 +316,7 @@ def get_user_inputs():
             if not ini:
                 # Set default values for these variables
                 flag = 1  # Default method, for example Jacobi
-                return selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag, selected_matrix_key
+                return selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key
 
             # Selecting which method to run for the selected matrix
             print("\nChoose which method to run:")
@@ -328,7 +331,7 @@ def get_user_inputs():
                 print("Error: Invalid method")
                 continue
 
-            return selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag, selected_matrix_key
+            return selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -431,7 +434,7 @@ def part_2_driver_one(selected_matrix, smin, smax, g, tol, max_iter, debug, flag
     return solution_list, iteration_list, relative_error_list
 
 # Driver function for the methods
-def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug, selected_matrix_key):
+def part_2_driver_multiple(selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, selected_matrix_key):
     # Getting user inputs
     #inputs = get_user_inputs()
 
@@ -443,7 +446,6 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug,
     # Setting Initial Conditions
     rows, cols = selected_matrix.shape
     k = rows
-    x0 = np.zeros(k)
 
     if debug:
         print(f"Matrix Selected is: \n{selected_matrix}")
@@ -478,52 +480,55 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug,
     spectral_radius_list_sgs = []
     G_matrix_norms_list_sgs = []
 
+    print(f"\nUsing each method with the selected matrix: \n{selected_matrix}")
     # For loop running over multiple solution vectors for same matrix and initial guess vector
     for i in range(g):
-
         # Setting a new x_tilde (solution vector) time to test over multiple solution vectors for same matrix and same initial guess vector
         x_tilde = generate_float_1D_vector_np(smin, smax, k)
         b = np.dot(selected_matrix, x_tilde)
 
-        # Debug print statements for initial guess, true solution, and b vectors
-        if debug:
-            print(f"Initial Guess Vector x0 = {x0}")
-            print(f"True Solution Vector x_tilde = {x_tilde}")
-            print(f"Ax = b is: {b}")
+        for j in range(num_x0):
+            # Generate Random Initial Guess Vectors
+            x0 = generate_float_1D_vector_np(smin, smax, k)
 
-        print(f"\nUsing each method with the selected matrix: \n{selected_matrix}")
-        # Jacobi Method
-        solution_jac, iteration_jac, relative_error_jac = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 1)
+            # Debug print statements for initial guess, true solution, and b vectors
+            if debug:
+                print(f"Initial Guess Vector x0 = {x0}")
+                print(f"True Solution Vector x_tilde = {x_tilde}")
+                print(f"Ax = b is: {b}")
 
-        # Forward Gauss-Seidel Method
-        solution_fgs, iteration_fgs, relative_error_fgs = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 2)
+            # Jacobi Method
+            solution_jac, iteration_jac, relative_error_jac = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 1)
 
-        # Backward Gauss-Seidel Method
-        solution_bgs, iteration_bgs, relative_error_bgs = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 3)
+            # Forward Gauss-Seidel Method
+            solution_fgs, iteration_fgs, relative_error_fgs = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 2)
 
-        # Symmetric Gauss-Seidel Method
-        solution_sgs, iteration_sgs, relative_error_sgs = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 4)
+            # Backward Gauss-Seidel Method
+            solution_bgs, iteration_bgs, relative_error_bgs = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 3)
 
-        # Appending lists that are the output of the methods
-        # Lists for outputs for Jacobi
-        solution_list_jac.append(solution_jac)
-        iteration_list_jac.append(iteration_jac)
-        relative_error_list_jac.append(relative_error_jac)
+            # Symmetric Gauss-Seidel Method
+            solution_sgs, iteration_sgs, relative_error_sgs = stationary_method(selected_matrix, b, x0, x_tilde, tol, max_iter, 4)
 
-        # Lists for outputs for FGS
-        solution_list_fgs.append(solution_fgs)
-        iteration_list_fgs.append(iteration_fgs)
-        relative_error_list_fgs.append(relative_error_fgs)
+            # Appending lists that are the output of the methods
+            # Lists for outputs for Jacobi
+            solution_list_jac.append(solution_jac)
+            iteration_list_jac.append(iteration_jac)
+            relative_error_list_jac.append(relative_error_jac)
 
-        # Lists for outputs for BGS
-        solution_list_bgs.append(solution_bgs)
-        iteration_list_bgs.append(iteration_bgs)
-        relative_error_list_bgs.append(relative_error_bgs)
+            # Lists for outputs for FGS
+            solution_list_fgs.append(solution_fgs)
+            iteration_list_fgs.append(iteration_fgs)
+            relative_error_list_fgs.append(relative_error_fgs)
 
-        # Lists for outputs for SGS
-        solution_list_sgs.append(solution_sgs)
-        iteration_list_sgs.append(iteration_sgs)
-        relative_error_list_sgs.append(relative_error_sgs)
+            # Lists for outputs for BGS
+            solution_list_bgs.append(solution_bgs)
+            iteration_list_bgs.append(iteration_bgs)
+            relative_error_list_bgs.append(relative_error_bgs)
+
+            # Lists for outputs for SGS
+            solution_list_sgs.append(solution_sgs)
+            iteration_list_sgs.append(iteration_sgs)
+            relative_error_list_sgs.append(relative_error_sgs)
 
         # Computing the matrix G from ||Ge_k|| for the method selected and appending the list for each initial guess
         G_matrix_jac = G_error_matrix(selected_matrix, k, 1)
@@ -560,6 +565,14 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug,
         #     print(f"G Error Matrix: \n{G_matrix}")
         #     print(f"Spectral Radius of G is: {spectral_radius}")
 
+    reshape_iteration_list_result = {
+        "Jacobi": np.array(iteration_list_jac).reshape(g, num_x0),
+        "FGS": np.array(iteration_list_fgs).reshape(g, num_x0),
+        "BGS": np.array(iteration_list_bgs).reshape(g, num_x0),
+        "SGS": np.array(iteration_list_sgs).reshape(g, num_x0),
+    }
+
+
     print(f"Iterations Jacobi: {iteration_list_jac}")
     print(f"Iterations FGS: {iteration_list_fgs}")
     print(f"Iterations BGS: {iteration_list_bgs}")
@@ -573,57 +586,98 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug,
     print(f"Spectral Radii BGS: {spectral_radius_list_bgs}")
     print(f"Spectral Radii SGS: {spectral_radius_list_sgs}")
 
-    # Create Subplots
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
+    # Sets x-axis labels for number of initial guess vectors
+    x_labels = [f"x0_{i}" for i in range(1, num_x0 + 1)]
 
-    # 1. Plot for Iterations to Converge (Top-left)
-    ax1.plot(iteration_list_jac, label="Jacobi", marker='o')
-    ax1.plot(iteration_list_fgs, label="Forward Gauss-Seidel", marker='x')
-    ax1.plot(iteration_list_bgs, label="Backward Gauss-Seidel", marker='^')
-    ax1.plot(iteration_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
-    ax1.set_xlabel("Test Run")
-    ax1.set_ylabel("Iterations to Converge")
-    ax1.set_title("Iterations to Converge for Each Method")
-    ax1.legend()
-    ax1.grid(True)
+    # Randomly Choosing 3 Solution Vectors from however many were tested defined by the user, "g"
+    random_indices = np.random.choice(g, 3, replace=False)
 
-    # # 2. Plot for Relative Error (Top-right)
-    # axes[0, 1].plot(relative_error_list_jac, label="Jacobi", marker='o')
-    # axes[0, 1].plot(relative_error_list_fgs, label="Forward Gauss-Seidel", marker='x')
-    # axes[0, 1].plot(relative_error_list_bgs, label="Backward Gauss-Seidel", marker='^')
-    # axes[0, 1].plot(relative_error_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
-    # axes[0, 1].set_xlabel("Test Run")
-    # axes[0, 1].set_ylabel("Relative Error")
-    # axes[0, 1].set_title("Relative Error for Each Method")
-    # axes[0, 1].legend()
-    # axes[0, 1].grid(True)
+    # Creating the 3 subplots that are horizontal instead of stacked
+    fig, axes = plt.subplots(1, 3, figsize=(18,6))
 
-    # 3. Plot for G Matrix Norms (Bottom-left)
-    ax2.plot(G_matrix_norms_list_jac, label="Jacobi", marker='o')
-    ax2.plot(G_matrix_norms_list_fgs, label="Forward Gauss-Seidel", marker='x')
-    ax2.plot(G_matrix_norms_list_bgs, label="Backward Gauss-Seidel", marker='^')
-    ax2.plot(G_matrix_norms_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
-    ax2.set_xlabel("Test Run")
-    ax2.set_ylabel("2-Norm of G Matrix")
-    ax2.set_title("2-Norm of G Matrix for Each Method")
-    ax2.legend()
-    ax2.grid(True)
+    # Checks the case if the axes is not iterable
+    if g == 1:
+        axes = [axes]
 
-    # 4. Plot for Spectral Radius of G (Bottom-right)
-    ax3.plot(spectral_radius_list_jac, label="Jacobi", marker='o')
-    ax3.plot(spectral_radius_list_fgs, label="Forward Gauss-Seidel", marker='x')
-    ax3.plot(spectral_radius_list_bgs, label="Backward Gauss-Seidel", marker='^')
-    ax3.plot(spectral_radius_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
-    ax3.set_xlabel("Test Run")
-    ax3.set_ylabel("Spectral Radius of G")
-    ax3.set_title("Spectral Radius of G for Each Method")
-    ax3.legend()
-    ax3.grid(True)
+    # Loops through each randomly selected solution vector from above
+    for i, ax in enumerate(axes):
+        # Gets the index from random_indices for the solution vector
+        index = random_indices[i]
 
-    # Adjust layout to avoid overlap
-    plt.suptitle(f"Plots for {selected_matrix_key} with {g} solution vectors ", fontsize=16)
+        # Plot Each Method's Result on the same graph for the given solution vector
+        for method, iteration_lists in reshape_iteration_list_result.items():
+            ax.plot(x_labels, iteration_lists[index], label=method)
+
+        # Changing the x-axis ticks to be every 3
+        ax.set_xticks(x_labels[::3])
+
+        # Changes the x-axis labels to be every 3 and rotates them for readability
+        ax.set_xticklabels(x_labels[::3], rotation=45)
+
+        # Sets the labels, grid, and titles of the subplots
+        ax.set_xlabel("Initial Guess Vectors")
+        ax.set_ylabel("Iterations")
+        ax.set_title(f"Iterations for x_tilde {index+1}")
+        ax.grid(True)
+        ax.legend(loc="best")
+
+    # Shows the plot and gives the overall title of the plot
+    plt.suptitle("Convergence for Each Method with Given Solution Vectors and Initial Guess Vectors")
     plt.tight_layout()
     plt.show()
+
+
+    # # Create Subplots
+    # fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
+    #
+    # # 1. Plot for Iterations to Converge (Top-left)
+    # ax1.plot(iteration_list_jac, label="Jacobi", marker='o')
+    # ax1.plot(iteration_list_fgs, label="Forward Gauss-Seidel", marker='x')
+    # ax1.plot(iteration_list_bgs, label="Backward Gauss-Seidel", marker='^')
+    # ax1.plot(iteration_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
+    # ax1.set_xlabel("Test Run")
+    # ax1.set_ylabel("Iterations to Converge")
+    # ax1.set_title("Iterations to Converge for Each Method")
+    # ax1.legend()
+    # ax1.grid(True)
+    #
+    # # # 2. Plot for Relative Error (Top-right)
+    # # axes[0, 1].plot(relative_error_list_jac, label="Jacobi", marker='o')
+    # # axes[0, 1].plot(relative_error_list_fgs, label="Forward Gauss-Seidel", marker='x')
+    # # axes[0, 1].plot(relative_error_list_bgs, label="Backward Gauss-Seidel", marker='^')
+    # # axes[0, 1].plot(relative_error_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
+    # # axes[0, 1].set_xlabel("Test Run")
+    # # axes[0, 1].set_ylabel("Relative Error")
+    # # axes[0, 1].set_title("Relative Error for Each Method")
+    # # axes[0, 1].legend()
+    # # axes[0, 1].grid(True)
+    #
+    # # 3. Plot for G Matrix Norms (Bottom-left)
+    # ax2.plot(G_matrix_norms_list_jac, label="Jacobi", marker='o')
+    # ax2.plot(G_matrix_norms_list_fgs, label="Forward Gauss-Seidel", marker='x')
+    # ax2.plot(G_matrix_norms_list_bgs, label="Backward Gauss-Seidel", marker='^')
+    # ax2.plot(G_matrix_norms_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
+    # ax2.set_xlabel("Test Run")
+    # ax2.set_ylabel("2-Norm of G Matrix")
+    # ax2.set_title("2-Norm of G Matrix for Each Method")
+    # ax2.legend()
+    # ax2.grid(True)
+    #
+    # # 4. Plot for Spectral Radius of G (Bottom-right)
+    # ax3.plot(spectral_radius_list_jac, label="Jacobi", marker='o')
+    # ax3.plot(spectral_radius_list_fgs, label="Forward Gauss-Seidel", marker='x')
+    # ax3.plot(spectral_radius_list_bgs, label="Backward Gauss-Seidel", marker='^')
+    # ax3.plot(spectral_radius_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
+    # ax3.set_xlabel("Test Run")
+    # ax3.set_ylabel("Spectral Radius of G")
+    # ax3.set_title("Spectral Radius of G for Each Method")
+    # ax3.legend()
+    # ax3.grid(True)
+    #
+    # # Adjust layout to avoid overlap
+    # plt.suptitle(f"Plots for {selected_matrix_key} with {g} solution vectors ", fontsize=16)
+    # plt.tight_layout()
+    # plt.show()
 
 
     return (solution_list_jac, solution_list_fgs, solution_list_bgs, solution_list_sgs,
@@ -633,13 +687,13 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug,
 if __name__ == "__main__":
     while True:
         inputs = get_user_inputs()
-        selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag, selected_matrix_key = inputs
+        selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key = inputs
 
         if not ini:
             (solution_list_jac, solution_list_fgs, solution_list_bgs, solution_list_sgs,
              iteration_list_jac, iteration_list_fgs,
              iteration_list_bgs, iteration_list_sgs) = part_2_driver_multiple(selected_matrix,
-                                                                           smin, smax, g, tol,
+                                                                           smin, smax, g, num_x0, tol,
                                                                            max_iter, debug, selected_matrix_key)
         else:
             solution, iteration, relative_error_list = part_2_driver_one(selected_matrix, smin, smax,
