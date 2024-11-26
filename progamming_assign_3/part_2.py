@@ -313,7 +313,7 @@ def get_user_inputs():
             if not ini:
                 # Set default values for these variables
                 flag = 1  # Default method, for example Jacobi
-                return selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag
+                return selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag, selected_matrix_key
 
             # Selecting which method to run for the selected matrix
             print("\nChoose which method to run:")
@@ -328,7 +328,7 @@ def get_user_inputs():
                 print("Error: Invalid method")
                 continue
 
-            return selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag
+            return selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag, selected_matrix_key
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -431,7 +431,7 @@ def part_2_driver_one(selected_matrix, smin, smax, g, tol, max_iter, debug, flag
     return solution_list, iteration_list, relative_error_list
 
 # Driver function for the methods
-def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug):
+def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug, selected_matrix_key):
     # Getting user inputs
     #inputs = get_user_inputs()
 
@@ -574,18 +574,18 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug)
     print(f"Spectral Radii SGS: {spectral_radius_list_sgs}")
 
     # Create Subplots
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
 
     # 1. Plot for Iterations to Converge (Top-left)
-    axes[0].plot(iteration_list_jac, label="Jacobi", marker='o')
-    axes[0].plot(iteration_list_fgs, label="Forward Gauss-Seidel", marker='x')
-    axes[0].plot(iteration_list_bgs, label="Backward Gauss-Seidel", marker='^')
-    axes[0].plot(iteration_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
-    axes[0].set_xlabel("Test Run")
-    axes[0].set_ylabel("Iterations to Converge")
-    axes[0].set_title("Iterations to Converge for Each Method")
-    axes[0].legend()
-    axes[0].grid(True)
+    ax1.plot(iteration_list_jac, label="Jacobi", marker='o')
+    ax1.plot(iteration_list_fgs, label="Forward Gauss-Seidel", marker='x')
+    ax1.plot(iteration_list_bgs, label="Backward Gauss-Seidel", marker='^')
+    ax1.plot(iteration_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
+    ax1.set_xlabel("Test Run")
+    ax1.set_ylabel("Iterations to Converge")
+    ax1.set_title("Iterations to Converge for Each Method")
+    ax1.legend()
+    ax1.grid(True)
 
     # # 2. Plot for Relative Error (Top-right)
     # axes[0, 1].plot(relative_error_list_jac, label="Jacobi", marker='o')
@@ -599,28 +599,29 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug)
     # axes[0, 1].grid(True)
 
     # 3. Plot for G Matrix Norms (Bottom-left)
-    axes[1].plot(G_matrix_norms_list_jac, label="Jacobi", marker='o')
-    axes[1].plot(G_matrix_norms_list_fgs, label="Forward Gauss-Seidel", marker='x')
-    axes[1].plot(G_matrix_norms_list_bgs, label="Backward Gauss-Seidel", marker='^')
-    axes[1].plot(G_matrix_norms_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
-    axes[1].set_xlabel("Test Run")
-    axes[1].set_ylabel("2-Norm of G Matrix")
-    axes[1].set_title("2-Norm of G Matrix for Each Method")
-    axes[1].legend()
-    axes[1].grid(True)
+    ax2.plot(G_matrix_norms_list_jac, label="Jacobi", marker='o')
+    ax2.plot(G_matrix_norms_list_fgs, label="Forward Gauss-Seidel", marker='x')
+    ax2.plot(G_matrix_norms_list_bgs, label="Backward Gauss-Seidel", marker='^')
+    ax2.plot(G_matrix_norms_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
+    ax2.set_xlabel("Test Run")
+    ax2.set_ylabel("2-Norm of G Matrix")
+    ax2.set_title("2-Norm of G Matrix for Each Method")
+    ax2.legend()
+    ax2.grid(True)
 
     # 4. Plot for Spectral Radius of G (Bottom-right)
-    axes[2].plot(spectral_radius_list_jac, label="Jacobi", marker='o')
-    axes[2].plot(spectral_radius_list_fgs, label="Forward Gauss-Seidel", marker='x')
-    axes[2].plot(spectral_radius_list_bgs, label="Backward Gauss-Seidel", marker='^')
-    axes[2].plot(spectral_radius_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
-    axes[2].set_xlabel("Test Run")
-    axes[2].set_ylabel("Spectral Radius of G")
-    axes[2].set_title("Spectral Radius of G for Each Method")
-    axes[2].legend()
-    axes[2].grid(True)
+    ax3.plot(spectral_radius_list_jac, label="Jacobi", marker='o')
+    ax3.plot(spectral_radius_list_fgs, label="Forward Gauss-Seidel", marker='x')
+    ax3.plot(spectral_radius_list_bgs, label="Backward Gauss-Seidel", marker='^')
+    ax3.plot(spectral_radius_list_sgs, label="Symmetric Gauss-Seidel", marker='s')
+    ax3.set_xlabel("Test Run")
+    ax3.set_ylabel("Spectral Radius of G")
+    ax3.set_title("Spectral Radius of G for Each Method")
+    ax3.legend()
+    ax3.grid(True)
 
     # Adjust layout to avoid overlap
+    plt.suptitle(f"Plots for {selected_matrix_key} with {g} solution vectors ", fontsize=16)
     plt.tight_layout()
     plt.show()
 
@@ -632,14 +633,14 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, tol, max_iter, debug)
 if __name__ == "__main__":
     while True:
         inputs = get_user_inputs()
-        selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag = inputs
+        selected_matrix, smin, smax, g, tol, max_iter, debug, ini, flag, selected_matrix_key = inputs
 
         if not ini:
             (solution_list_jac, solution_list_fgs, solution_list_bgs, solution_list_sgs,
              iteration_list_jac, iteration_list_fgs,
              iteration_list_bgs, iteration_list_sgs) = part_2_driver_multiple(selected_matrix,
                                                                            smin, smax, g, tol,
-                                                                           max_iter, debug)
+                                                                           max_iter, debug, selected_matrix_key)
         else:
             solution, iteration, relative_error_list = part_2_driver_one(selected_matrix, smin, smax,
                                                                      g, tol, max_iter, debug, flag)
