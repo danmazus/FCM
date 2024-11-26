@@ -319,7 +319,7 @@ def get_user_inputs():
             if not ini:
                 # Set default values for these variables
                 flag = 1  # Default method, for example Jacobi
-                return selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag
+                return selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key
 
             # Selecting which method to run for the selected matrix
             print("\nChoose which method to run:")
@@ -334,7 +334,7 @@ def get_user_inputs():
                 print("Error: Invalid method")
                 continue
 
-            return selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag
+            return selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -437,7 +437,7 @@ def part_2_driver_one(selected_matrix, smin, smax, g, tol, max_iter, debug, flag
     return solution_list, iteration_list, relative_error_list
 
 # Driver function for the methods
-def part_2_driver_multiple(selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug):
+def part_2_driver_multiple(selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, selected_matrix_key):
     # Getting user inputs
     #inputs = get_user_inputs()
 
@@ -625,7 +625,7 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, dmin, dmax, num_x0, t
         ax.legend(loc="best")
 
     # Shows the plot and gives the overall title of the plot
-    plt.suptitle("Convergence for Each Method with Given Solution Vectors and Initial Guess Vectors")
+    plt.suptitle(f"Convergence for Each Method for Matrix {selected_matrix_key} with Given Solution Vectors and Initial Guess Vectors")
     plt.tight_layout()
     plt.show()
 
@@ -690,14 +690,14 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, dmin, dmax, num_x0, t
 if __name__ == "__main__":
     while True:
         inputs = get_user_inputs()
-        selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag = inputs
+        selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key = inputs
 
         if not ini:
             (solution_list_jac, solution_list_fgs, solution_list_bgs, solution_list_sgs,
              iteration_list_jac, iteration_list_fgs,
              iteration_list_bgs, iteration_list_sgs) = part_2_driver_multiple(selected_matrix,
                                                                            smin, smax, g, dmin, dmax, num_x0, tol,
-                                                                           max_iter, debug)
+                                                                           max_iter, debug, selected_matrix_key)
         else:
             solution, iteration, relative_error_list = part_2_driver_one(selected_matrix, smin, smax,
                                                                      g, tol, max_iter, debug, flag)
