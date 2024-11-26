@@ -49,7 +49,7 @@ def richard_first(A, b, x0, x_tilde, tol, max_iter):
         # Update the solution
         x_next = x + alpha * r
 
-        err_next = vec_2_norm_np(x_next - x_true)
+        err_next = np.linalg.norm(x_next - x_true)
         rel_err = err_next / err
         err_list.append(rel_err)
 
@@ -57,7 +57,7 @@ def richard_first(A, b, x0, x_tilde, tol, max_iter):
         r_next = r - alpha * A * r
 
         # Check for Convergence by seeing if relative error < error tolerance
-        r_next_norm = vec_2_norm_np(r_next)
+        r_next_norm = np.linalg.norm(r_next)
         residual_list.append(r_next_norm)
         if r_next_norm / r0_norm < tol:
             return x_next, iter_num + 1, residual_list, err_list
@@ -122,7 +122,7 @@ def steep_descent(A, b, x0, x_tilde, tol, max_iter):
         r_next = r - v * alpha
 
         # Checking for convergence by computing relative error < error tolerance set
-        r_next_norm = vec_2_norm_np(r_next)
+        r_next_norm = np.linalg.norm(r_next)
         residual_list.append(r_next_norm)
         if r_next_norm / r0_norm < tol:
             return x_next, iter_num + 1, residual_list, err_list
@@ -183,7 +183,7 @@ def conj_grad(A, b, x0, x_tilde, tol, max_iter):
         rel_err = err_next_full / err
         err_list.append(rel_err)
 
-        r_next_norm = vec_2_norm_np(r_next)
+        r_next_norm = np.linalg.norm(r_next)
         residual_list.append(r_next_norm)
         if r_next_norm / r0_norm < tol:
             return x_next, iter_num + 1, residual_list, err_list
