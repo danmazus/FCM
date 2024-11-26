@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="added variable for second driver">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/progamming_assign_3/part_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/progamming_assign_3/part_2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/progamming_assign_3/part_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/progamming_assign_3/part_3.py" afterDir="false" />
     </list>
@@ -94,15 +95,7 @@
       <workItem from="1731782265968" duration="117197000" />
       <workItem from="1732412698063" duration="16527000" />
       <workItem from="1732484541705" duration="9442000" />
-      <workItem from="1732539122945" duration="28797000" />
-    </task>
-    <task id="LOCAL-00009" summary="Added Programming Assignment 3 Folder">
-      <option name="closed" value="true" />
-      <created>1731434957624</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1731434957624</updated>
+      <workItem from="1732539122945" duration="29961000" />
     </task>
     <task id="LOCAL-00010" summary="Added new generating function">
       <option name="closed" value="true" />
@@ -488,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732631721851</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="added variable for second driver">
+      <option name="closed" value="true" />
+      <created>1732631949312</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1732631949312</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

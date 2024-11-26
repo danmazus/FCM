@@ -370,7 +370,7 @@ def part_2_driver_one(selected_matrix, smin, smax, g, tol, max_iter, debug, flag
     for i in range(g):
 
         # Setting a new x_tilde (solution vector) time to test over multiple solution vectors for same matrix and same initial guess vector
-        x_tilde = generate_float_1D_vector_np(smin, smax, k)
+        x_tilde = generate_float_1D_vector_np(1, 1, k)
         b = np.dot(selected_matrix, x_tilde)
 
         # Debug print statements for initial guess, true solution, and b vectors
