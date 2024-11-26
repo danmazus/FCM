@@ -292,13 +292,16 @@ def get_user_inputs():
             print("\nChoose How Many Solution Vectors:")
             g = int(input("Enter number of Solution Vectors (default=10): ") or "10")
 
+            print("\nSet range for random values of Initial Guess Vectors:")
+            dmin = float(input("Enter minimum value (default=-10.0): ") or "-10.0")
+            dmax = float(input("Enter maximum value (default=10.0): ") or "10.0")
+
+            if dmin > dmax:
+                print("Error: Minimum value must be less than maximum value")
+                continue
+
             print("\nChoose How Many Initial Guess Vectors for each Solution Vector:")
             num_x0 = int(input("Enter number of Initial Guess Vectors (default=10): ") or "10")
-
-            # # Random value range for the initial guess vectors
-            # print("\nSet range of values for Initial Guess Vectors:")
-            # ig_value_min = float(input("Enter minimum value (default=0.0): ") or "0.0")
-            # ig_value_max = float(input("Enter maximum value (default=0.0): ") or "0.0")
 
             # Tolerance level for convergence
             print("\nSet Tolerance Level for Convergence to Hit:")
@@ -316,7 +319,7 @@ def get_user_inputs():
             if not ini:
                 # Set default values for these variables
                 flag = 1  # Default method, for example Jacobi
-                return selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key
+                return selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag
 
             # Selecting which method to run for the selected matrix
             print("\nChoose which method to run:")
@@ -331,7 +334,7 @@ def get_user_inputs():
                 print("Error: Invalid method")
                 continue
 
-            return selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key
+            return selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag
 
         except ValueError:
             print("Error: Please enter valid numbers")
@@ -434,7 +437,7 @@ def part_2_driver_one(selected_matrix, smin, smax, g, tol, max_iter, debug, flag
     return solution_list, iteration_list, relative_error_list
 
 # Driver function for the methods
-def part_2_driver_multiple(selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, selected_matrix_key):
+def part_2_driver_multiple(selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug):
     # Getting user inputs
     #inputs = get_user_inputs()
 
@@ -489,7 +492,7 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, num_x0, tol, max_iter
 
         for j in range(num_x0):
             # Generate Random Initial Guess Vectors
-            x0 = generate_float_1D_vector_np(smin, smax, k)
+            x0 = generate_float_1D_vector_np(dmin, dmax, k)
 
             # Debug print statements for initial guess, true solution, and b vectors
             if debug:
@@ -687,14 +690,14 @@ def part_2_driver_multiple(selected_matrix, smin, smax, g, num_x0, tol, max_iter
 if __name__ == "__main__":
     while True:
         inputs = get_user_inputs()
-        selected_matrix, smin, smax, g, num_x0, tol, max_iter, debug, ini, flag, selected_matrix_key = inputs
+        selected_matrix, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag = inputs
 
         if not ini:
             (solution_list_jac, solution_list_fgs, solution_list_bgs, solution_list_sgs,
              iteration_list_jac, iteration_list_fgs,
              iteration_list_bgs, iteration_list_sgs) = part_2_driver_multiple(selected_matrix,
-                                                                           smin, smax, g, num_x0, tol,
-                                                                           max_iter, debug, selected_matrix_key)
+                                                                           smin, smax, g, dmin, dmax, num_x0, tol,
+                                                                           max_iter, debug)
         else:
             solution, iteration, relative_error_list = part_2_driver_one(selected_matrix, smin, smax,
                                                                      g, tol, max_iter, debug, flag)
