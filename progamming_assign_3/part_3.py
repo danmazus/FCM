@@ -178,6 +178,30 @@ def csr_lower_solve(aa, ia, ja, b, D):
     return y
 
 
+# def csr_upper_solve(aa, ia, ja, y, D):
+#     """
+#     Solve Ux = y where U is upper triangular and stored as transpose of lower triangular CSR format
+#     """
+#     n = len(y)
+#     x = np.zeros(n)
+#
+#     # Process from bottom to top
+#     for j in range(n - 1, -1, -1):
+#         sum_val = y[j]
+#
+#         k1 = ia[j]
+#         k2 = ia[j+1]
+#
+#         for k in range(k1, k2):
+#             col_index = ja[k]
+#             value = aa[k]
+#             if col_index < j:
+#                 sum_val -= value * x[col_index]
+#
+#         x[j] = sum_val / D[j]
+#
+#     return x
+
 def csr_upper_solve(aa, ia, ja, y, D):
     """
     Solve Ux = y where U is upper triangular and stored as transpose of lower triangular CSR format
@@ -185,28 +209,25 @@ def csr_upper_solve(aa, ia, ja, y, D):
     n = len(y)
     x = np.zeros(n)
 
+    x[-1] = y[-1] / D[-1]
+
     # Process from bottom to top
-    for j in range(n - 1, -1, -1):
-        sum_val = y[j]
+    for i in range(n-2, -1, -1):
+        k1 = ia[i]
+        k2 = ia[i + 1]
 
-        start = ia[j]
-        end = ia[j+1]
-
-        for index in range(start, end):
-            i = ja[index]
-            if i < j:
-                sum_val -= aa[index] * x[i]
-
-        x[j] = sum_val / D[j]
+        temp_sum = np.dot(aa[k1:k2], x[ja[k1:k2]])
+        x[i] = (y[i] - temp_sum) / D[i]
 
     return x
+
 
 
 # Test Case 1: Generate SPD Matrix and Check its Structure
 n = 5
 a = 5
 c = 10
-density = 0.7
+density = 0.5
 boost_factor = 2
 
 # Generate a sparse positive definite matrix
