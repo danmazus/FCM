@@ -1,7 +1,9 @@
+from imghdr import tests
+
 import numpy as np
 import scipy.linalg as sp
+from matplotlib import pyplot as plt
 from scipy.sparse.linalg import spsolve_triangular
-
 from my_package import *
 
 def generate_spd_sparse_matrix(a, b, n, density, boost_factor):
@@ -177,31 +179,6 @@ def csr_lower_solve(aa, ia, ja, b, D):
 
     return y
 
-
-# def csr_upper_solve(aa, ia, ja, y, D):
-#     """
-#     Solve Ux = y where U is upper triangular and stored as transpose of lower triangular CSR format
-#     """
-#     n = len(y)
-#     x = np.zeros(n)
-#
-#     # Process from bottom to top
-#     for j in range(n - 1, -1, -1):
-#         sum_val = y[j]
-#
-#         k1 = ia[j]
-#         k2 = ia[j+1]
-#
-#         for k in range(k1, k2):
-#             col_index = ja[k]
-#             value = aa[k]
-#             if col_index < j:
-#                 sum_val -= value * x[col_index]
-#
-#         x[j] = sum_val / D[j]
-#
-#     return x
-
 def csr_upper_solve(aa, ia, ja, y, D):
     """
     Solve Ux = y where U is upper triangular and stored as transpose of lower triangular CSR format
@@ -221,14 +198,129 @@ def csr_upper_solve(aa, ia, ja, y, D):
 
     return x
 
+def stationary_method(aa, ia, ja, D, b, x0, x_tilde, tol, max_iter, flag):
+    """
+        Stationary Methods Function which has parameters consisting of:
+            A: Matrix A
+            b: Vector b from Ax = b
+            x0: Initial guess for x
+            x_tilde: Solution vector from Ax = b
+            tol: Convergence tolerance
+            max_iter: Maximum number of iterations
+            flag: Flag to indicate which stationary method should be used (1: Jacobi,
+                                                                           2: Forward Gauss-Seidel,
+                                                                           3: Backward Gauss-Seidel,
+                                                                           4: Symmetric Gauss-Seidel)
+
+        Returns:
+            x: Solution vector to iteration
+            iter_num: Number of iterations for convergence
+            rel_err_list: List of Relative Errors during each iteration
+    """
+    x = x0
+    x_true = x_tilde
+    r = b - compressed_sparse_symmetric_mat_vec_prod(aa, ja, ia, x, D)
+
+    # Jacobi Method
+    if flag == 1:
+        """Jacobi"""
+        rel_err_list = []
+        iter_num = 0
+        pre_cond = 1 / D
+
+        while iter_num < max_iter:
+            # Computing relative error ||x_k - x_true|| / ||x_true||
+            rel_err = (np.linalg.norm(x - x_true)) / (np.linalg.norm(x_true))
+            rel_err_list.append(rel_err)
+
+            # Checking if Relative Error is below Tolerance Level, if so return
+            if rel_err < tol:
+                return x, iter_num + 1, rel_err_list
+
+            # Computing next x term
+            x_next = x + pre_cond * r
+
+            # Computing r_(k+1)
+            r_next = b - compressed_sparse_symmetric_mat_vec_prod(aa, ja, ia, x_next, D)
+
+            # Updating Values
+            r = r_next
+            x = x_next
+            iter_num += 1
+
+        return x, iter_num, rel_err_list
+
+    # Forward Gauss-Seidel
+    elif flag == 2:
+        '''Gauss-Seidel (Forward)'''
+        rel_err_list = []
+        iter_num = 0
+        true_err_norm = np.linalg.norm(x_true)
 
 
-# Test Case 1: Generate SPD Matrix and Check its Structure
+        while iter_num < max_iter:
+            # Lower triangular solve for P^(-1) * r_k
+            z = csr_upper_solve(aa, ia, ja, r, D)
+
+            # Compute the next x term
+            x_next = x + z
+
+            rel_err = (np.linalg.norm(x_next - x_true)) / true_err_norm
+            rel_err_list.append(rel_err)
+
+            # Checking if Relative Error is below Tolerance Level, if so return
+            if rel_err < tol:
+                return x, iter_num + 1, rel_err_list
+
+            # Update next values
+            x = x_next
+            r = b - compressed_sparse_symmetric_mat_vec_prod(aa, ja, ia, x, D)
+            iter_num += 1
+
+        return x, iter_num, rel_err_list
+
+    # Symmetric Gauss-Seidel
+    else:
+        '''Symmetric Gauss-Seidel'''
+        rel_err_list = []
+        true_err_norm = np.linalg.norm(x_true)
+        iter_num = 0
+
+        while iter_num < max_iter:
+            # First the Lower Solve is computed first (D - L)^(-1) * r_k = z_1
+            z_1 = csr_lower_solve(aa, ia, ja, r, D)
+
+            # Scale of the diagonal D * (D - L)^(-1) * r_k = z_2
+            z_2 = D * z_1
+
+            # Upper Solve is finally computed (D - U)^(-1) * z_2 = z_3
+            z_3 = csr_lower_solve(aa, ia, ja, z_2, D)
+
+            # Computing the next x
+            x = x + z_3
+
+            # Compute Relative error ||x_k - x|| / ||x||
+            rel_err = (np.linalg.norm(x - x_true)) / true_err_norm
+            rel_err_list.append(rel_err)
+
+            # Checking if Relative Error is below Tolerance Level, if so return
+            if rel_err < tol:
+                return x, iter_num + 1, rel_err_list
+
+            # Correcting variables for next iteration
+            r = b - compressed_sparse_symmetric_mat_vec_prod(aa, ja, ia, x, D)
+            iter_num += 1
+
+        return x, iter_num, rel_err_list
+
+
+
+#Test Case 1: Generate SPD Matrix and Check its Structure
 n = 5
 a = 5
 c = 10
 density = 0.5
-boost_factor = 2
+boost_factor = 3
 
 # Generate a sparse positive definite matrix
 A = generate_spd_sparse_matrix(a, c, n, density, boost_factor)
@@ -295,8 +387,195 @@ print(np.abs(x_tilde - x_dense))
 print("\nDifference norm between x_tilde and x_dense")
 print(np.linalg.norm(x_tilde - x_dense))
 
+x0 = np.random.uniform(a, c, n)
+
+# Compute Stationary Method
+solutions_jac, iterations_jac, rel_error_list_jac = stationary_method(aa, ia, ja, D, b_tilde, x0, x, 1e-6, 1000, 1)
+print(f"Iterations for Convergence Jacobi: {iterations_jac}")
+
+solutions_gs, iterations_gs, rel_error_list_gs = stationary_method(aa, ia, ja, D, b_tilde, x0, x, 1e-6, 1000, 2)
+print(f"Iterations for Convergence GS: {iterations_gs}")
+
+solutions_sgs, iterations_sgs, rel_error_list_sgs = stationary_method(aa, ia, ja, D, b_tilde, x0, x, 1e-6, 1000, 3)
+print(f"Iterations for Convergence SGS: {iterations_sgs}")
 
 
 
 
-
+# # User input function
+# def get_user_inputs():
+#     """
+#     Get problem parameters from user input.
+#
+#     Prompts user for:
+#     - Matrix dimensions (n rows x n columns)
+#     - Matrix to be passed (A0 through A9)
+#     - Range for random values for solution vectors (smin, smax)
+#     - Number of initial guess vectors (g)
+#     - Range of for random values for initial guess vectors (ig_min_value, ig_max_value)
+#     - Tolerance level for convergence to happen (tol)
+#     - Maximum number of iterations before stopping (max_iter)
+#     - Debug output preference
+#     """
+#
+#     print("\nSparse Matrices Construction")
+#     print("----------------------------------")
+#
+#     while True:
+#         try:
+#             n = int(input("Enter dimensions for vectors (n) [default=10]: ") or "10")
+#
+#             n_min = int(input("Minimum Dimension to be run:  [default=10]: ") or "10")
+#             n_max = int(input("Maximum Dimension to be run: [default=100]: ") or "100")
+#
+#             density = float(input("Enter density for Sparsity (Must be between 0 and 1 [default=0.5]: ") or "0.5")
+#
+#             boost_factor = float(input("Enter boost factor for diagonal elements [default=2]: ") or "2")
+#
+#             # Random values for solution vectors to be used
+#             print("\nSet range for random values of Matrices:")
+#             smin = float(input("Enter minimum value (default=-10.0): ") or "-10.0")
+#             smax = float(input("Enter maximum value (default=10.0): ") or "10.0")
+#
+#             # Checking condition to make sure input is valid
+#             if smin > smax:
+#                 print("Error: Minimum value must be less than maximum value")
+#                 continue
+#
+#             # Choosing how many initial guess vectors will be taken
+#             print("\nChoose How Many Solution Vectors:")
+#             g = int(input("Enter number of Solution Vectors (default=10): ") or "10")
+#
+#             print("\nSet range for random values of Solution and Initial Guess Vectors:")
+#             dmin = float(input("Enter minimum value (default=-10.0): ") or "-10.0")
+#             dmax = float(input("Enter maximum value (default=10.0): ") or "10.0")
+#
+#             if dmin > dmax:
+#                 print("Error: Minimum value must be less than maximum value")
+#                 continue
+#
+#             print("\nChoose How Many Initial Guess Vectors for each Solution Vector:")
+#             num_x0 = int(input("Enter number of Initial Guess Vectors (default=10): ") or "10")
+#
+#             # Tolerance level for convergence
+#             print("\nSet Tolerance Level for Convergence to Hit:")
+#             tol = float(input("Enter tolerance (default=1e-6): ") or "1e-6")
+#
+#             # Max number of iterations
+#             print("\nSet Maximum Number of Iterations to be Ran:")
+#             max_iter = int(input("Enter maximum number of iterations (default=1000): ") or "1000")
+#
+#             # Enable debug input
+#             debug = input("\nEnable debug output? (y/n) (default=n): ").lower().startswith('y')
+#
+#             ini = input("\nRun initial case for true solution and initial guess vector? (y/n) (default=n): ").lower().startswith('y')
+#             # If 'n', skip asking for method flag and set defaults
+#             if not ini:
+#                 # Set default values for these variables
+#                 flag = 1  # Default method, for example Jacobi
+#                 return n, n_min, n_max, density, boost_factor, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag
+#
+#             # Selecting which method to run for the selected matrix
+#             print("\nChoose which method to run:")
+#             print("1. Jacobi Method")
+#             print("2. Forward Gauss-Seidel Method")
+#             print("3. Backward Gauss-Seidel Method")
+#             print("4. Symmetric Gauss-Seidel Method")
+#             flag = int(input("Enter Method: "))
+#
+#             # Ensuring a correct value for method is chosen
+#             if flag not in [1, 2, 3, 4]:
+#                 print("Error: Invalid method")
+#                 continue
+#
+#             return n, n_min, n_max, density, boost_factor, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag
+#
+#         except ValueError:
+#             print("Error: Please enter valid numbers")
+#
+# def part_3_driver(n, n_min, n_max, density, boost_factor, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag):
+#     results = []
+#
+#     for nums in range(n_min, n_max + 1):
+#         matrices = []
+#
+#         for i in range(10):
+#             A = generate_spd_sparse_matrix(smin, smax, nums, density, boost_factor)
+#             matrices.append(A)
+#
+#         selected_matrices = np.random.choice(matrices, 3, replace=False)
+#
+#         for tests_index, A in enumerate(selected_matrices):
+#             iterations_dict = {'Jacobi': [], 'Gauss-Seidel': [], 'Symmetric Gauss-Seidel': []}
+#             D = np.diag(A)
+#             aa, ja, ia = compressed_sparse_row_lower_tri(A)
+#
+#             for i in range(g):
+#                 for j in range(num_x0):
+#                     x_tilde = np.random.uniform(dmin, dmax, nums)
+#                     b_tilde = compressed_sparse_symmetric_mat_vec_prod(aa, ia, ja, x_tilde, D)
+#                     x0 = np.random.uniform(dmin, dmax, nums)
+#
+#                     solution, iterations, rel_error_list = stationary_method(aa, ia, ja, D, b_tilde, x0, x_tilde,
+#                                                                                      tol, max_iter, 1)
+#                     iterations_dict['Jacobi'].append(iterations)
+#
+#                     solution, iterations, rel_error_list = stationary_method(aa, ia, ja, D, b_tilde, x0, x_tilde,
+#                                                                                   tol, max_iter, 2)
+#                     iterations_dict['Gauss-Seidel'].append(iterations)
+#
+#                     solution, iterations, rel_error_list = stationary_method(aa, ia, ja, D, b_tilde, x0,
+#                                                                                      x_tilde, tol, max_iter, 3)
+#                     iterations_dict['Symmetric Gauss-Seidel'].append(iterations)
+#
+#             fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+#
+#             axs[0].plot(iterations_dict['Jacobi'], label='Jacobi', marker='o', linestyle='-', color='b')
+#             axs[0].set_title('Jacobi Method')
+#             axs[0].set_xlabel('Test Index')
+#             axs[0].set_ylabel('Iterations')
+#
+#             axs[1].plot(iterations_dict['Gauss-Seidel'], label='Gauss-Seidel', marker='x', linestyle='--', color='g')
+#             axs[1].set_title('Gauss-Seidel Method')
+#             axs[1].set_xlabel('Test Index')
+#             axs[1].set_ylabel('Iterations')
+#
+#             axs[2].plot(iterations_dict['Symmetric Gauss-Seidel'], label='Symmetric Gauss-Seidel', marker='s',
+#                         linestyle='-.', color='r')
+#             axs[2].set_title('Symmetric Gauss-Seidel Method')
+#             axs[2].set_xlabel('Test Index')
+#             axs[2].set_ylabel('Iterations')
+#
+#             for ax in axs:
+#                 ax.legend()
+#                 ax.grid(True)
+#
+#             plt.tight_layout()
+#             plt.show()
+#
+#             results.append({
+#                 'matrix_size': nums,
+#                 'density': density,
+#                 'test_id': tests_index + 1,
+#                 'iterations_dict': iterations_dict
+#             })
+#
+#     return results
+#
+#
+#
+# # Main function
+# if __name__ == "__main__":
+#     while True:
+#         inputs = get_user_inputs()
+#         n, n_min, n_max, density, boost_factor, smin, smax, g, dmin, dmax, num_x0, tol, max_iter, debug, ini, flag= inputs
+#
+#         if not ini:
+#             results = part_3_driver(n, n_min, n_max, density, boost_factor, smin, smax, g, dmin, dmax, num_x0, tol, max_iter,
+#                           debug, ini, flag)
+#
+#         user_input = input("\nRun another problem? (y/n) [default=n]: ").strip().lower()
+#         if user_input != 'y':
+#             break
+#
+#         print("Thank you for using the Solver!")
