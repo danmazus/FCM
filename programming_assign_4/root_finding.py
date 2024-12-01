@@ -147,7 +147,7 @@ def steff_method(f, x0, max_iter, tol = 1e-6):
 
     raise ValueError("Steffenson's method did not converge within the maximum number of iterations")
 
-
+# Test Cases for f(x) = x^3 - 3x + 1 from in class example to test correctness
 solution_reg, iteration_reg = reg_fal_method(f, 1, 2, max_iter=1000, tol=1e-6)
 solution_sec, iteration_sec = secant_method(f, 1, 2, max_iter=1000, tol=1e-6)
 solution_new, iteration_new = newton_method(f, x0 = 2, max_iter=1000, m=1.0, tol=1e-6, h=1e-6)
