@@ -142,6 +142,10 @@ def steff_method(f, x0, max_iter, tol = 1e-6):
         g = x - (f(x) / theta)
         x_next = g
 
+        # Convergence check for both direct or x_k+1 - x_k convergence
+        if abs(x_next) < tol or abs(x_next - x) < tol:
+            return x_next, k + 1
+
         x = x_next
         k += 1
 
