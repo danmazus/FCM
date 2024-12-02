@@ -121,7 +121,7 @@ def newton_method(f, x0, max_iter, m = 1.0, tol = 1e-6, h = 1e-6):
             raise ValueError("Evaluated Derivative is too small at iteration {k}: x_k = {x}, q_k = {q_k}")
 
         # Comptue x_(k+1)
-        x_next = x - (f(x) / (m * q_k))
+        x_next = x - (m * (f(x) / q_k))
 
         if abs(x_next) < tol or abs(x_next - x) < tol:
             return x_next, k + 1
