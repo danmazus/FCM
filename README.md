@@ -13,3 +13,7 @@ Programming Assignment 2, in Program 2 folder, contains 3 subroutines and a test
 
 ## Least Squares
 This folder has the Householder Reflector subroutine which computes the Householder vector which transform an input vector and outputs the transformed vector and the scalar value that led to the transformation. This also has the tester that was used in class to test this routine using Least Squares. This was translated from in class code from Dr. Gallivan from Matlab to Python for both the subroutine and the Householder Reflector Routine. The Driver file was also translated from given Matlab code from Dr. Gallivan to Python code to be able to use and test different least squares problems given certain user inputs using the function defined in the Driver File.
+
+## Programming Assignment 3
+
+## Programming Assignment 4
