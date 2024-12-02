@@ -3,8 +3,7 @@ def f(x):
     return f
 
 def p(x, rho, d):
-    f = (x - rho)**d
-    return f
+    return (x - rho)**d
 
 
 # Regula-Falsi
@@ -173,4 +172,6 @@ print(f"\nRoot for Newton is: {solution_new}")
 print(f"\nIterations for Newton is: {iteration_new}")
 print(f"\nRoot for Steffenson is: {solution_steff}")
 print(f"\nIterations for Steffenson is: {iteration_steff}")
+
+
 
