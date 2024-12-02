@@ -1,7 +1,9 @@
+# f(x) function for standard functions
 def f(x):
     f = pow(x, 3) + (-3*x) + 1
     return f
 
+# rho function for higher order single root functions
 def p(rho, d):
     return lambda x: (x - rho) ** d
 
