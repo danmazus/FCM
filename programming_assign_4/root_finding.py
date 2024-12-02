@@ -138,12 +138,19 @@ def steff_method(f, x0, max_iter, tol = 1e-6):
     x = x0
     k = 0
     while k < max_iter:
-        theta = (f(x - f(x)) - f(x)) / f(x)
+        # First way of implementing steffenson's method
+        theta = (f(x + f(x)) - f(x)) / f(x)
         g = x - (f(x) / theta)
         x_next = g
 
+        # Second way of implementing steffenson's method
+        # denominator = f(x + f(x)) - f(x)
+        # if abs(denominator) < 1e-12:
+        #     raise ValueError(f"Evaluated Derivative is too small at iteration {k}: x_k = {x}")
+        # x_next = x - ((f(x)**2) / denominator)
+
         # Convergence check for both direct or x_k+1 - x_k convergence
-        if abs(x_next) < tol or abs(x_next - x) < tol:
+        if abs(f(x_next)) < tol or abs(x_next - x) < tol:
             return x_next, k + 1
 
         x = x_next
@@ -151,10 +158,13 @@ def steff_method(f, x0, max_iter, tol = 1e-6):
 
     raise ValueError("Steffenson's method did not converge within the maximum number of iterations")
 
+
+
 # Test Cases for f(x) = x^3 - 3x + 1 from in class example to test correctness
 solution_reg, iteration_reg = reg_fal_method(f, 1, 2, max_iter=1000, tol=1e-6)
 solution_sec, iteration_sec = secant_method(f, 1, 2, max_iter=1000, tol=1e-6)
 solution_new, iteration_new = newton_method(f, x0 = 2, max_iter=1000, m=1.0, tol=1e-6, h=1e-6)
+solution_steff, iteration_steff = steff_method(f, 2, max_iter=1000, tol=1e-6)
 
 print(f"\nRoot for Regula Falsi is: {solution_reg}")
 print(f"\nIterations for Regula Falsi is: {iteration_reg}")
@@ -162,5 +172,6 @@ print(f"\nRoot for Secant is: {solution_sec}")
 print(f"\nIterations for Secant is: {iteration_sec}")
 print(f"\nRoot for Newton is: {solution_new}")
 print(f"\nIterations for Newton is: {iteration_new}")
-
+print(f"\nRoot for Steffenson is: {solution_steff}")
+print(f"\nIterations for Steffenson is: {iteration_steff}")
 

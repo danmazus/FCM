@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="fixed newton's method">
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="added convergence check for steffenson">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/programming_assign_4/root_finding.py" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/root_finding.py" afterDir="false" />
     </list>
@@ -104,15 +104,7 @@
       <workItem from="1732484541705" duration="9442000" />
       <workItem from="1732539122945" duration="37806000" />
       <workItem from="1732653278241" duration="16111000" />
-      <workItem from="1733069375455" duration="11255000" />
-    </task>
-    <task id="LOCAL-00017" summary="Added triangular solve functions">
-      <option name="closed" value="true" />
-      <created>1732128427880</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1732128427880</updated>
+      <workItem from="1733069375455" duration="12431000" />
     </task>
     <task id="LOCAL-00018" summary="Added triangular solve functions using numpy arrays">
       <option name="closed" value="true" />
@@ -498,14 +490,21 @@
       <option name="project" value="LOCAL" />
       <updated>1733107529516</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="added convergence check for steffenson">
+      <option name="closed" value="true" />
+      <created>1733108276795</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1733108276795</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="updated print lines and comments" />
     <MESSAGE value="updated debug statement comments" />
     <MESSAGE value="fixed error and error bound on conjugate gradient" />
     <MESSAGE value="updated imports" />
@@ -530,14 +529,15 @@
     <MESSAGE value="Added root finding functions" />
     <MESSAGE value="Added comment for test case" />
     <MESSAGE value="fixed newton's method" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed newton's method" />
+    <MESSAGE value="added convergence check for steffenson" />
+    <option name="LAST_COMMIT_MESSAGE" value="added convergence check for steffenson" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FCM$functions_storage.coverage" NAME="functions_storage Coverage Results" MODIFIED="1732216866533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/my_package" />
     <SUITE FILE_PATH="coverage/FCM$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1732289922159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/FCM$part_2.coverage" NAME="part_2 Coverage Results" MODIFIED="1732653395064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
     <SUITE FILE_PATH="coverage/FCM$part_1.coverage" NAME="part_1 Coverage Results" MODIFIED="1732664666686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
-    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733092594154" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
+    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733109404556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
     <SUITE FILE_PATH="coverage/FCM$least_squares_driver.coverage" NAME="least_squares_driver Coverage Results" MODIFIED="1731367886066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/least_squares" />
     <SUITE FILE_PATH="coverage/FCM$part_3.coverage" NAME="part_3 Coverage Results" MODIFIED="1732678450071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
   </component>
