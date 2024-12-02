@@ -2,8 +2,8 @@ def f(x):
     f = pow(x, 3) + (-3*x) + 1
     return f
 
-def p(x, rho, d):
-    return (x - rho)**d
+def p(rho, d):
+    return lambda x: (x - rho) ** d
 
 
 # Regula-Falsi
@@ -115,8 +115,8 @@ def newton_method(f, x0, max_iter, m = 1.0, tol = 1e-6, h = 1e-6):
         q_k = der(f, x, h)
 
         # Makes sure derivative value is not too small for division
-        if abs(q_k) < 1e-12:
-            raise ValueError("Evaluated Derivative is too small at iteration {k}: x_k = {x}, q_k = {q_k}")
+        # if abs(q_k) < 1e-12:
+        #     raise ValueError(f"Evaluated Derivative is too small at iteration {k}: x_k = {x}, q_k = {q_k}")
 
         # Comptue x_(k+1)
         x_next = x - (m * (f(x) / q_k))
@@ -127,7 +127,7 @@ def newton_method(f, x0, max_iter, m = 1.0, tol = 1e-6, h = 1e-6):
         x = x_next
         k += 1
 
-    raise ValueError("Newton's method did not converge within the maximum number of iterations. Last x_k = {x}, iteration = {k}")
+    raise ValueError(f"Newton's method did not converge within the maximum number of iterations. Last x_k = {x}, iteration = {k}")
 
 
 
@@ -175,3 +175,68 @@ print(f"\nIterations for Steffenson is: {iteration_steff}")
 
 
 
+
+"""Higher Order Roots Questions"""
+# Assigning Values
+rho = 1.9
+d = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+x0 = [0.5, 1.5, 2.5]
+
+# Problem 1
+print(f"\nUsing Standard Newton's Method:")
+for i in d:
+    for k in x0:
+        f = p(rho, i)
+
+        try:
+            solution, iteration = newton_method(f, k, max_iter=1000, m=1.0, tol=1e-6, h=1e-6)
+            print(f"d = {i},  x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+        except ValueError as e:
+            print(f"d = {i}, x0 = {k}, Error: {e}")
+
+# Problem 2
+print(f"\nUsing Modified Newton's Method")
+for i in d:
+    for k in x0:
+        f = p(rho, i)
+
+        try:
+            solution, iteration = newton_method(f, k, max_iter=1000, m=i, tol=1e-6, h=1e-6)
+            print(f"d = {i}, m = {i}, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+
+        except ValueError as e:
+            print(f"d = {i}, m = {i}, x0 = {k}, Error: {e}")
+
+# Problem 3
+print(f"\nUsing Steffenson's Method")
+for i in d:
+    for k in x0:
+        f = p(rho, i)
+
+        try:
+            solution, iteration = steff_method(f, k, max_iter=1000, tol=1e-6)
+            print(f"d = {i}, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+
+        except ValueError as e:
+            print(f"d = {i}, x0 = {k}, Error: {e}")
+
+# Problem 4
+print(f"\nUsing Each Method when d = 1")
+for k in x0:
+    f = p(rho, 1)
+
+    try:
+        print(f"\nUsing Standard Newton's Method for x0 = {k}:")
+        solution, iteration = newton_method(f, k, max_iter=1000, m=1.0, tol=1e-6, h=1e-6)
+        print(f"d = 1, m = 1, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+
+    except ValueError as e:
+        print(f"d = 1, x0 = {k}, Error: {e}")
+
+    try:
+        print(f"\nUsing Steffenson's Method for x0 = {k}:")
+        solution, iteration = steff_method(f, k, max_iter=1000, tol=1e-6)
+        print(f"d = 1, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+
+    except ValueError as e:
+        print(f"d = 1, x0 = {k}, Error: {e}")
