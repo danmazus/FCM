@@ -1,10 +1,9 @@
-import numpy as np
-from my_package import *
-import matplotlib.pyplot as plt
-
-
 def f(x):
     f = pow(x, 3) + (-3*x) + 1
+    return f
+
+def p(x, rho, d):
+    f = (x - rho)**d
     return f
 
 
