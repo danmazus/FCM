@@ -223,6 +223,8 @@ for i in d:
             print(f"d = {i}, x0 = {k}, Error: {e}")
 
 # Problem 4
+
+# Problem 5
 print(f"\nUsing Each Method when d = 1")
 for k in x0:
     f = p(rho, 1)
@@ -242,3 +244,5 @@ for k in x0:
 
     except ValueError as e:
         print(f"d = 1, x0 = {k}, Error: {e}")
+
+# Problem 6
