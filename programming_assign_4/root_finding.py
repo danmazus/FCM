@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 # f(x) function for standard functions
 def f(x):
     f = pow(x, 3) + (-3*x) + 1
@@ -76,28 +78,27 @@ def secant_method(f, x0, x1, max_iter, tol = 1e-6):
     #if f(x_k0) * f(x_k1) >= 0:
      #   raise ValueError("The function values at x0 and x1 must have opposite signs")
 
-    if (f(x_k0) * f(x_k1) < 0):
-        while k < max_iter:
-            # Compute q_k
-            q_k = (f(x_k1) - f(x_k0)) / (x_k1 - x_k0)
+    while k < max_iter:
+        # Compute q_k
+        q_k = (f(x_k1) - f(x_k0)) / (x_k1 - x_k0)
 
-            # Compute x_(k+1)
-            x_k_next = x_k1 - f(x_k1) / q_k
+        # Compute x_(k+1)
+        x_k_next = x_k1 - f(x_k1) / q_k
 
-            # Check for direct convergence
-            if abs(f(x_k_next)) < tol:
-                return x_k_next, k + 1
+        # Check for direct convergence
+        if abs(f(x_k_next)) < tol:
+            return x_k_next, k + 1
 
-            # Check for x_(k+1) - x_k convergence
-            if abs(x_k_next - x_k1) < tol:
-                return x_k_next, k + 1
+        # Check for x_(k+1) - x_k convergence
+        if abs(x_k_next - x_k1) < tol:
+            return x_k_next, k + 1
 
-            # Update values for next iteration
-            x_k0 = x_k1
-            x_k1 = x_k_next
-            k += 1
+        # Update values for next iteration
+        x_k0 = x_k1
+        x_k1 = x_k_next
+        k += 1
 
-        raise ValueError("Secant method did not converge within the maximum number of iterations")
+    raise ValueError("Secant method did not converge within the maximum number of iterations")
 
 
 
@@ -182,10 +183,24 @@ print(f"\nIterations for Steffenson is: {iteration_steff}")
 # Assigning Values
 rho = 1.9
 d = [2, 3, 4, 5, 6, 7, 8, 9, 10]
-x0 = [0.5, 1.5, 2.5]
+m_minus = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+m_plus = [3, 4, 5, 6, 7, 8, 9, 10, 11]
+x0 = [0, 0.5, 1, 1.5, 2, 2.5, 3]
+x1 = [1, 1.5, 2, 2.5, 3, 3.5, 4]
+a0 = []
+b0 = []
 
 # Problem 1
 print(f"\nUsing Standard Newton's Method:")
+# fig, ax1 = plt.subplots(figsize=(10,6))
+# ax1.set_xlabel("Multiplicity of Root")
+# ax1.set_ylabel("Iterations")
+# ax1.set_title("Root for Standard Newton's Method")
+# ax1.grid(True)
+# colors = ['red', 'green', 'blue', 'purple', 'black', 'yellow', 'brown']
+# markers = ['o', '^', 'v', 'x', 's', 'd', 'h']
+iterations = {k: [] for k in x0}
+
 for i in d:
     for k in x0:
         f = p(rho, i)
@@ -193,11 +208,28 @@ for i in d:
         try:
             solution, iteration = newton_method(f, k, max_iter=1000, m=1.0, tol=1e-6, h=1e-6)
             print(f"d = {i},  x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+            iterations[k].append(iteration)
         except ValueError as e:
             print(f"d = {i}, x0 = {k}, Error: {e}")
+            iterations[k].append(None)
+
+# for i, k in enumerate(x0):
+#     ax1.plot(d, iterations[k], label=f"x0 = {k}", marker = markers[i],color=colors[i])
+#
+# plt.legend(title="Initial Guess x0", loc="best")
+# plt.show()
 
 # Problem 2
 print(f"\nUsing Modified Newton's Method")
+# fig, ax2 = plt.subplots(figsize=(10,6))
+# ax2.set_xlabel("Multiplicity of Root")
+# ax2.set_ylabel("Iterations")
+# ax2.set_title("Root for Modified Newton's Method")
+# ax2.grid(True)
+# colors = ['red', 'green', 'blue', 'purple', 'black', 'yellow', 'brown']
+# markers = ['o', '^', 'v', 'x', 's', 'd', 'h']
+iterations = {k: [] for k in x0}
+
 for i in d:
     for k in x0:
         f = p(rho, i)
@@ -205,24 +237,76 @@ for i in d:
         try:
             solution, iteration = newton_method(f, k, max_iter=1000, m=i, tol=1e-6, h=1e-6)
             print(f"d = {i}, m = {i}, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+            iterations[k].append(iteration)
 
         except ValueError as e:
             print(f"d = {i}, m = {i}, x0 = {k}, Error: {e}")
+            iterations[k].append(None)
+
+# for i, k in enumerate(x0):
+#     ax2.plot(d, iterations[k], label=f"x0 = {k}", marker = markers[i],color=colors[i])
+#
+# plt.legend(title="Initial Guess x0", loc="best")
+# plt.show()
 
 # Problem 3
 print(f"\nUsing Steffenson's Method")
+# fig, ax3 = plt.subplots(figsize=(10,6))
+# ax3.set_xlabel("Multiplicity of Root")
+# ax3.set_ylabel("Iterations")
+# ax3.set_title("Root for Steffenson's Method")
+# ax3.grid(True)
+# colors = ['red', 'green', 'blue', 'purple', 'black', 'yellow', 'brown']
+# markers = ['o', '^', 'v', 'x', 's', 'd', 'h']
+iterations = {k: [] for k in x0}
+
+for i in d:
+    f = p(rho, i)
+
+    for k in x0:
+
+        try:
+            solution, iteration = steff_method(f, k, max_iter=1000, tol=1e-6)
+            print(f"d = {i}, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+            iterations[k].append(iteration)
+
+        except ValueError as e:
+            print(f"d = {i}, x0 = {k}, Error: {e}")
+            iterations[k].append(None)
+
+# for i, k in enumerate(x0):
+#     ax3.plot(d, iterations[k], label=f"x0 = {k}", marker = markers[i],color=colors[i])
+#
+# plt.legend(title="Initial Guess x0", loc="best")
+# plt.show()
+
+# Problem 4
+print(f"\nUsing Regula Falsi Method")
 for i in d:
     for k in x0:
         f = p(rho, i)
 
         try:
-            solution, iteration = steff_method(f, k, max_iter=1000, tol=1e-6)
-            print(f"d = {i}, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+            solution, iteration = reg_fal_method(f, k, 1.5, max_iter=1000, tol=1e-6)
+            print(f"d = {i}, a0 = {k}, b0 = 1.5, Root = {solution:.6f}, Iterations = {iteration}")
 
         except ValueError as e:
-            print(f"d = {i}, x0 = {k}, Error: {e}")
+            print(f"d = {i}, a0 = {k}, b0 = 1.5, Error: {e}")
 
-# Problem 4
+print(f"\nUsing Secant Method")
+for i in d:
+    f = p(rho, i)
+
+    for k in range(len(x0)):
+        initial_x0 = x0[k]
+        initial_x1 = x1[k]
+
+        try:
+            solution, iteration = secant_method(f, initial_x0, initial_x1, max_iter=1000, tol=1e-6)
+            print(f"d = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Root = {solution:.6f}, Iterations = {iteration}")
+
+        except ValueError as e:
+            print(f"d = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Error: {e}")
 
 # Problem 5
 print(f"\nUsing Each Method when d = 1")
@@ -246,3 +330,11 @@ for k in x0:
         print(f"d = 1, x0 = {k}, Error: {e}")
 
 # Problem 6
+# for i in d:
+#     for k in x0:
+#         f = p(rho, i)
+#         try:
+#             solution, iteration = newton_method(f, k, max_iter=1000,
+#             print(f"d = {i}, a0 = {k}, b0 = 1.5, Root = {solution:.6f}, Iterations = {iteration}")
+#         except ValueError as e:
+#             print(f"d = {i}, a0 = {k}, b0 = 1.5, Error: {e}")
