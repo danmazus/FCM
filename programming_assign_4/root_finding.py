@@ -15,8 +15,7 @@ def p_3(rho_1, rho_2):
 def dp(rho, d):
     return lambda x: d * (x - rho) ** (d-1)
 
-def dp_2(rho):
-    alpha = rho / (np.sqrt(3))
+def dp_2(rho, alpha):
     return lambda x: 3 * (x - alpha) * (x + alpha)
 
 def display_panda_df(log):
@@ -27,7 +26,7 @@ def display_panda_df(log):
     print(df)
 
 # Regula-Falsi
-def reg_fal_method(f, a0, b0, max_iter, tol = 1e-6):
+def reg_fal_method(f, rho, a0, b0, max_iter, tol = 1e-6):
     if f(a0) * f(b0) >= 0:
         raise ValueError("The function values at a0 and b0 must have opposite signs")
 
@@ -37,6 +36,8 @@ def reg_fal_method(f, a0, b0, max_iter, tol = 1e-6):
     # else:
     #     x = b0
     x = a0
+    x_true = rho
+
     #x = b0
 
     # Setting initial values for iterations
@@ -59,9 +60,17 @@ def reg_fal_method(f, a0, b0, max_iter, tol = 1e-6):
 
         interval_size = abs(b_k - a_k)
 
+        err_k = abs(x - x_true)
+        err_k_next = abs(x_next - x_true)
+
+        ratio = abs(err_k_next) / abs(err_k)
+
+        results.append((k, x, f(x), ratio))
+
         # Check for convergence
-        if abs(f(x_next)) < tol or interval_size < tol:
-            return x_next, k + 1
+        if abs(err_k) < tol:
+            results.append((k+1, x_next, f(x_next), ratio))
+            return x_next, k + 1, results
 
         # Setting Next values depending on what the signs are
         if f(x_next) * f(a_k) < 0:
@@ -72,7 +81,7 @@ def reg_fal_method(f, a0, b0, max_iter, tol = 1e-6):
             b_k_next = b_k
         else:
             # This is a return statement as we have found the root directly
-            return x_next, k + 1
+            return x_next, k + 1, results
 
         # Compute q_(k+1)
         q_next = (f(b_k_next) - f(a_k_next)) / (b_k_next - a_k_next)
@@ -110,15 +119,18 @@ def secant_method(f, x0, x1, rho, max_iter, tol = 1e-6):
         err_k = abs(x_k1 - x_true)
         err_k_next = abs(x_k_next - x_true)
 
-
         ratio = abs(err_k_next) / abs(err_k)
 
-        results.append((k, x_k1, err_k, ratio))
+        results.append((k, x_k1, f(x_k1), ratio))
+
+        if abs(err_k_next) < tol:
+            results.append((k+1, x_k_next, f(x_k_next), ratio))
+            return x_k_next, k + 1, results
 
         # Check for direct convergence
-        if abs(x_k_next - x_k1) < tol:
-            results.append((k+1, x_k_next, err_k_next, ratio))
-            return x_k_next, k + 1, results
+        # if abs(x_k_next - x_k1) < tol:
+        #     results.append((k+1, x_k_next, err_k_next, ratio))
+        #     return x_k_next, k + 1, results
 
         #abs(f(x_k_next)) < tol or
 
@@ -145,29 +157,24 @@ def newton_method(f, df, x0, rho, max_iter, m = 1.0, tol = 1e-6):
         f_val = f(x)
         q_k = df(x)
 
-        # if abs(q_k) < tol:
-        #     if abs(f_val) < tol:
-        #         results.append((k, x, f_val, ratio))
-        #         return x, k + 1, results
-        #     else:
-        #         raise ValueError(f"q_k = {q_k} is close to zero but f(x) = {f_val} is not close to zero")
-
         # Comptue x_(k+1)
         x_next = x - (m * (f_val / q_k))
+        #print(x_next)
 
         err_k = abs(x - x_true)
         err_k_next = abs((x_next - x_true))
 
-        ratio = abs(err_k_next) / abs(err_k)
-
+        ratio = abs(err_k_next) / (abs(err_k) ** 2)
 
         results.append((k, x, f_val, ratio))
 
-
-
-        if abs(f(x_next)) < tol or abs(x_next - x) < tol:
+        if abs(err_k_next) < tol:
             results.append((k+1, x_next, f(x_next), ratio))
             return x_next, k + 1, results
+
+        # if abs(f(x_next)) < tol or abs(x_next - x) < tol:
+        #     results.append((k+1, x_next, f(x_next), ratio))
+        #     return x_next, k + 1, results
 
         x = x_next
         k += 1
@@ -189,16 +196,22 @@ def steff_method(f, x0, rho, max_iter, tol = 1e-6):
         x_next = g
 
         err_k = abs(x - x_true)
+
         err_k_next = abs(x_next - x_true)
 
         ratio = err_k_next / (err_k)
 
-        results.append((k, x, err_k, ratio))
+        results.append((k, x, f(x), ratio))
+
+        if abs(err_k_next) < tol:
+            results.append((k+1, x_next, f(x_next), ratio))
+            return x_next, k + 1, results
+
 
         # Convergence check for both direct or x_k+1 - x_k convergence
-        if abs(f(x_next)) < tol or abs(x_next - x) < tol:
-            results.append((k+1, x_next, err_k_next, ratio))
-            return x_next, k + 1, results
+        # if abs(f(x_next)) < tol or abs(x_next - x) < tol:
+        #     results.append((k+1, x_next, err_k_next, ratio))
+        #     return x_next, k + 1, results
 
         x = x_next
         k += 1
@@ -208,148 +221,145 @@ def steff_method(f, x0, rho, max_iter, tol = 1e-6):
 
 """Higher Order Roots Questions"""
 # Assigning Values
-rho = 1.9
-d = [2, 3, 4, 5, 6, 7, 8, 9, 10]
-m_minus = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-m_plus = [3, 4, 5, 6, 7, 8, 9, 10, 11]
-x0 = [1, 1.5, 2, 2.5]
-x1 = [1.5, 1.7, 2.1, 2.3]
-a0 = [0, 0.5, 1, 1.5]
-
-# Problem 1
-print("\n-------------------------------")
-print("PROBLEM 1")
-print("-------------------------------")
-print(f"\nUsing Standard Newton's Method:")
-# fig, ax1 = plt.subplots(figsize=(10,6))
-# ax1.set_xlabel("Multiplicity of Root")
-# ax1.set_ylabel("Iterations")
-# ax1.set_title("Root for Standard Newton's Method")
-# ax1.grid(True)
-for i in d:
-    for k in x0:
-        f = p(rho, i)
-        df = dp(rho, i)
-
-        try:
-            solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=1.0, tol=1e-6)
-            print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-            display_panda_df(log)
-
-        except ValueError as e:
-            print(f"d = {i}, x0 = {k}, Error: {e}")
-
-# Problem 2
-print("\n-------------------------------")
-print("PROBLEM 2")
-print("-------------------------------")
-print(f"\nUsing Newton's Method when d = m")
-for i in d:
-    for k in x0:
-        f = p(rho, i)
-        df = dp(rho, i)
-
-        try:
-            solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=i, tol=1e-6)
-            print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-            display_panda_df(log)
-
-        except ValueError as e:
-            print(f"d = {i}, x0 = {k}, Error: {e}")
-
-
-# # Problem 3
-print("\n-------------------------------")
-print("PROBLEM 3")
-print("-------------------------------")
-print(f"\nUsing Steffenson's Method")
-# # fig, ax3 = plt.subplots(figsize=(10,6))
-# # ax3.set_xlabel("Multiplicity of Root")
-# # ax3.set_ylabel("Iterations")
-# # ax3.set_title("Root for Steffenson's Method")
-# # ax3.grid(True)
-# # colors = ['red', 'green', 'blue', 'purple', 'black', 'yellow', 'brown']
-# # markers = ['o', '^', 'v', 'x', 's', 'd', 'h']
+# rho = 1.9
+# d = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+# m_minus = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+# m_plus = [3, 4, 5, 6, 7, 8, 9, 10, 11]
+# x0 = [1, 1.5, 2, 2.5]
+# x1 = [1.5, 1.7, 2.1, 2.3]
+# a0 = [0, 0.5, 1, 1.5]
 #
-for i in d:
-    f = p(rho, i)
-
-    for k in x0:
-
-        try:
-            solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
-            print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-            display_panda_df(log)
-
-        except ValueError as e:
-            print(f"d = {i}, x0 = {k}, Error: {e}")
+# # Problem 1
+# print("\n-------------------------------")
+# print("PROBLEM 1")
+# print("-------------------------------")
+# print(f"\nUsing Standard Newton's Method:")
+# for i in d:
+#     for k in x0:
+#         f = p(rho, i)
+#         df = dp(rho, i)
 #
+#         try:
+#             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=1.0, tol=1e-6)
+#             print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+#             display_panda_df(log)
+#
+#         except ValueError as e:
+#             print(f"d = {i}, x0 = {k}, Error: {e}")
+#
+#
+#
+#
+#
+#
+# # Problem 2
+# print("\n-------------------------------")
+# print("PROBLEM 2")
+# print("-------------------------------")
+# print(f"\nUsing Newton's Method when d = m")
+# for i in d:
+#     for k in x0:
+#         f = p(rho, i)
+#         df = dp(rho, i)
+#
+#         try:
+#             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=i, tol=1e-6)
+#             print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+#             display_panda_df(log)
+#
+#         except ValueError as e:
+#             print(f"d = {i}, x0 = {k}, Error: {e}")
+#
+#
+#
+#
+#
+# # # Problem 3
+# # print("\n-------------------------------")
+# # print("PROBLEM 3")
+# # print("-------------------------------")
+# # print(f"\nUsing Steffenson's Method")
+# # for i in d:
+# #     f = p(rho, i)
 # #
-# # # for i, k in enumerate(x0):
-# # #     ax3.plot(d, iterations[k], label=f"x0 = {k}", marker = markers[i],color=colors[i])
-# # #
-# # # plt.legend(title="Initial Guess x0", loc="best")
-# # # plt.show()
+# #     for k in x0:
 # #
-
+# #         try:
+# #             solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
+# #             print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+# #             display_panda_df(log)
+# #
+# #         except ValueError as e:
+# #             print(f"d = {i}, x0 = {k}, Error: {e}")
+#
+#
+#
+#
 # # Problem 4
-print("\n-------------------------------")
-print("PROBLEM 4")
-print("-------------------------------")
-print(f"\nUsing Regula Falsi Method")
-for i in d:
-    for k in a0:
-        f = p(rho, i)
-
-        try:
-            solution, iteration = reg_fal_method(f, k, 2.1, max_iter=20000, tol=1e-6)
-            print(f"d = {i}, a0 = {k}, b0 = 2.1, Root = {solution:.12f}, Iterations = {iteration}")
-
-        except ValueError as e:
-            print(f"d = {i}, a0 = {k}, b0 = 2.1, Error: {e}")
-
-print(f"\nUsing Secant Method")
-for i in d:
-    f = p(rho, i)
-
-    for k in range(len(x0)):
-        initial_x0 = x0[k]
-        initial_x1 = x1[k]
-
-        try:
-            solution, iteration, log = secant_method(f, initial_x0, initial_x1, rho, max_iter=1000, tol=1e-6)
-            print(f"\nd = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Root = {solution:.12f}, Iterations = {iteration}")
-            display_panda_df(log)
-
-        except ValueError as e:
-            print(f"d = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Error: {e}")
-
-# Problem 5
-print("\n-------------------------------")
-print("PROBLEM 5")
-print("-------------------------------")
-print(f"\nUsing Each Method when d = 1")
-for k in x0:
-    f = p(rho, 1)
-    df = dp(rho, 1)
-
-    try:
-        print(f"\nUsing Standard Newton's Method for x0 = {k}:")
-        solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=1.0, tol=1e-6)
-        print(f"d = 1, m = 1, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-        display_panda_df(log)
-
-    except ValueError as e:
-        print(f"d = 1, x0 = {k}, Error: {e}")
-
-    try:
-        print(f"\nUsing Steffenson's Method for x0 = {k}:")
-        solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
-        print(f"d = 1, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-
-    except ValueError as e:
-        print(f"d = 1, x0 = {k}, Error: {e}")
-
+# print("\n-------------------------------")
+# print("PROBLEM 4")
+# print("-------------------------------")
+# print(f"\nUsing Regula Falsi Method")
+# for i in d:
+#     for k in a0:
+#         f = p(rho, i)
+#
+#         try:
+#             solution, iteration, log = reg_fal_method(f, rho, k, 2.1, max_iter=20000, tol=1e-6)
+#             print(f"d = {i}, a0 = {k}, b0 = 2.1, Root = {solution:.12f}, Iterations = {iteration}")
+#             display_panda_df(log)
+#
+#         except ValueError as e:
+#             print(f"d = {i}, a0 = {k}, b0 = 2.1, Error: {e}")
+#
+# print(f"\nUsing Secant Method")
+# for i in d:
+#     f = p(rho, i)
+#
+#     for k in range(len(x0)):
+#         initial_x0 = x0[k]
+#         initial_x1 = x1[k]
+#
+#         try:
+#             solution, iteration, log = secant_method(f, initial_x0, initial_x1, rho, max_iter=1000, tol=1e-6)
+#             print(f"\nd = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Root = {solution:.12f}, Iterations = {iteration}")
+#             display_panda_df(log)
+#
+#         except ValueError as e:
+#             print(f"d = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Error: {e}")
+#
+#
+#
+#
+#
+#
+# # Problem 5
+# print("\n-------------------------------")
+# print("PROBLEM 5")
+# print("-------------------------------")
+# print(f"\nUsing Each Method when d = 1")
+# for k in x0:
+#     f = p(rho, 1)
+#     df = dp(rho, 1)
+#
+#     try:
+#         print(f"\nUsing Standard Newton's Method for x0 = {k}:")
+#         solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=1.0, tol=1e-6)
+#         print(f"d = 1, m = 1, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+#         display_panda_df(log)
+#
+#     except ValueError as e:
+#         print(f"d = 1, x0 = {k}, Error: {e}")
+#
+#     try:
+#         print(f"\nUsing Steffenson's Method for x0 = {k}:")
+#         solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
+#         print(f"d = 1, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+#         display_panda_df(log)
+#
+#     except ValueError as e:
+#         print(f"d = 1, x0 = {k}, Error: {e}")
+#
 # for k in range(len(x0)):
 #     f = p(rho, 1)
 #     initial_x0 = x0[k]
@@ -363,44 +373,93 @@ for k in x0:
 #
 #     except ValueError as e:
 #         print(f"d = 1, x0 = {initial_x0}, x1 = {initial_x1}, Error: {e}")
+#
+# for k in a0:
+#     f = p(rho, 1)
+#     try:
+#         print(f"\nUsing Regula Falsi Method for a0 = {k}:")
+#         solution, iteration, log = reg_fal_method(f, rho, k, 2.1, max_iter=20000000, tol=1e-6)
+#         print(f"d = 1, a0 = {k}, b0 = 2.1, Root = {solution:.12f}, Iterations = {iteration}")
+#         display_panda_df(log)
+#
+#     except ValueError as e:
+#         print(f"d = 1, a0 = {k}, b0 = 2.1, Error: {e}")
+#
+#
+#
+#
+#
+#
+# # Problem 6
+# print("\n-------------------------------")
+# print("PROBLEM 6")
+# print("-------------------------------")
+# print(f"\nUsing Newton's Method for m > d")
+# for i in d:
+#     for k in x0:
+#         f = p(rho, i)
+#         df = dp(rho, i)
+#         try:
+#             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=2*i, tol=1e-6)
+#             print(f"\nd = {i}, m = {i+1}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+#             display_panda_df(log)
+#
+#         except ValueError as e:
+#             print(f"d = {i}, m = {3*i}, x0 = {k}, Error: {e}")
+#
+# print(f"\nUsing Newton's Method for m < d")
+# for i in d:
+#     for k in x0:
+#         f = p(rho, i)
+#         df = dp(rho, i)
+#         back = i / 4
+#         try:
+#             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=back, tol=1e-6)
+#             print(f"\nd = {i}, m = {back}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+#             display_panda_df(log)
+#
+#         except ValueError as e:
+#             print(f"d = {i}, x0 = {k}, Error: {e}")
 
-for k in a0:
-    f = p(rho, 1)
-    try:
-        print(f"\nUsing Regula Falsi Method for a0 = {k}:")
-        solution, iteration = reg_fal_method(f, k, 2.1, max_iter=20000, tol=1e-6)
-        print(f"d = 1, a0 = {k}, b0 = 2.1, Root = {solution:.12f}, Iterations = {iteration}")
 
-    except ValueError as e:
-        print(f"d = 1, a0 = {k}, b0 = 2.1, Error: {e}")
 
-# Problem 6
-print("\n-------------------------------")
-print("PROBLEM 6")
-print("-------------------------------")
-print(f"\nUsing Newton's Method for m > d")
-for i in d:
-    for k in x0:
-        f = p(rho, i)
-        df = dp(rho, i)
-        try:
-            solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=i+1, tol=1e-6)
-            print(f"\nd = {i}, m = {i+1}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-            display_panda_df(log)
 
-        except ValueError as e:
-            print(f"d = {i}, x0 = {k}, Error: {e}")
 
-print(f"\nUsing Newton's Method for m < d")
-for i in d:
-    for k in x0:
-        f = p(rho, i)
-        df = dp(rho, i)
-        back = i - 1
-        try:
-            solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=back, tol=1e-6)
-            print(f"\nd = {i}, m = {i-1}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-            display_panda_df(log)
+"""Three Distinct Roots and Newton's Method"""
+rho = 3
+alpha = rho / (np.sqrt(3))
+xi_plus = np.sqrt((rho ** 2) / 5)
+xi_neg = -np.sqrt((rho ** 2) / 5)
+x0 = 500
+x1 = 1.75
+x2 = xi_plus-.1
 
-        except ValueError as e:
-            print(f"d = {i}, x0 = {k}, Error: {e}")
+f = p_2(rho)
+df = dp_2(rho, alpha)
+
+try:
+    print(f"\nUsing Newton's Method for rho = {rho} and x0 = {x0}:")
+    solution, iteration, log = newton_method(f, df, x0, rho, max_iter=1000, m=1.0, tol=1e-6)
+    print(f"\nRoot = {solution:.12f}, Iterations = {iteration}")
+    display_panda_df(log)
+except ValueError as e:
+    print(f"Error: {e}")
+
+try:
+    print(f"\nUsing Newton's Method for rho = {rho} and x0 = {x1}:")
+    solution, iteration, log = newton_method(f, df, x1, rho, max_iter=1000, m=1.0, tol=1e-6)
+    print(f"\nRoot = {solution:.12f}, Iterations = {iteration}")
+    display_panda_df(log)
+except ValueError as e:
+    print(f"Error: {e}")
+
+try:
+    print(f"\nUsing Newton's Method for rho = {rho} and x0 = {x2}:")
+    solution, iteration, log = newton_method(f, df, x2, rho, max_iter=1000, m=1.0, tol=1e-6)
+    print(f"\nRoot = {solution:.12f}, Iterations = {iteration}")
+    display_panda_df(log)
+except ValueError as e:
+    print(f"Error: {e}")
+
+
+
