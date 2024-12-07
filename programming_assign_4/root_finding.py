@@ -2,12 +2,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-
-# f(x) function for standard functions
-# def f(x):
-#     f = pow(x, 3) + (-3*x) + 1
-#     return f
-
 # rho function for higher order single root functions
 def p(rho, d):
     return lambda x: (x - rho) ** d
@@ -28,7 +22,7 @@ def dp_2(rho):
 def display_panda_df(log):
     df = pd.DataFrame(log, columns=["Iteration", "x_k", "f(x_k)", "Ratio"])
 
-    pd.set_option("display.float_format", "{:.7f}".format,
+    pd.set_option("display.float_format", "{:.12f}".format,
                   "display.max_rows", 20)
     print(df)
 
@@ -115,6 +109,7 @@ def secant_method(f, x0, x1, rho, max_iter, tol = 1e-6):
 
         err_k = abs(x_k1 - x_true)
         err_k_next = abs(x_k_next - x_true)
+
 
         ratio = abs(err_k_next) / abs(err_k)
 
@@ -238,7 +233,7 @@ for i in d:
 
         try:
             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=1.0, tol=1e-6)
-            print(f"\nd = {i}, x0 = {k}, Root = {solution:.7f}, Iterations = {iteration}")
+            print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
             display_panda_df(log)
 
         except ValueError as e:
@@ -256,7 +251,7 @@ for i in d:
 
         try:
             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=i, tol=1e-6)
-            print(f"\nd = {i}, x0 = {k}, Root = {solution:.7f}, Iterations = {iteration}")
+            print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
             display_panda_df(log)
 
         except ValueError as e:
@@ -283,7 +278,7 @@ for i in d:
 
         try:
             solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
-            print(f"\nd = {i}, x0 = {k}, Root = {solution:.7f}, Iterations = {iteration}")
+            print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
             display_panda_df(log)
 
         except ValueError as e:
@@ -308,7 +303,7 @@ for i in d:
 
         try:
             solution, iteration = reg_fal_method(f, k, 2.1, max_iter=20000, tol=1e-6)
-            print(f"d = {i}, a0 = {k}, b0 = 2.1, Root = {solution:.6f}, Iterations = {iteration}")
+            print(f"d = {i}, a0 = {k}, b0 = 2.1, Root = {solution:.12f}, Iterations = {iteration}")
 
         except ValueError as e:
             print(f"d = {i}, a0 = {k}, b0 = 2.1, Error: {e}")
@@ -323,7 +318,7 @@ for i in d:
 
         try:
             solution, iteration, log = secant_method(f, initial_x0, initial_x1, rho, max_iter=1000, tol=1e-6)
-            print(f"\nd = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Root = {solution:.7f}, Iterations = {iteration}")
+            print(f"\nd = {i}, x0 = {initial_x0}, x1 = {initial_x1}, Root = {solution:.12f}, Iterations = {iteration}")
             display_panda_df(log)
 
         except ValueError as e:
@@ -341,7 +336,7 @@ for k in x0:
     try:
         print(f"\nUsing Standard Newton's Method for x0 = {k}:")
         solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=1.0, tol=1e-6)
-        print(f"d = 1, m = 1, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+        print(f"d = 1, m = 1, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
         display_panda_df(log)
 
     except ValueError as e:
@@ -350,25 +345,34 @@ for k in x0:
     try:
         print(f"\nUsing Steffenson's Method for x0 = {k}:")
         solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
-        print(f"d = 1, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+        print(f"d = 1, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
 
     except ValueError as e:
         print(f"d = 1, x0 = {k}, Error: {e}")
 
-for k in range(len(x0)):
-    f = p(rho, 1)
-    initial_x0 = x0[k]
-    initial_x1 = x1[k]
+# for k in range(len(x0)):
+#     f = p(rho, 1)
+#     initial_x0 = x0[k]
+#     initial_x1 = x1[k]
+#
+#     try:
+#         print(f"\nUsing Secant Method for x0 = {initial_x0} and x1 = {initial_x1}:")
+#         solution, iteration, log = secant_method(f, initial_x0, initial_x1, rho, max_iter=1000, tol=1e-6)
+#         print(f"d = 1, x0 = {initial_x0}, x1 = {initial_x1}, Root = {solution:.6f}, Iterations = {iteration}")
+#         display_panda_df(log)
+#
+#     except ValueError as e:
+#         print(f"d = 1, x0 = {initial_x0}, x1 = {initial_x1}, Error: {e}")
 
+for k in a0:
+    f = p(rho, 1)
     try:
-        print(f"\nUsing Secant Method for x0 = {initial_x0} and x1 = {initial_x1}:")
-        solution, iteration, log = secant_method(f, initial_x0, initial_x1, rho, max_iter=1000, tol=1e-6)
-        print(f"d = 1, x0 = {initial_x0}, x1 = {initial_x1}, Root = {solution:.6f}, Iterations = {iteration}")
-        display_panda_df(log)
+        print(f"\nUsing Regula Falsi Method for a0 = {k}:")
+        solution, iteration = reg_fal_method(f, k, 2.1, max_iter=20000, tol=1e-6)
+        print(f"d = 1, a0 = {k}, b0 = 2.1, Root = {solution:.12f}, Iterations = {iteration}")
 
     except ValueError as e:
-        print(f"d = 1, x0 = {initial_x0}, x1 = {initial_x1}, Error: {e}")
-
+        print(f"d = 1, a0 = {k}, b0 = 2.1, Error: {e}")
 
 # Problem 6
 print("\n-------------------------------")
@@ -381,7 +385,7 @@ for i in d:
         df = dp(rho, i)
         try:
             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=i+1, tol=1e-6)
-            print(f"\nd = {i}, m = {i+1}, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+            print(f"\nd = {i}, m = {i+1}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
             display_panda_df(log)
 
         except ValueError as e:
@@ -395,7 +399,7 @@ for i in d:
         back = i - 1
         try:
             solution, iteration, log = newton_method(f, df, k, rho, max_iter=1000, m=back, tol=1e-6)
-            print(f"\nd = {i}, m = {i-1}, x0 = {k}, Root = {solution:.6f}, Iterations = {iteration}")
+            print(f"\nd = {i}, m = {i-1}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
             display_panda_df(log)
 
         except ValueError as e:
