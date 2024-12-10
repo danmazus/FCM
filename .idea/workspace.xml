@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="added features">
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="added next part">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_2_24,_9_20 AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_2_24__9_20AM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/programming_assign_4/root_finding.py" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/root_finding.py" afterDir="false" />
     </list>
@@ -47,32 +49,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.functions_storage.executor&quot;: &quot;Run&quot;,
-    &quot;Python.least_squares_driver.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.root_finding.executor&quot;: &quot;Run&quot;,
-    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "LaTeX.table_Standard_Newton's_Method_2_1.executor": "Run",
+    "Python.functions_storage.executor": "Run",
+    "Python.least_squares_driver.executor": "Run",
+    "Python.part_1.executor": "Run",
+    "Python.part_2.executor": "Run",
+    "Python.part_3.executor": "Run",
+    "Python.root_finding.executor": "Run",
+    "Python.scratch.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Python&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_1" />
+      <recent name="$PROJECT_DIR$/programming_assign_4/Tables" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -106,15 +111,8 @@
       <workItem from="1732653278241" duration="16111000" />
       <workItem from="1733069375455" duration="35980000" />
       <workItem from="1733450076449" duration="13161000" />
-      <workItem from="1733503343297" duration="23001000" />
-    </task>
-    <task id="LOCAL-00028" summary="Added comments to explain steps">
-      <option name="closed" value="true" />
-      <created>1732199647605</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1732199647605</updated>
+      <workItem from="1733503343297" duration="35842000" />
+      <workItem from="1733776036744" duration="18265000" />
     </task>
     <task id="LOCAL-00029" summary="added for loop for multiple initial guesses">
       <option name="closed" value="true" />
@@ -500,14 +498,21 @@
       <option name="project" value="LOCAL" />
       <updated>1733532835968</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="added next part">
+      <option name="closed" value="true" />
+      <created>1733549416246</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1733549416246</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixing upper solve" />
     <MESSAGE value="updated part 2 driver" />
     <MESSAGE value="Updated part 2 with second driver for multiple solution vectors" />
     <MESSAGE value="renamed part 2 drivers to make sense" />
@@ -532,14 +537,15 @@
     <MESSAGE value="fixed some problems" />
     <MESSAGE value="fixed functions and added tables for output" />
     <MESSAGE value="added features" />
-    <option name="LAST_COMMIT_MESSAGE" value="added features" />
+    <MESSAGE value="added next part" />
+    <option name="LAST_COMMIT_MESSAGE" value="added next part" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FCM$functions_storage.coverage" NAME="functions_storage Coverage Results" MODIFIED="1732216866533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/my_package" />
     <SUITE FILE_PATH="coverage/FCM$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1732289922159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/FCM$part_2.coverage" NAME="part_2 Coverage Results" MODIFIED="1732653395064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
     <SUITE FILE_PATH="coverage/FCM$part_1.coverage" NAME="part_1 Coverage Results" MODIFIED="1732664666686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
-    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733548965315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
+    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733799447335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
     <SUITE FILE_PATH="coverage/FCM$least_squares_driver.coverage" NAME="least_squares_driver Coverage Results" MODIFIED="1731367886066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/least_squares" />
     <SUITE FILE_PATH="coverage/FCM$part_3.coverage" NAME="part_3 Coverage Results" MODIFIED="1732678450071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
   </component>
