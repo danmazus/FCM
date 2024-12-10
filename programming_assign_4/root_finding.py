@@ -232,7 +232,7 @@ def secant_method(f, x0, x1, rho, max_iter, tol = 1e-6):
         err_k = abs(x_k1 - x_true)
         err_k_next = abs(x_k_next - x_true)
 
-        ratio = abs(err_k_next) / abs(err_k)
+        ratio = abs(err_k_next) / abs(err_k ** 1.618)
 
         results.append((k, x_k1, f(x_k1), ratio))
 
@@ -389,23 +389,23 @@ for i in d:
 
 
 # Problem 3
-print("\n-------------------------------")
-print("PROBLEM 3")
-print("-------------------------------")
-print(f"\nUsing Steffenson's Method")
-for i in d:
-    f = p(rho, i)
-
-    for k in x0:
-
-        try:
-            solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
-            print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
-            display_panda_df(log, "Steffenson's Method", i, k, path=
-            "/Users/dannymazus/FCM/programming_assign_4/Tables/Part_1_Prob_3")
-
-        except ValueError as e:
-            print(f"d = {i}, x0 = {k}, Error: {e}")
+# print("\n-------------------------------")
+# print("PROBLEM 3")
+# print("-------------------------------")
+# print(f"\nUsing Steffenson's Method")
+# for i in d:
+#     f = p(rho, i)
+#
+#     for k in x0:
+#
+#         try:
+#             solution, iteration, log = steff_method(f, k, rho, max_iter=1000, tol=1e-6)
+#             print(f"\nd = {i}, x0 = {k}, Root = {solution:.12f}, Iterations = {iteration}")
+#             display_panda_df(log, "Steffenson's Method", i, k, path=
+#             "/Users/dannymazus/FCM/programming_assign_4/Tables/Part_1_Prob_3")
+#
+#         except ValueError as e:
+#             print(f"d = {i}, x0 = {k}, Error: {e}")
 
 
 
@@ -542,7 +542,9 @@ alpha = rho / (np.sqrt(3))
 xi_plus = np.sqrt((rho ** 2) / 5)
 xi_neg = -np.sqrt((rho ** 2) / 5)
 x0 = 7
+x02 = 10
 x1 = 1.75
+x12 = 1.29
 x2 = xi_plus-.1
 x3 = xi_plus
 
@@ -622,6 +624,23 @@ try:
     display_panda_2_df(log, "Steffenson's Method", rho, x3, path="/Users/dannymazus/FCM/programming_assign_4/Tables/Part_2_Prob_5")
 except ValueError as e:
     print(f"Error: {e}")
+
+try:
+    print(f"\nUsing Secant Method for rho = {rho}, x0 = {x0}, x1 = {x02}:")
+    solution, iteration, log = secant_method(f, x0, x02, rho, max_iter=1000, tol=1e-6)
+    print(f"\nRoot = {solution:.12f}, Iterations = {iteration}")
+    display_panda_2_df(log, "Secant Method", rho, x0, path="/Users/dannymazus/FCM/programming_assign_4/Tables/Part_2_Prob_5")
+except ValueError as e:
+    print(f"Error: {e}")
+try:
+    print(f"\nUsing Secant Method for rho = {rho}, x0 = {x12}, x1 = {x1}:")
+    solution, iteration, log = secant_method(f, x12, x1, rho, max_iter=1000, tol=1e-6)
+    print(f"\nRoot = {solution:.12f}, Iterations = {iteration}")
+    display_panda_2_df(log, "Secant Method", rho, x1, path="/Users/dannymazus/FCM/programming_assign_4/Tables/Part_2_Prob_5")
+except ValueError as e:
+    print(f"Error: {e}")
+
+
 
 
 """Root Coalescing"""

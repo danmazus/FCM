@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="added next part">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_2_24,_9_20 AM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_2_24__9_20AM__Changes_.xml" beforeDir="false" />
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="fixed comment">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1_5.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1_5.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2_5.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2_5.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_2/table_Newton's_Method_3_1_75.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_2/table_Newton's_Method_3_1_75.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_3_4/table_Newton's_Method_3_1_2416407864998737.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_3_4/table_Newton's_Method_3_1_2416407864998737.tex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/programming_assign_4/root_finding.py" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/root_finding.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,31 +116,7 @@
       <workItem from="1733069375455" duration="35980000" />
       <workItem from="1733450076449" duration="13161000" />
       <workItem from="1733503343297" duration="35842000" />
-      <workItem from="1733776036744" duration="18265000" />
-    </task>
-    <task id="LOCAL-00029" summary="added for loop for multiple initial guesses">
-      <option name="closed" value="true" />
-      <created>1732200183125</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1732200183125</updated>
-    </task>
-    <task id="LOCAL-00030" summary="added results section within for loop">
-      <option name="closed" value="true" />
-      <created>1732200630735</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1732200630735</updated>
-    </task>
-    <task id="LOCAL-00031" summary="updated lower solve">
-      <option name="closed" value="true" />
-      <created>1732214341456</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1732214341456</updated>
+      <workItem from="1733776036744" duration="19686000" />
     </task>
     <task id="LOCAL-00032" summary="updated lower solve">
       <option name="closed" value="true" />
@@ -506,16 +486,37 @@
       <option name="project" value="LOCAL" />
       <updated>1733549416246</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="finishing code">
+      <option name="closed" value="true" />
+      <created>1733801710249</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1733801710249</updated>
+    </task>
+    <task id="LOCAL-00079" summary="added latex tables from output">
+      <option name="closed" value="true" />
+      <created>1733801865784</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1733801865784</updated>
+    </task>
+    <task id="LOCAL-00080" summary="fixed comment">
+      <option name="closed" value="true" />
+      <created>1733801906080</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1733801906080</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="updated part 2 driver" />
-    <MESSAGE value="Updated part 2 with second driver for multiple solution vectors" />
-    <MESSAGE value="renamed part 2 drivers to make sense" />
     <MESSAGE value="comments made" />
     <MESSAGE value="added title for graphs" />
     <MESSAGE value="added functionality of multiple solution and initial guess vectors" />
@@ -538,14 +539,17 @@
     <MESSAGE value="fixed functions and added tables for output" />
     <MESSAGE value="added features" />
     <MESSAGE value="added next part" />
-    <option name="LAST_COMMIT_MESSAGE" value="added next part" />
+    <MESSAGE value="finishing code" />
+    <MESSAGE value="added latex tables from output" />
+    <MESSAGE value="fixed comment" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed comment" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FCM$functions_storage.coverage" NAME="functions_storage Coverage Results" MODIFIED="1732216866533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/my_package" />
     <SUITE FILE_PATH="coverage/FCM$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1732289922159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/FCM$part_2.coverage" NAME="part_2 Coverage Results" MODIFIED="1732653395064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
     <SUITE FILE_PATH="coverage/FCM$part_1.coverage" NAME="part_1 Coverage Results" MODIFIED="1732664666686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
-    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733799447335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
+    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733802274635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
     <SUITE FILE_PATH="coverage/FCM$least_squares_driver.coverage" NAME="least_squares_driver Coverage Results" MODIFIED="1731367886066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/least_squares" />
     <SUITE FILE_PATH="coverage/FCM$part_3.coverage" NAME="part_3 Coverage Results" MODIFIED="1732678450071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
   </component>
