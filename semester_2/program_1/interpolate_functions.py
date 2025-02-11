@@ -8,15 +8,42 @@ def f(x):
 def f_2(x):
     return abs(x) + 0.5 * x - x ** 2
 
-def chebyshev_1(n):
+def chebyshev_points(n, flag):
+    """
+    Function to create Chebyshev Points of the First kind
+    Inputs:
+        n: number of points needed
+        flag: Flag to indicate which Chebyshev Points should be created
+            1 = Chebyshev Points of the First Kind
+            2 = Chebyshev Points of the Second Kind
+    Outputs:
+        x_mesh: Chebyshev Point of the First Kind
+    """
+    # Initializing the mesh
     x_mesh = np.zeros(n+1)
 
-    for i in range(n+1):
-        x_mesh[i] = np.cos(((2*i + 1) * np.pi) / (2 * n + 2))
+    # Looping over to create the mesh points for Chebyshev Points of the First Kind
+    if flag == 1:
+        for i in range(n+1):
+            x_mesh[i] = np.cos(((2*i + 1) * np.pi) / (2 * n + 2))
+
+    # Looping over to create the mesh points for Chebyshev Points of the Second Kind
+    else:
+        for i in range(n+1):
+            x_mesh[i] = np.cos((i * np.pi)/ n)
 
     return x_mesh
 
 def chebyshev_2(n):
+    """
+    Function to Create Chebyshev Points of the Second kind
+    Inputs:
+        n: number of points needed
+    Outputs:
+        x_mesh: Chebyshev Point of the Second Kind
+    """
+
+    # Initializing the Mesh
     x_mesh = np.zeros(n+1)
 
     for i in range(n+1):
@@ -25,6 +52,19 @@ def chebyshev_2(n):
     return x_mesh
 
 def x_mesh_order(x_mesh, flag):
+    """
+    Function to order a given mesh in either increasing, decreasing, or Leja order
+    Inputs:
+        x_mesh: The vector of points to be sorted
+        flag: Flag to indicate which ordering is to be used
+            1 = Decreasing order of values in mesh
+            2 = Increasing order of values in mesh
+            3 = Leja order of values in mesh
+    Outputs:
+        x_mesh_order: Points in order
+    """
+
+    # Initializing terms and the ordered set of terms
     n = len(x_mesh)
     x_mesh_order = x_mesh.copy()
 
@@ -42,6 +82,7 @@ def x_mesh_order(x_mesh, flag):
                 if x_mesh_order[j] > x_mesh_order[j+1]:
                     x_mesh_order[j], x_mesh_order[j+1] = x_mesh_order[j+1], x_mesh_order[j]
 
+    # Leja ordering of x-values in mesh
     elif flag == 3:
         # Picking x_0 as the max by getting the index of the max through argmax and then reordering terms
         x_max_index = np.argmax(np.abs(x_mesh_order))
@@ -67,6 +108,17 @@ def x_mesh_order(x_mesh, flag):
     return x_mesh_order
 
 def coef_gamma(x_mesh, n, f):
+    """
+    Function to calculate the gamma coefficients and have an evaluation of the function at the mesh points
+    Inputs:
+        x_mesh: The mesh points
+        n: number of points needed
+        f: Function to be evaluated/to evaluate the points
+    Outputs:
+        gamma_vec: The gamma coefficients stored in a vector
+        func_val: The evaluated function value at the mesh points
+    """
+
     gamma_vec = np.zeros(n+1)
     func_val = np.zeros(n+1)
 
@@ -86,6 +138,23 @@ def coef_gamma(x_mesh, n, f):
     return gamma_vec, func_val
 
 def coef_beta(x_mesh, n, f, flag):
+    """
+    Function to calculate the beta coefficients for Barycentric 2 using either the recursive formula to
+    get the coefficients, Chebyshev points of the First Kind, or Chebyshev Points of the Second Kind. This
+    function will also evaluate the function at the mesh points
+    Inputs:
+        x_mesh: The mesh points
+        n: number of points needed
+        f: Function to be evaluated/to evaluate the points
+        flag: Flag to indicate which beta coefficients should be created
+            1 = Recursive style without Chebyshev
+            2 = Using Chebyshev Points of the First Kind
+            3 = Using Chebyshev Points of the Second Kind
+    Outputs:
+        beta_vec: The beta coefficients stored in a vector
+        func_val: The evaluated function value at the mesh points
+    """
+
     beta_vec = np.zeros(n+1)
     func_val = np.zeros(n+1)
 
@@ -111,16 +180,16 @@ def coef_beta(x_mesh, n, f, flag):
 def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n):
     """
     This function is implementing the Barycentric 1 form interpolation and evaluating the polynomial.
-    The inputs for this function are:
-    gamma_vec: Coefficient weights for p_(k-1)
-    x_mesh: Given x-values
-    x_values: x-values that are to be interpolated through/estimated
-    y: The corresponding y-values associated with the mesh
-    n: The length of the mesh minus 1
+    Inputs:
+        gamma_vec: Coefficient weights for p_(k-1)
+        x_mesh: Given x-values
+        x_values: x-values that are to be interpolated through/estimated
+        y: The corresponding y-values associated with the mesh
+        n: The length of the mesh minus 1
 
     Outputs:
-    m_curr: The new Coefficient weights for p_k
-    p_eval: the evaluated polynomial at the x_values
+        m_curr: The new Coefficient weights for p_k
+        p_eval: the evaluated polynomial at the x_values
     """
     k = n+1
 

@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semester_2/program_1/interpolate_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_1/interpolate_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semester_2/program_1/task_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_1/task_2.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,33 +48,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;LaTeX.table_Standard_Newton's_Method_2_1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.functions_storage.executor&quot;: &quot;Run&quot;,
-    &quot;Python.interpolate_functions.executor&quot;: &quot;Run&quot;,
-    &quot;Python.least_squares_driver.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.root_finding.executor&quot;: &quot;Run&quot;,
-    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "LaTeX.table_Standard_Newton's_Method_2_1.executor": "Run",
+    "Python.functions_storage.executor": "Run",
+    "Python.interpolate_functions.executor": "Run",
+    "Python.least_squares_driver.executor": "Run",
+    "Python.part_1.executor": "Run",
+    "Python.part_2.executor": "Run",
+    "Python.part_3.executor": "Run",
+    "Python.root_finding.executor": "Run",
+    "Python.scratch.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/dannymazus/FCM/semester_2/program_1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Python&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/semester_2/program_1" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_1" />
       <recent name="$PROJECT_DIR$/programming_assign_4/Tables" />
@@ -122,7 +128,7 @@
       <workItem from="1739057329422" duration="952000" />
       <workItem from="1739058287294" duration="400000" />
       <workItem from="1739117918911" duration="14255000" />
-      <workItem from="1739213758333" duration="10853000" />
+      <workItem from="1739213758333" duration="11789000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
