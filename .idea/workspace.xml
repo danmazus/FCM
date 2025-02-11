@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="fixed comment">
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1_5.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_1_5.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2_5.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_3/table_Steffenson's_Method_2_2_5.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_2/table_Newton's_Method_3_1_75.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_2/table_Newton's_Method_3_1_75.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_3_4/table_Newton's_Method_3_1_2416407864998737.tex" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/Tables/Part_2_Prob_3_4/table_Newton's_Method_3_1_2416407864998737.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/programming_assign_4/root_finding.py" beforeDir="false" afterPath="$PROJECT_DIR$/programming_assign_4/root_finding.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,31 +46,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "LaTeX.table_Standard_Newton's_Method_2_1.executor": "Run",
-    "Python.functions_storage.executor": "Run",
-    "Python.least_squares_driver.executor": "Run",
-    "Python.part_1.executor": "Run",
-    "Python.part_2.executor": "Run",
-    "Python.part_3.executor": "Run",
-    "Python.root_finding.executor": "Run",
-    "Python.scratch.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;LaTeX.table_Standard_Newton's_Method_2_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.functions_storage.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interpolate_functions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.least_squares_driver.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.root_finding.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_1" />
@@ -88,8 +82,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
-        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-PY-243.22562.220" />
+        <option value="bundled-python-sdk-0fc6c617c4bd-9a18a617cbe4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.22562.220" />
       </set>
     </attachedChunks>
   </component>
@@ -116,23 +110,19 @@
       <workItem from="1733069375455" duration="35980000" />
       <workItem from="1733450076449" duration="13161000" />
       <workItem from="1733503343297" duration="35842000" />
-      <workItem from="1733776036744" duration="19686000" />
-    </task>
-    <task id="LOCAL-00032" summary="updated lower solve">
-      <option name="closed" value="true" />
-      <created>1732214914635</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1732214914636</updated>
-    </task>
-    <task id="LOCAL-00033" summary="updated lower solve">
-      <option name="closed" value="true" />
-      <created>1732216862153</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1732216862153</updated>
+      <workItem from="1733776036744" duration="20780000" />
+      <workItem from="1733926331588" duration="597000" />
+      <workItem from="1736966577295" duration="17000" />
+      <workItem from="1738588495279" duration="2012000" />
+      <workItem from="1738680068636" duration="88000" />
+      <workItem from="1738680180015" duration="13000" />
+      <workItem from="1738942979073" duration="1440000" />
+      <workItem from="1738971770811" duration="4000" />
+      <workItem from="1739055653553" duration="1577000" />
+      <workItem from="1739057329422" duration="952000" />
+      <workItem from="1739058287294" duration="400000" />
+      <workItem from="1739117918911" duration="14255000" />
+      <workItem from="1739213758333" duration="10853000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
@@ -510,15 +500,29 @@
       <option name="project" value="LOCAL" />
       <updated>1733801906080</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="tables changed">
+      <option name="closed" value="true" />
+      <created>1733802898038</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1733802898038</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Added new tables">
+      <option name="closed" value="true" />
+      <created>1733802912651</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1733802912651</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="comments made" />
-    <MESSAGE value="added title for graphs" />
     <MESSAGE value="added functionality of multiple solution and initial guess vectors" />
     <MESSAGE value="added variable for second driver" />
     <MESSAGE value="updated part 2 driver one" />
@@ -542,14 +546,17 @@
     <MESSAGE value="finishing code" />
     <MESSAGE value="added latex tables from output" />
     <MESSAGE value="fixed comment" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed comment" />
+    <MESSAGE value="tables changed" />
+    <MESSAGE value="Added new tables" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new tables" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/FCM$interpolate_functions.coverage" NAME="interpolate_functions Coverage Results" MODIFIED="1739219052994" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
     <SUITE FILE_PATH="coverage/FCM$functions_storage.coverage" NAME="functions_storage Coverage Results" MODIFIED="1732216866533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/my_package" />
     <SUITE FILE_PATH="coverage/FCM$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1732289922159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/FCM$part_2.coverage" NAME="part_2 Coverage Results" MODIFIED="1732653395064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
     <SUITE FILE_PATH="coverage/FCM$part_1.coverage" NAME="part_1 Coverage Results" MODIFIED="1732664666686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
-    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733802274635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
+    <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733802512334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
     <SUITE FILE_PATH="coverage/FCM$least_squares_driver.coverage" NAME="least_squares_driver Coverage Results" MODIFIED="1731367886066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/least_squares" />
     <SUITE FILE_PATH="coverage/FCM$part_3.coverage" NAME="part_3 Coverage Results" MODIFIED="1732678450071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
   </component>
