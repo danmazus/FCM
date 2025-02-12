@@ -127,7 +127,7 @@
       <workItem from="1739057329422" duration="952000" />
       <workItem from="1739058287294" duration="400000" />
       <workItem from="1739117918911" duration="14255000" />
-      <workItem from="1739213758333" duration="20249000" />
+      <workItem from="1739213758333" duration="20747000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
@@ -556,7 +556,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="Added new tables" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/FCM$interpolate_functions.coverage" NAME="interpolate_functions Coverage Results" MODIFIED="1739381879159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
+    <SUITE FILE_PATH="coverage/FCM$interpolate_functions.coverage" NAME="interpolate_functions Coverage Results" MODIFIED="1739384970986" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
     <SUITE FILE_PATH="coverage/FCM$functions_storage.coverage" NAME="functions_storage Coverage Results" MODIFIED="1732216866533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/my_package" />
     <SUITE FILE_PATH="coverage/FCM$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1732289922159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/FCM$part_2.coverage" NAME="part_2 Coverage Results" MODIFIED="1732653395064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />

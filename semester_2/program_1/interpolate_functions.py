@@ -88,15 +88,15 @@ def x_mesh_order(x_mesh, flag):
         x_max_index = np.argmax(np.abs(x_mesh_order))
         x_mesh_order[0], x_mesh_order[x_max_index] = x_mesh_order[x_max_index], x_mesh_order[0]
 
-        # Rest of the values in the mesh
+        # Looping over Rest of the values in the mesh starting from index 1 to n-1
         for i in range(1, n):
             # Initializing the product to 1
             product = np.ones(n)
 
-
+            # Looping over the remaining values needed for the product, i to n-1
             for j in range(i, n):
-                for k in range(i):
-                    product[j] = product[j] * abs(x_mesh_order[j] - x_mesh_order[k])
+                for k in range(i): # Looping over the already selected points from before, i.e. 0 to i-1
+                    product[j] *= abs(x_mesh_order[j] - x_mesh_order[k])
 
 
             # Indexing through to find the next point with max product and add i to get correct index
