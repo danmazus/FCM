@@ -8,7 +8,7 @@ def f(x):
 def f_2(x):
     return abs(x) + 0.5 * x - x ** 2
 
-def chebyshev_points(n, flag):
+def chebyshev_points(n, flag, dtype=np.float32):
     """
     Function to create Chebyshev Points of the First kind
     Inputs:
@@ -34,7 +34,7 @@ def chebyshev_points(n, flag):
 
     return x_mesh
 
-def chebyshev_2(n):
+def chebyshev_2(n, dtype=np.float32):
     """
     Function to Create Chebyshev Points of the Second kind
     Inputs:
@@ -90,12 +90,14 @@ def x_mesh_order(x_mesh, flag):
 
         # Rest of the values in the mesh
         for i in range(1, n):
-            # Initializing product vector
+            # Initializing the product to 1
             product = np.ones(n)
 
-            # Leja ordering product
+
             for j in range(i, n):
-                product[j] = product[j-1] * (x_mesh_order[j] - x_mesh_order[i-1])
+                for k in range(i):
+                    product[j] = product[j] * abs(x_mesh_order[j] - x_mesh_order[k])
+
 
             # Indexing through to find the next point with max product and add i to get correct index
             # Adding i is needed as this will adjust the index in the subarray to the original array location
@@ -107,7 +109,7 @@ def x_mesh_order(x_mesh, flag):
 
     return x_mesh_order
 
-def coef_gamma(x_mesh, n, f):
+def coef_gamma(x_mesh, n, f, dtype=np.float32):
     """
     Function to calculate the gamma coefficients and have an evaluation of the function at the mesh points
     Inputs:
@@ -137,7 +139,7 @@ def coef_gamma(x_mesh, n, f):
     gamma_vec = func_val/gamma_vec
     return gamma_vec, func_val
 
-def coef_beta(x_mesh, n, f, flag):
+def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
     """
     Function to calculate the beta coefficients for Barycentric 2 using either the recursive formula to
     get the coefficients, Chebyshev points of the First Kind, or Chebyshev Points of the Second Kind. This
@@ -177,7 +179,7 @@ def coef_beta(x_mesh, n, f, flag):
 
     return beta_vec, func_val
 
-def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n):
+def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n, dtype=np.float32):
     """
     This function is implementing the Barycentric 1 form interpolation and evaluating the polynomial.
     Inputs:
@@ -220,7 +222,7 @@ def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n):
 
     return m_curr, p_eval
 
-def bary_2_interpolation(beta_vec, x_mesh, x_values, y, n):
+def bary_2_interpolation(beta_vec, x_mesh, x_values, y, n, dtype=np.float32):
     p_eval = []
     for x in x_values:
         numer = 0
@@ -237,13 +239,21 @@ def bary_2_interpolation(beta_vec, x_mesh, x_values, y, n):
 
     return p_eval
 
-def newton_divdiff(x_mesh, x_values, f, n):
+def newton_divdiff(x_mesh, x_values, f, n, dtype=np.float32):
     func_val = np.zeros(n+1)
     d = np.zeros(n+1)
+    div_table = np.zeros((n+1, n+1))
+
 
     """Computing the mesh values using the given function"""
     for i in range(n+1):
         func_val[i] = f(x_mesh[i])
+
+    div_table[0, :] = func_val
+
+    for i in range(1, n+1):
+        for j in range(n-i):
+            div_table[i, j] = (div_table[i-1, j+1] - div_table[i-1, j]) / (x_mesh[j+i] - x_mesh[j])
 
     """Computing the vector of summation terms"""
     for i in range(n):
@@ -279,7 +289,7 @@ def newton_divdiff(x_mesh, x_values, f, n):
 
     return f_div, func_val
 
-def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n):
+def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n, dtype=np.float32):
     s = f_div
     p_eval = []
     for x in x_values:
@@ -330,7 +340,7 @@ def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n):
 
 
 
-# x_mesh = np.array([-1, -0.5, 0, 0.5, 1])
-# x_mesh_ordered = x_mesh_order(x_mesh, 3)
-# print(x_mesh)
-# print(x_mesh_ordered)
+x_mesh = np.array([-1, -0.5, 0, 0.5, 1, 2, -2, 5, -3, 4, 10])
+x_mesh_ordered = x_mesh_order(x_mesh, 3)
+print(x_mesh)
+print(x_mesh_ordered)
