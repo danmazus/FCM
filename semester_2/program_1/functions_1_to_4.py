@@ -4,6 +4,7 @@ def p_1(d, rho):
 
 def p_2(d):
     for i in range(d):
+        prod = 1.0
         return lambda x: (x - i)
 
 def p_3(n):

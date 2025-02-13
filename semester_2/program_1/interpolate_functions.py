@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 def f(x):
     # f(x)=4+3x+2x^2+x^3
@@ -163,13 +162,18 @@ def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
     for i in range(n+1):
         func_val[i] = f(x_mesh[i])
 
+    # Uniform Mesh
     if flag == 1:
         beta_vec[0] = 1
         for i in range(n):
             beta_vec[i+1] = -beta_vec[i] * ((n - i) / i + 1)
+
+    # Chebyshev Point of the First Kind
     elif flag == 2:
         for i in range(n+1):
             beta_vec[i] = (-1)**i * np.sin(((2*i + 1) * np.pi) / (2*n + 2))
+
+    # Chebyshev Points of the Second Kind
     else:
         for i in range(n+1):
             if i == 0 or i == n:
@@ -340,7 +344,7 @@ def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n, dtype=np.float32)
 
 
 
-x_mesh = np.array([-1, -0.5, 0, 0.5, 1, 2, -2, 5, -3, 4, 10])
-x_mesh_ordered = x_mesh_order(x_mesh, 3)
-print(x_mesh)
-print(x_mesh_ordered)
+# x_mesh = np.array([-1, -0.5, 0, 0.5, 1, 2, -2, 5, -3, 4, 10, -10])
+# x_mesh_ordered = x_mesh_order(x_mesh, 3)
+# print(x_mesh)
+# print(x_mesh_ordered)
