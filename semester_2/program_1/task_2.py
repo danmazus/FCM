@@ -39,7 +39,7 @@ def get_user_inputs():
     return m, rho, d, x_min, x_max, num_tests
 
 
-def task_1_driver():
+def task_2_driver():
     inputs = get_user_inputs()
 
     m, rho, d, x_min, x_max, num_tests = inputs
@@ -91,7 +91,7 @@ def task_1_driver():
 
 if __name__ == '__main__':
     while True:
-        bary_2_sol = task_1_driver()
+        bary_2_sol = task_2_driver()
 
         user_input = input("\nRun another problem? (y/n) [default=n]: ").strip().lower()
         if user_input != 'y':
