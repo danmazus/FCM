@@ -19,7 +19,7 @@ def chebyshev_points(n, flag, dtype=np.float32):
         x_mesh: Chebyshev Point of the First Kind
     """
     # Initializing the mesh
-    x_mesh = np.zeros(n+1)
+    x_mesh = np.zeros(n+1, dtype=dtype)
 
     # Looping over to create the mesh points for Chebyshev Points of the First Kind
     if flag == 1:
@@ -30,23 +30,6 @@ def chebyshev_points(n, flag, dtype=np.float32):
     else:
         for i in range(n+1):
             x_mesh[i] = np.cos((i * np.pi)/ n)
-
-    return x_mesh
-
-def chebyshev_2(n, dtype=np.float32):
-    """
-    Function to Create Chebyshev Points of the Second kind
-    Inputs:
-        n: number of points needed
-    Outputs:
-        x_mesh: Chebyshev Point of the Second Kind
-    """
-
-    # Initializing the Mesh
-    x_mesh = np.zeros(n+1)
-
-    for i in range(n+1):
-        x_mesh[i] = np.cos((i * np.pi)/ n)
 
     return x_mesh
 
@@ -239,13 +222,12 @@ def bary_2_interpolation(beta_vec, x_mesh, x_values, y, n, dtype=np.float32):
         p = numer / denom
         p_eval.append(p)
 
-    np.array(p_eval)
+    np.array(p_eval, dtype = dtype)
 
     return p_eval
 
-def newton_divdiff(x_mesh, x_values, f, n, dtype=np.float32):
+def newton_divdiff(x_mesh, f, n, dtype=np.float32):
     func_val = np.zeros(n+1)
-    d = np.zeros(n+1)
     div_table = np.zeros((n+1, n+1))
 
 
@@ -253,6 +235,8 @@ def newton_divdiff(x_mesh, x_values, f, n, dtype=np.float32):
     for i in range(n+1):
         func_val[i] = f(x_mesh[i])
 
+    """Computing the Divided Difference Table"""
+    # Initializing the first row as the function values
     div_table[0, :] = func_val
 
     for i in range(1, n+1):
@@ -260,25 +244,25 @@ def newton_divdiff(x_mesh, x_values, f, n, dtype=np.float32):
             div_table[i, j] = (div_table[i-1, j+1] - div_table[i-1, j]) / (x_mesh[j+i] - x_mesh[j])
 
     """Computing the vector of summation terms"""
-    for i in range(n):
-        omega_prime = 1.0
-        for j in range(n+1):
-            if i != j:
-                omega_prime = omega_prime * (x_mesh[i] - x_mesh[j])
-        d[i] = func_val[i] / omega_prime
-
-    """Computing the coefficients"""
-    p = x_mesh[0] - x_mesh[n]
-    d_0 = d[0] / p
-    s = d_0
-    for i in range(1, n):
-        t = (x_mesh[i] - x_mesh[n])
-        d_i = d[i] / t
-        p = t * p
-        s = d_i + s
-
-    d_n = ((-1) ** n) * (f(x_mesh[n]) / p)
-    f_div = s + d_n
+    # for i in range(n):
+    #     omega_prime = 1.0
+    #     for j in range(n+1):
+    #         if i != j:
+    #             omega_prime = omega_prime * (x_mesh[i] - x_mesh[j])
+    #     d[i] = func_val[i] / omega_prime
+    #
+    # """Computing the coefficients"""
+    # p = x_mesh[0] - x_mesh[n]
+    # d_0 = d[0] / p
+    # s = d_0
+    # for i in range(1, n):
+    #     t = (x_mesh[i] - x_mesh[n])
+    #     d_i = d[i] / t
+    #     p = t * p
+    #     s = d_i + s
+    #
+    # d_n = ((-1) ** n) * (f(x_mesh[n]) / p)
+    # f_div = s + d_n
 
     # """Computing the polynomial evaluation using the divided difference coefficients just found"""
     #
@@ -291,10 +275,12 @@ def newton_divdiff(x_mesh, x_values, f, n, dtype=np.float32):
     #         product = product * (x - x_mesh[i-1])
 
 
-    return f_div, func_val
+    return func_val, div_table
 
-def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n, dtype=np.float32):
-    s = f_div
+def horner_interpolation(x_mesh, x_values, ndd, f, n, dtype=np.float32):
+    alpha = ndd[:, 0]
+    print(alpha)
+    s = alpha[-1]
     p_eval = []
     for x in x_values:
         for i in range(n-1, 1, -1):
@@ -313,6 +299,7 @@ def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n, dtype=np.float32)
 # print(gamma_vec)
 # print(func_val)
 #
+## Testing Barycentric 1 function
 # m_curr, p_eval = bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n)
 # print(m_curr)
 # print(p_eval)
@@ -320,6 +307,7 @@ def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n, dtype=np.float32)
 # true_values = f(x_values)
 # print(true_values)
 
+## Testing Barycentric 2 example given in class
 # n = 20
 # x_mesh = chebyshev_2(n)
 # print(x_mesh)
@@ -340,10 +328,18 @@ def horner_interpolation(x_mesh, x_values, alpha, f_div, f, n, dtype=np.float32)
 # plt.grid(True)
 # plt.show()
 
+# Testing Newton Divided Difference Table
+x_mesh = [1, 2, 4, 7, 8]
+def f_3(x):
+    return x**3 - 4*x
 
+n = len(x_mesh) - 1
 
+func_val, ndd = newton_divdiff(x_mesh, f_3, n, dtype=np.float64)
+print(func_val)
+print(ndd)
 
-
+# Testing Leja Ordering to make sure ordering is correct
 # x_mesh = np.array([-1, -0.5, 0, 0.5, 1, 2, -2, 5, -3, 4, 10, -10])
 # x_mesh_ordered = x_mesh_order(x_mesh, 3)
 # print(x_mesh)

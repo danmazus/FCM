@@ -48,7 +48,8 @@ def task_1_driver():
     x_mesh_uniform = np.linspace(-1, 1, m)
     x_mesh_cheb1 = ifs.chebyshev_points(m, flag=1, dtype=np.float32)
     x_mesh_cheb2 = ifs.chebyshev_points(m, flag=2, dtype=np.float32)
-    f = functions_1_to_4.p_1(d, rho)
+    #f = functions_1_to_4.p_1(d, rho)
+    f = functions_1_to_4.p_4(4)
 
     bary_2_sol = []
 
@@ -62,9 +63,10 @@ def task_1_driver():
         m_curr, bary_1 = ifs.bary_1_interpolation(g, x_mesh_cheb1, x_values, func_val_2, m,
                                                                     dtype=np.float32)
         plt.title("Barycentric Form 1 with Chebyshev Points of the First Kind")
-        plt.plot(x_mesh_cheb1, func_val_2, '*')
-        plt.plot(x_values, bary_1, '-')
-        plt.plot(x_values, ft, '--')
+        plt.plot(x_mesh_cheb1, func_val_2, '*', label="Interpolation Points")
+        plt.plot(x_values, bary_1, '-', label="Interpolation Polynomial")
+        plt.plot(x_values, ft, '--', label="f(x)")
+        plt.legend()
         plt.grid(True)
         plt.show()
 
@@ -72,9 +74,10 @@ def task_1_driver():
         c, func_val = ifs.coef_beta(x_mesh_cheb1, m, f, flag=2, dtype=np.float32)
         bary_2 = ifs.bary_2_interpolation(c, x_mesh_cheb1, x_values, func_val, m, dtype=np.float32)
         plt.title("Barycentric Form 2 with Chebyshev Points of the First Kind")
-        plt.plot(x_mesh_cheb1, func_val, '*')
-        plt.plot(x_values, bary_2, '-')
-        plt.plot(x_values, ft, '--')
+        plt.plot(x_mesh_cheb1, func_val, '*', label="Interpolation Points")
+        plt.plot(x_values, bary_2, '-', label="Interpolation Polynomial")
+        plt.plot(x_values, ft, '--', label="f(x)")
+        plt.legend()
         plt.grid(True)
         plt.show()
 

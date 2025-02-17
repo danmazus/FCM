@@ -11,4 +11,4 @@ def p_3(n):
     return lambda x: (x - 1)
 
 def p_4(n):
-    return lambda x: 1 / (1 + (25 * x)^n)
+    return lambda x: 1 / (1 + (25 * x) ** n)
