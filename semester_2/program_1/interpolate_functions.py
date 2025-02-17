@@ -329,15 +329,15 @@ def horner_interpolation(x_mesh, x_values, ndd, f, n, dtype=np.float32):
 # plt.show()
 
 # Testing Newton Divided Difference Table
-x_mesh = [1, 2, 4, 7, 8]
-def f_3(x):
-    return x**3 - 4*x
-
-n = len(x_mesh) - 1
-
-func_val, ndd = newton_divdiff(x_mesh, f_3, n, dtype=np.float64)
-print(func_val)
-print(ndd)
+# x_mesh = [1, 2, 4, 7, 8]
+# def f_3(x):
+#     return x**3 - 4*x
+#
+# n = len(x_mesh) - 1
+#
+# func_val, ndd = newton_divdiff(x_mesh, f_3, n, dtype=np.float64)
+# print(func_val)
+# print(ndd)
 
 # Testing Leja Ordering to make sure ordering is correct
 # x_mesh = np.array([-1, -0.5, 0, 0.5, 1, 2, -2, 5, -3, 4, 10, -10])
