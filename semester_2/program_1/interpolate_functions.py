@@ -1,13 +1,15 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def f(x):
     # f(x)=4+3x+2x^2+x^3
     return 4 + 3 * x + 2 * np.power(x,2) + np.power(x,3)
 
 def f_2(x):
-    return abs(x) + 0.5 * x - x ** 2
+    #return abs(x) + 0.5 * x - x ** 2
+    return (x - 2)**2
 
-def chebyshev_points(n, flag, dtype=np.float32):
+def chebyshev_points(a, b, n, flag, dtype=np.float32):
     """
     Function to create Chebyshev Points of the First kind
     Inputs:
@@ -21,15 +23,18 @@ def chebyshev_points(n, flag, dtype=np.float32):
     # Initializing the mesh
     x_mesh = np.zeros(n+1, dtype=dtype)
 
-    # Looping over to create the mesh points for Chebyshev Points of the First Kind
+
     if flag == 1:
+        x_mesh = np.linspace(a, b, )
+    # Looping over to create the mesh points for Chebyshev Points of the First Kind
+    elif flag == 2:
         for i in range(n+1):
-            x_mesh[i] = np.cos(((2*i + 1) * np.pi) / (2 * n + 2))
+            x_mesh[i] = 0.5 * (b-a) * np.cos(((2*i + 1) * np.pi) / (2 * n + 2)) + 0.5*(b+a)
 
     # Looping over to create the mesh points for Chebyshev Points of the Second Kind
-    else:
+    elif flag == 3:
         for i in range(n+1):
-            x_mesh[i] = np.cos((i * np.pi)/ n)
+            x_mesh[i] = 0.5 * (b-a) * np.cos((i * np.pi)/ n) + 0.5 * (b+a)
 
     return x_mesh
 
@@ -118,7 +123,7 @@ def coef_gamma(x_mesh, n, f, dtype=np.float32):
                 temp = temp * (x_mesh[i]-x_mesh[j])
         gamma_vec[i] = temp
 
-    gamma_vec = func_val/gamma_vec
+    gamma_vec = 1/gamma_vec
     return gamma_vec, func_val
 
 def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
@@ -145,7 +150,7 @@ def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
     for i in range(n+1):
         func_val[i] = f(x_mesh[i])
 
-    # Uniform Mesh
+    # Using Uniform Mesh
     if flag == 1:
         beta_vec[0] = 1
         for i in range(n):
@@ -196,11 +201,13 @@ def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n, dtype=np.float32):
     for x in x_values:
         numer = 0
         denom = 0
+        #### FIX THIS ####
         for j in range(k):
             if x != x_mesh[j]:
                 term = m_curr[j] / (x - x_mesh[j])
                 numer += term * y[j]
                 denom += term
+
 
         p = numer / denom
         p_eval.append(p)
@@ -307,17 +314,17 @@ def horner_interpolation(x_mesh, x_values, ndd, f, n, dtype=np.float32):
 # true_values = f(x_values)
 # print(true_values)
 
-## Testing Barycentric 2 example given in class
-# n = 20
-# x_mesh = chebyshev_2(n)
+# Testing Barycentric 2 example given in class
+# n = 1
+# x_mesh = chebyshev_points(n, flag=2, dtype=np.float32)
 # print(x_mesh)
 # c, func_val = coef_beta(x_mesh, n, f_2, 3)
 # print(c)
 # print(func_val)
 # x_values = np.linspace(-1, 1, 1000)
 # ft = f_2(x_values)
-#
-#
+# #
+# #
 # bary_2 = bary_2_interpolation(c, x_mesh, x_values, func_val, n)
 # print(bary_2)
 #
