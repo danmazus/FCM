@@ -47,54 +47,57 @@ def task_2_driver():
     # Setting up the initial mesh's using the user inputs
     x_mesh_uniform = np.linspace(-1, 1, m)
     x_mesh_cheb1 = ifs.chebyshev_points(x_min, x_max, m, flag=2, dtype=np.float32)
+    x_mesh_cheb1_inc = ifs.x_mesh_order(x_mesh_cheb1, 2)
     x_mesh_cheb2 = ifs.chebyshev_points(x_min, x_max, m, flag=3, dtype=np.float32)
-    x_mesh_cheb1_64 = ifs.chebyshev_points(x_min, x_max, m, flag=2, dtype=np.float64)
-    x_mesh_cheb2_64 = ifs.chebyshev_points(x_min, x_max, m, flag=3, dtype=np.float64)
-    f = functions_1_to_4.p_1(d, rho)
-    #f = functions_1_to_4.p_4(4)
+    #f = functions_1_to_4.p_1(d, rho)
+    f = functions_1_to_4.p_4(2)
 
     bary_2_sol = []
 
 
     for i in range(num_tests):
-        x_values = np.linspace(x_min, x_max, 1000)
-        ft = f(x_values)
+        x_values = np.linspace(x_min, x_max, 100)
+        exact = f(x_values)
 
         ### CHEBYSHEV 1 POINTS
 
         # Barycentric Form 1 Approximate (float32)
-        g, func_val_1 = ifs.coef_gamma(x_mesh_cheb1, m, f, dtype=np.float32)
-        m_curr, bary_1 = ifs.bary_1_interpolation(g, x_mesh_cheb1, x_values, func_val_1, m,
-                                                                    dtype=np.float32)
+        g, func_val_1 = ifs.coef_gamma(x_mesh_cheb1_inc, m, f, dtype=np.float32)
+        bary_1 = ifs.bary_1_interpolation(g, x_mesh_cheb1_inc, x_values, func_val_1, m, dtype=np.float32)
 
-        print(bary_1)
+        #print(bary_1)
 
         # Barycentric Form 1 Exact (float64)
-        g_64, func_val_64 = ifs.coef_gamma(x_mesh_cheb1_64, m, f, dtype=np.float64)
-        m_curr_64, bary_1_64 = ifs.bary_1_interpolation(g_64, x_mesh_cheb1_64, x_values, func_val_64, m, dtype=np.float64)
+
 
         # Barycentric Form 1 Error
-        bary_1_error_storage = np.zeros(len(x_values))
-        for err in range(len(x_values)):
-            bary_1_error_storage[err] = (bary_1_64[err] - bary_1[err]) / bary_1_64[err]
+
 
         # Barycentric Form 2 Approximate (float32)
-        c, func_val_2 = ifs.coef_beta(x_mesh_cheb1, m, f, flag=2, dtype=np.float32)
-        bary_2 = ifs.bary_2_interpolation(c, x_mesh_cheb1, x_values, func_val_2, m, dtype=np.float32)
+        c, func_val_2 = ifs.coef_beta(x_mesh_cheb1_inc, m, f, flag=2, dtype=np.float32)
+        bary_2 = ifs.bary_2_interpolation(c, x_mesh_cheb1_inc, x_values, func_val_2, m, dtype=np.float32)
+
+        error = np.subtract(exact, bary_1)
+        error = abs(error)
+        rel_error = np.divide(error, exact)
 
         # Barycentric Form 2 Exact (float64)
-        c_64, func_val_2_64 = ifs.coef_beta(x_mesh_cheb1_64, m, f, flag=2, dtype=np.float64)
-        bary_2_64 = ifs.bary_2_interpolation(c_64, x_mesh_cheb1_64, x_values, func_val_2_64, m, dtype=np.float64)
+
 
 
 
         # Plot Barycentric Form
         plt.title("Barycentric Form 1 and 2 with Chebyshev Points of the First Kind")
-        plt.plot(x_mesh_cheb1, func_val_2, '*', label="Interpolation Points")
-        plt.plot(x_values, bary_2, label="Barycentric 2")
+        plt.plot(x_mesh_cheb1_inc, func_val_2, '*', label="Interpolation Points")
+        #plt.plot(x_values, bary_2, label="Barycentric 2")
         plt.plot(x_values, bary_1, label="Barycentric 1")
-        plt.plot(x_values, ft, 'black', label="f(x)")
+        plt.plot(x_values, exact, 'black', label="f(x)")
         plt.legend()
+        plt.grid(True)
+        plt.show()
+
+        plt.title("Error")
+        plt.plot(x_values, rel_error, 'x', label="Error")
         plt.grid(True)
         plt.show()
 

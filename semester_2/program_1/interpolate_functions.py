@@ -1,13 +1,14 @@
+import copy
 import numpy as np
 import matplotlib.pyplot as plt
 
-def f(x):
-    # f(x)=4+3x+2x^2+x^3
-    return 4 + 3 * x + 2 * np.power(x,2) + np.power(x,3)
-
-def f_2(x):
-    #return abs(x) + 0.5 * x - x ** 2
-    return (x - 2)**2
+# def f(x):
+#     # f(x)=4+3x+2x^2+x^3
+#     return 4 + 3 * x + 2 * np.power(x,2) + np.power(x,3)
+#
+# def f_2(x):
+#     #return abs(x) + 0.5 * x - x ** 2
+#     return (x - 2)**2
 
 def chebyshev_points(a, b, n, flag, dtype=np.float32):
     """
@@ -15,17 +16,18 @@ def chebyshev_points(a, b, n, flag, dtype=np.float32):
     Inputs:
         n: number of points needed
         flag: Flag to indicate which Chebyshev Points should be created
-            1 = Chebyshev Points of the First Kind
-            2 = Chebyshev Points of the Second Kind
+            1 = Uniform Mesh
+            2 = Chebyshev Points of the First Kind
+            3 = Chebyshev Points of the Second Kind
     Outputs:
-        x_mesh: Chebyshev Point of the First Kind
+        x_mesh: mesh points with desired type
     """
     # Initializing the mesh
-    x_mesh = np.zeros(n+1, dtype=dtype)
+    x_mesh = np.zeros(n+1)
 
 
     if flag == 1:
-        x_mesh = np.linspace(a, b, )
+        x_mesh = np.linspace(a, b, n+1)
     # Looping over to create the mesh points for Chebyshev Points of the First Kind
     elif flag == 2:
         for i in range(n+1):
@@ -36,7 +38,7 @@ def chebyshev_points(a, b, n, flag, dtype=np.float32):
         for i in range(n+1):
             x_mesh[i] = 0.5 * (b-a) * np.cos((i * np.pi)/ n) + 0.5 * (b+a)
 
-    return x_mesh
+    return x_mesh.astype(dtype)
 
 def x_mesh_order(x_mesh, flag):
     """
@@ -108,23 +110,19 @@ def coef_gamma(x_mesh, n, f, dtype=np.float32):
         func_val: The evaluated function value at the mesh points
     """
 
-    gamma_vec = np.zeros(n+1)
+    gamma_vec = np.ones(n+1)
     func_val = np.zeros(n+1)
 
     for i in range(n+1):
         func_val[i] = f(x_mesh[i])
 
     for i in range(n+1):
-        temp = 1
         for j in range(n+1):
-            if j == i:
-                continue
-            else:
-                temp = temp * (x_mesh[i]-x_mesh[j])
-        gamma_vec[i] = temp
+            if i != j:
+                gamma_vec[i] *= (x_mesh[i] - x_mesh[j])
 
     gamma_vec = 1/gamma_vec
-    return gamma_vec, func_val
+    return gamma_vec.astype(dtype), func_val
 
 def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
     """
@@ -169,7 +167,7 @@ def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
             else:
                 beta_vec[i] = ((-1) ** i) * 1
 
-    return beta_vec, func_val
+    return beta_vec.astype(dtype), func_val
 
 def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n, dtype=np.float32):
     """
@@ -187,34 +185,54 @@ def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n, dtype=np.float32):
     """
     k = n+1
 
-    m_curr = np.zeros(k)
-    p = 1.0
-    for i in range(n):
-        t = x_mesh[i] - x_mesh[n]
-        m_curr[i] = t * gamma_vec[i]
-        p = -t * p
+    # m_curr = np.zeros(k)
+    # p = 1.0
+    # for i in range(n):
+    #     t = x_mesh[i] - x_mesh[n]
+    #     m_curr[i] = t * gamma_vec[i]
+    #     p = -t * p
+    #
+    # m_curr[n] = p
 
-    m_curr[n] = p
+    # omega = 1
+    # for x in x_values:
+    #     for i in range(k):
+    #         if x != x_mesh[i]:
+    #             omega *= x - x_mesh[i]
 
     # Evaluating the polynomial given the weights calculated above
+    # p_eval = []
+    # for x in x_values:
+    #     #numer = 0
+    #     #denom = 0
+    #     term = 0
+    #     #### FIX THIS ####
+    #     for j in range(k):
+    #         if x != x_mesh[j]:
+    #             #term = m_curr[j] / (x - x_mesh[j])
+    #             term += y[j] * gamma_vec[j] / (x - x_mesh[j])
+    #             #numer += term * y[j]
+    #             #denom += term
+    #
+    #
+    #     p = term * omega
+    #     p_eval.append(p)
+    #
+    # np.array(p_eval)
+
     p_eval = []
-    for x in x_values:
-        numer = 0
-        denom = 0
-        #### FIX THIS ####
-        for j in range(k):
-            if x != x_mesh[j]:
-                term = m_curr[j] / (x - x_mesh[j])
-                numer += term * y[j]
-                denom += term
+    for j in range(len(x_values)):
+        omega = np.prod(x_values[j] - x_mesh)
 
+        term = 0
+        for i in range(k):
+            term += (y[i] * gamma_vec[i]) / (x_values[j] - x_mesh[i])
 
-        p = numer / denom
+        p = omega * term
         p_eval.append(p)
 
-    np.array(p_eval)
-
-    return m_curr, p_eval
+    p_eval = np.array(p_eval, dtype=dtype)
+    return p_eval
 
 def bary_2_interpolation(beta_vec, x_mesh, x_values, y, n, dtype=np.float32):
     p_eval = []
@@ -225,68 +243,35 @@ def bary_2_interpolation(beta_vec, x_mesh, x_values, y, n, dtype=np.float32):
             if x != x_mesh[j]:
                 numer += (y[j] * beta_vec[j]) / (x - x_mesh[j])
                 denom += beta_vec[j] / (x - x_mesh[j])
+            else:
+                idx = np.where(x_mesh[j] == x)[0][0]
+                p_eval.append(y[idx])
+                continue
+
 
         p = numer / denom
         p_eval.append(p)
 
-    np.array(p_eval, dtype = dtype)
+    p_eval = np.array(p_eval, dtype = dtype)
 
     return p_eval
 
 def newton_divdiff(x_mesh, f, n, dtype=np.float32):
     func_val = np.zeros(n+1)
-    div_table = np.zeros((n+1, n+1))
-
 
     """Computing the mesh values using the given function"""
     for i in range(n+1):
         func_val[i] = f(x_mesh[i])
 
-    """Computing the Divided Difference Table"""
-    # Initializing the first row as the function values
-    div_table[0, :] = func_val
-
+    div_coeff = copy.deepcopy(func_val)
     for i in range(1, n+1):
-        for j in range(n-i):
-            div_table[i, j] = (div_table[i-1, j+1] - div_table[i-1, j]) / (x_mesh[j+i] - x_mesh[j])
+        for j in range(n, i-1, -1):
+            div_coeff[j] = (div_coeff[j] - div_coeff[j-1]) / (x_mesh[j] - x_mesh[j-i])
 
-    """Computing the vector of summation terms"""
-    # for i in range(n):
-    #     omega_prime = 1.0
-    #     for j in range(n+1):
-    #         if i != j:
-    #             omega_prime = omega_prime * (x_mesh[i] - x_mesh[j])
-    #     d[i] = func_val[i] / omega_prime
-    #
-    # """Computing the coefficients"""
-    # p = x_mesh[0] - x_mesh[n]
-    # d_0 = d[0] / p
-    # s = d_0
-    # for i in range(1, n):
-    #     t = (x_mesh[i] - x_mesh[n])
-    #     d_i = d[i] / t
-    #     p = t * p
-    #     s = d_i + s
-    #
-    # d_n = ((-1) ** n) * (f(x_mesh[n]) / p)
-    # f_div = s + d_n
+    return func_val, div_coeff.astype(dtype)
 
-    # """Computing the polynomial evaluation using the divided difference coefficients just found"""
-    #
-    # # Initializing the first coefficient and holding the product term of x - x0 ...
-    # p_eval = f_div[0]
-    # product = 1.0
-    #
-    # for x in x_values:
-    #     for i in range(1, n):
-    #         product = product * (x - x_mesh[i-1])
-
-
-    return func_val, div_table
-
-def horner_interpolation(x_mesh, x_values, ndd, f, n, dtype=np.float32):
-    alpha = ndd[:, 0]
-    print(alpha)
+def horner_interpolation(x_mesh, x_values, div_coeff, n, dtype=np.float32):
+    alpha = copy.deepcopy(div_coeff)
     s = alpha[-1]
     p_eval = []
     for x in x_values:
@@ -294,6 +279,8 @@ def horner_interpolation(x_mesh, x_values, ndd, f, n, dtype=np.float32):
             s = s * (x - x_mesh[i]) + alpha[i]
 
         p_eval.append(s)
+
+    p_eval = np.array(p_eval, dtype=dtype)
 
     return p_eval
 
@@ -342,9 +329,9 @@ def horner_interpolation(x_mesh, x_values, ndd, f, n, dtype=np.float32):
 #
 # n = len(x_mesh) - 1
 #
-# func_val, ndd = newton_divdiff(x_mesh, f_3, n, dtype=np.float64)
+# func_val, div = newton_divdiff(x_mesh, f_3, n, dtype=np.float64)
 # print(func_val)
-# print(ndd)
+# print(div)
 
 # Testing Leja Ordering to make sure ordering is correct
 # x_mesh = np.array([-1, -0.5, 0, 0.5, 1, 2, -2, 5, -3, 4, 10, -10])
