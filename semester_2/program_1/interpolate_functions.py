@@ -23,20 +23,21 @@ def chebyshev_points(a, b, n, flag, dtype=np.float32):
         x_mesh: mesh points with desired type
     """
     # Initializing the mesh
-    x_mesh = np.zeros(n+1)
+    x_mesh = np.zeros(n+1, dtype=dtype)
 
 
     if flag == 1:
-        x_mesh = np.linspace(a, b, n+1)
+        x_mesh = np.linspace(a, b, n+1, dtype=dtype)
+
     # Looping over to create the mesh points for Chebyshev Points of the First Kind
     elif flag == 2:
         for i in range(n+1):
-            x_mesh[i] = 0.5 * (b-a) * np.cos(((2*i + 1) * np.pi) / (2 * n + 2)) + 0.5*(b+a)
+            x_mesh[i] = dtype(0.5 * (b-a) * np.cos(((2*i + 1) * np.pi) / (2 * n + 2)) + 0.5*(b+a))
 
     # Looping over to create the mesh points for Chebyshev Points of the Second Kind
     elif flag == 3:
         for i in range(n+1):
-            x_mesh[i] = 0.5 * (b-a) * np.cos((i * np.pi)/ n) + 0.5 * (b+a)
+            x_mesh[i] = dtype(0.5 * (b-a) * np.cos((i * np.pi)/ n) + 0.5 * (b+a))
 
     return x_mesh.astype(dtype)
 
@@ -54,8 +55,8 @@ def x_mesh_order(x_mesh, flag):
     """
 
     # Initializing terms and the ordered set of terms
-    n = len(x_mesh)
-    x_mesh_order = x_mesh.copy()
+    n = len(x_mesh) - 1
+    x_mesh_order = copy.deepcopy(x_mesh)
 
     # Decreasing order of x-values in mesh
     if flag == 1:
@@ -98,7 +99,7 @@ def x_mesh_order(x_mesh, flag):
 
     return x_mesh_order
 
-def coef_gamma(x_mesh, n, f, dtype=np.float32):
+def coef_gamma(x_mesh, f, dtype=np.float32):
     """
     Function to calculate the gamma coefficients and have an evaluation of the function at the mesh points
     Inputs:
@@ -109,22 +110,25 @@ def coef_gamma(x_mesh, n, f, dtype=np.float32):
         gamma_vec: The gamma coefficients stored in a vector
         func_val: The evaluated function value at the mesh points
     """
+    n = len(x_mesh) - 1
 
-    gamma_vec = np.ones(n+1)
-    func_val = np.zeros(n+1)
+    gamma_vec = np.ones(n+1, dtype=dtype)
+    #func_val = np.zeros(n+1, dtype=dtype)
 
-    for i in range(n+1):
-        func_val[i] = f(x_mesh[i])
+    # for i in range(n+1):
+    #     func_val[i] = dtype(f(x_mesh[i]))
+    func_val = f(x_mesh)
+
 
     for i in range(n+1):
         for j in range(n+1):
             if i != j:
-                gamma_vec[i] *= (x_mesh[i] - x_mesh[j])
+                gamma_vec[i] *= dtype((x_mesh[i] - x_mesh[j]))
 
-    gamma_vec = 1/gamma_vec
-    return gamma_vec.astype(dtype), func_val
+    gamma_vec = dtype(1/gamma_vec)
+    return gamma_vec.astype(dtype), func_val.astype(dtype)
 
-def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
+def coef_beta(x_mesh, f, flag, dtype=np.float32):
     """
     Function to calculate the beta coefficients for Barycentric 2 using either the recursive formula to
     get the coefficients, Chebyshev points of the First Kind, or Chebyshev Points of the Second Kind. This
@@ -141,35 +145,37 @@ def coef_beta(x_mesh, n, f, flag, dtype=np.float32):
         beta_vec: The beta coefficients stored in a vector
         func_val: The evaluated function value at the mesh points
     """
+    n = len(x_mesh) - 1
 
-    beta_vec = np.zeros(n+1)
-    func_val = np.zeros(n+1)
+    beta_vec = np.zeros(n+1, dtype=dtype)
+    #func_val = np.zeros(n+1, dtype=dtype)
 
-    for i in range(n+1):
-        func_val[i] = f(x_mesh[i])
+    # for i in range(n+1):
+    #     func_val[i] = dtype(f(x_mesh[i]))
+    func_val = f(x_mesh)
 
     # Using Uniform Mesh
     if flag == 1:
         beta_vec[0] = 1
         for i in range(n):
-            beta_vec[i+1] = -beta_vec[i] * ((n - i) / i + 1)
+            beta_vec[i+1] = dtype(-beta_vec[i] * ((n - i) / (i + 1)))
 
     # Chebyshev Point of the First Kind
     elif flag == 2:
         for i in range(n+1):
-            beta_vec[i] = (-1)**i * np.sin(((2*i + 1) * np.pi) / (2*n + 2))
+            beta_vec[i] = dtype((-1)**i) * dtype(np.sin(((2*i + 1) * np.pi) / (2*n + 2)))
 
     # Chebyshev Points of the Second Kind
     else:
         for i in range(n+1):
             if i == 0 or i == n:
-                beta_vec[i] = ((-1) ** i) * (1 / 2)
+                beta_vec[i] = dtype(((-1) ** i) * (1 / 2))
             else:
-                beta_vec[i] = ((-1) ** i) * 1
+                beta_vec[i] = dtype(((-1) ** i) * 1)
 
-    return beta_vec.astype(dtype), func_val
+    return beta_vec, func_val.astype(dtype)
 
-def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n, dtype=np.float32):
+def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, dtype=np.float32):
     """
     This function is implementing the Barycentric 1 form interpolation and evaluating the polynomial.
     Inputs:
@@ -183,107 +189,151 @@ def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n, dtype=np.float32):
         m_curr: The new Coefficient weights for p_k
         p_eval: the evaluated polynomial at the x_values
     """
-    k = n+1
+    n = len(x_mesh) - 1
 
-    # m_curr = np.zeros(k)
-    # p = 1.0
-    # for i in range(n):
-    #     t = x_mesh[i] - x_mesh[n]
-    #     m_curr[i] = t * gamma_vec[i]
-    #     p = -t * p
-    #
-    # m_curr[n] = p
+    ## EVALUATING POLYNOMIAL USING BARYCENTRIC 1
+    p_eval = np.zeros(len(x_values), dtype=dtype)
 
-    # omega = 1
-    # for x in x_values:
-    #     for i in range(k):
-    #         if x != x_mesh[i]:
-    #             omega *= x - x_mesh[i]
 
-    # Evaluating the polynomial given the weights calculated above
-    # p_eval = []
-    # for x in x_values:
-    #     #numer = 0
-    #     #denom = 0
-    #     term = 0
-    #     #### FIX THIS ####
-    #     for j in range(k):
-    #         if x != x_mesh[j]:
-    #             #term = m_curr[j] / (x - x_mesh[j])
-    #             term += y[j] * gamma_vec[j] / (x - x_mesh[j])
-    #             #numer += term * y[j]
-    #             #denom += term
-    #
-    #
-    #     p = term * omega
-    #     p_eval.append(p)
-    #
-    # np.array(p_eval)
-
-    p_eval = []
+    condition_1 = np.zeros(len(x_values))
+    condition_y_numer = np.zeros(len(x_values))
     for j in range(len(x_values)):
-        omega = np.prod(x_values[j] - x_mesh)
+        numerical_stab = np.isclose(x_values[j], x_mesh, atol=np.finfo(dtype).eps).any()
+
+        if numerical_stab:
+            p_eval[j] = y[np.argmin(np.abs(x_values[j] - x_mesh))]
+
+
+        #omega = np.prod(x_values[j] - x_mesh, dtype=dtype)
+        omega = dtype(1)
+        for i in range(n+1):
+            omega *= dtype((x_values[j] - x_mesh[i]))
 
         term = 0
-        for i in range(k):
-            term += (y[i] * gamma_vec[i]) / (x_values[j] - x_mesh[i])
+        for i in range(n+1):
+            term += dtype((y[i] * gamma_vec[i]) / (x_values[j] - x_mesh[i]))
 
-        p = omega * term
-        p_eval.append(p)
+        sum_cond = 0
+        sum_cond_y = 0
+        for i in range(n + 1):
+            sum_cond_l = (gamma_vec[i] * omega) / (x_values[j] - x_mesh[i])
+            sum_cond += np.abs(sum_cond_l)
+            sum_cond_ly = sum_cond_l * y[i]
+            sum_cond_y += np.abs(sum_cond_ly)
+        condition_1[j] = sum_cond
+        condition_y_numer[j] = sum_cond_y
 
-    p_eval = np.array(p_eval, dtype=dtype)
-    return p_eval
+        p_eval[j] = dtype(omega * term)
 
-def bary_2_interpolation(beta_vec, x_mesh, x_values, y, n, dtype=np.float32):
-    p_eval = []
-    for x in x_values:
-        numer = 0
-        denom = 0
-        for j in range(n+1):
-            if x != x_mesh[j]:
-                numer += (y[j] * beta_vec[j]) / (x - x_mesh[j])
-                denom += beta_vec[j] / (x - x_mesh[j])
-            else:
-                idx = np.where(x_mesh[j] == x)[0][0]
-                p_eval.append(y[idx])
-                continue
+    # ## CONDITIONING FOR BARYCENTRIC 1
+    # condition_1 = np.zeros(len(x_values))
+    # condition_y_numer = np.zeros(len(x_values))
+    #
+    # for j in range(len(x_values)):
+    #     sum_cond = 0
+    #     sum_cond_y = 0
+    #     for i in range(n+1):
+    #         sum_cond_l = (gamma_vec[i] * omega) / (x_values[j] - x_mesh[i])
+    #         sum_cond += np.abs(sum_cond_l)
+    #         sum_cond_ly = sum_cond_l * y[i]
+    #         sum_cond_y += np.abs(sum_cond_ly)
+    #     condition_1[j] = sum_cond
+    #     condition_y_numer[j] = sum_cond_y
 
 
-        p = numer / denom
-        p_eval.append(p)
+    return p_eval.astype(dtype), condition_1, condition_y_numer
 
-    p_eval = np.array(p_eval, dtype = dtype)
+def bary_2_interpolation(beta_vec, x_mesh, x_values, y, dtype=np.float32):
+    n = len(x_mesh) - 1
 
-    return p_eval
+    p_eval = np.zeros(len(x_values), dtype=dtype)
 
-def newton_divdiff(x_mesh, f, n, dtype=np.float32):
-    func_val = np.zeros(n+1)
+    for j in range(len(x_values)):
+        numerical_stab = np.isclose(x_values[j], x_mesh, atol=np.finfo(dtype).eps).any()
+
+        if numerical_stab:
+            closest = np.argmin(np.abs(x_values[j] - x_mesh))
+            p_eval[j] = y[closest]
+            continue
+
+        numer = dtype(0)
+        denom = dtype(0)
+
+        for i in range(n+1):
+            numer += dtype((y[i] * beta_vec[i]) / (x_values[j] - x_mesh[i]))
+            denom += dtype(beta_vec[i] / (x_values[j] - x_mesh[i]))
+
+        p_eval[j] = dtype(numer / denom)
+
+    condition_1 = np.zeros(len(x_values))
+    condition_y = np.zeros(len(x_values))
+
+    for j in range(len(x_values)):
+
+        sum_numer_cond_1 = 0
+        sum_denom_cond_1 = 0
+        sum_numer_cond_y = 0
+        sum_denom_cond_y = 0
+
+        for i in range(n+1):
+            frac = beta_vec[i] / (x_values[j] - x_mesh[i])
+            frac_y = frac * y[i]
+            sum_numer_cond_1 += np.abs(frac)
+            sum_denom_cond_1 += frac
+            sum_denom_cond_1 = np.abs(sum_denom_cond_1)
+            sum_numer_cond_y += np.abs(frac_y)
+            sum_denom_cond_y += frac_y
+            sum_denom_cond_y = np.abs(sum_denom_cond_y)
+
+        condition_1[j] = sum_numer_cond_1 / sum_denom_cond_1
+        condition_y[j] = sum_numer_cond_y / sum_denom_cond_y
+
+
+
+    return p_eval, condition_1, condition_y
+
+def newton_divdiff(x_mesh, f, dtype=np.float32):
+    n = len(x_mesh)
+    #func_val = np.zeros(n, dtype=dtype)
 
     """Computing the mesh values using the given function"""
-    for i in range(n+1):
-        func_val[i] = f(x_mesh[i])
+    # for i in range(n):
+    #     func_val[i] = dtype(f(x_mesh[i]))
+    func_val = f(x_mesh)
+
 
     div_coeff = copy.deepcopy(func_val)
-    for i in range(1, n+1):
-        for j in range(n, i-1, -1):
-            div_coeff[j] = (div_coeff[j] - div_coeff[j-1]) / (x_mesh[j] - x_mesh[j-i])
+    for i in range(1, n):
+        for j in range(n-1, i-1, -1):
+            div_coeff[j] = dtype((div_coeff[j] - div_coeff[j-1]) / (x_mesh[j] - x_mesh[j-i]))
 
-    return func_val, div_coeff.astype(dtype)
+    return func_val.astype(dtype), div_coeff.astype(dtype)
 
-def horner_interpolation(x_mesh, x_values, div_coeff, n, dtype=np.float32):
+def horner_interpolation(x_mesh, x_values, div_coeff, dtype=np.float32):
+    n = len(x_mesh) - 1
     alpha = copy.deepcopy(div_coeff)
-    s = alpha[-1]
     p_eval = []
     for x in x_values:
-        for i in range(n-1, 1, -1):
-            s = s * (x - x_mesh[i]) + alpha[i]
+        s = alpha[-1]
+        for i in range(n-1, -1, -1):
+            s = dtype(s * (x - x_mesh[i]) + alpha[i])
 
         p_eval.append(s)
 
-    p_eval = np.array(p_eval, dtype=dtype)
+    p_eval = np.array(p_eval)
 
     return p_eval
 
+def product_func(x_values, x_mesh, alpha, dtype=np.float32):
+    n = len(x_mesh) - 1
+    d = []
+    d[0] = alpha
+    for j in range(len(x_values)):
+        for i in range(1, n+1):
+            d[i] = dtype(d[i-1] * (x_values[j] - x_mesh[i]))
+
+
+    return np.array(d, dtype=dtype)
 # Testing functions
 # x_mesh = np.array([1,2,3,4])
 # y = np.array([10,26,58,112])

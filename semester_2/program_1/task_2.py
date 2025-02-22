@@ -26,95 +26,696 @@ This task will perform the subtasks for the f_1 function:
 
 
 
-def get_user_inputs():
-    m = int(input("Please enter the number of mesh points (m) [default = 9]: ") or "9")
-    rho = int(input("Please enter the root value, i.e. (x - 2) would enter 2 [default = 2]: ") or "2")
-    d = int(input("Please enter the multiplicity of the root or highest degree of monomial [default = 9]: ") or "9")
+# def get_user_inputs():
+#     m = int(input("Please enter the number of mesh points (m) [default = 9]: ") or "9")
+#     rho = int(input("Please enter the root value, i.e. (x - 2) would enter 2 [default = 2]: ") or "2")
+#     d = int(input("Please enter the multiplicity of the root or highest degree of monomial [default = 9]: ") or "9")
+#
+#     a = float(input("Please enter the lower bound on the interval for mesh points (float) [default = -1]: ") or "-1")
+#     b = float(input("Please enter the upper bound on the interval for mesh points (float) [default = 1]: ") or "1")
+#
+#     x_min = float(input("Please enter the minimum value for x values to be tested (float) [default = -1]: ") or "-1")
+#     x_max = float(input("Please enter the maximum value for x values to be tested (float) [default = 1]: ") or "1")
+#
+#     num_tests = int(input("Please enter the number of tests wanted to run [default = 10]: ") or "10")
+#
+#     return m, rho, d, a, b, x_min, x_max, num_tests
+#
+#
+# def task_2_driver():
+#     inputs = get_user_inputs()
+#
+#     m, rho, d, a, b, x_min, x_max, num_tests = inputs
+#
+#     # Setting up the initial mesh's using the user inputs
+#     x_mesh_uniform = np.linspace(-1, 1, m)
+#     x_mesh_cheb1 = ifs.chebyshev_points(a, b, m, flag=2, dtype=np.float32)
+#     x_mesh_cheb1_inc = ifs.x_mesh_order(x_mesh_cheb1, 2)
+#     x_mesh_cheb2 = ifs.chebyshev_points(a, b, m, flag=3, dtype=np.float32)
+#     f = functions_1_to_4.p_1(d, rho)
+#     #f = functions_1_to_4.p_4(2)
+#
+#
+#     x_mesh_cheb1_exact = ifs.chebyshev_points(a, b, m, flag=2, dtype=np.float64)
+#     x_mesh_cheb1_exact_inc = ifs.x_mesh_order(x_mesh_cheb1_exact, 2)
+#     x_mesh_cheb2_exact = ifs.chebyshev_points(a, b, m, flag=3, dtype=np.float64)
+#     x_mesh_cheb2_exact_inc = ifs.x_mesh_order(x_mesh_cheb2_exact, 2)
+#
+#     bary_2_sol = []
+#
+#
+#     for i in range(num_tests):
+#         x_values = np.linspace(x_min, x_max, 100)
+#         exact = f(x_values)
+#
+#         ### CHEBYSHEV 1 POINTS
+#
+#         # Barycentric Form 1 Approximate (float32)
+#         g, func_val_1 = ifs.coef_gamma(x_mesh_cheb1_inc, f, dtype=np.float32)
+#         bary_1, cond_1_b1_32, cond_y_numer_b1_32 = ifs.bary_1_interpolation(g, x_mesh_cheb1_inc, x_values, func_val_1, dtype=np.float32)
+#
+#         #print(bary_1)
+#
+#         # Barycentric Form 1 Exact (float64)
+#         g_exact, func_val_1_exact = ifs.coef_gamma(x_mesh_cheb1_exact_inc, f, dtype=np.float64)
+#         bary_1_exact, cond_1_b1_64, cond_y_numer_b1_64 = ifs.bary_1_interpolation(g_exact, x_mesh_cheb1_exact_inc, x_values, func_val_1_exact, dtype=np.float64)
+#
+#
+#         # Barycentric Form 1 Error
+#         error = np.subtract(bary_1_exact, bary_1)
+#         error = abs(error)
+#         rel_error = np.divide(error, bary_1_exact)
+#
+#         pointwise_bary1 = np.subtract(bary_1, exact)
+#         pointwise_bary1 = abs(pointwise_bary1)
+#
+#         # Barycentric Form 2 Approximate (float32)
+#         c, func_val_2 = ifs.coef_beta(x_mesh_cheb1, f, flag=2, dtype=np.float32)
+#         bary_2, cond_1_b2_32, cond_y_b2_32 = ifs.bary_2_interpolation(c, x_mesh_cheb1, x_values, func_val_2, dtype=np.float32)
+#
+#
+#         # Barycentric Form 2 Exact (float64)
+#         c_exact, func_val_2_exact = ifs.coef_beta(x_mesh_cheb1_exact_inc, f, flag=2, dtype=np.float64)
+#         bary_2_exact, cond_1_b2_64, cond_y_b2_64 = ifs.bary_2_interpolation(c_exact, x_mesh_cheb1_exact_inc, x_values, func_val_2_exact, dtype=np.float64)
+#
+#         # Barycentric Form 2 Error
+#         err_bary_2 = np.subtract(bary_2_exact, bary_2)
+#         err_bary_2 = abs(err_bary_2)
+#         rel_err_bary_2 = np.divide(err_bary_2, bary_2_exact)
+#
+#         pointwise_bary2 = np.subtract(bary_2, exact)
+#         pointwise_bary2 = abs(pointwise_bary2)
+#
+#         # Newton Divided Difference (float32)
+#         func_val_newt_32, div_32 = ifs.newton_divdiff(x_mesh_cheb1_inc, f, dtype=np.float32)
+#         newt_32 = ifs.horner_interpolation(x_mesh_cheb1_inc, x_values, div_32, dtype=np.float32)
+#
+#         # Plot Barycentric Form
+#         plt.title("Barycentric Form 1 and 2 with Chebyshev Points of the First Kind")
+#         plt.plot(x_mesh_cheb1, func_val_2, '*', label="Interpolation Points")
+#         plt.plot(x_values, bary_2, label="Barycentric 2")
+#         #plt.plot(x_values, newt_32, label="Newton's Method")
+#         #plt.plot(x_values, bary_1, label="Barycentric 1")
+#         plt.plot(x_values, exact, 'black', label="f(x)")
+#         plt.legend()
+#         plt.grid(True)
+#         plt.show()
+#
+#         plt.title("Relative Error Between 'Exact' and 'Approximate' Solutions")
+#         #plt.yscale('log')
+#         plt.plot(x_values, rel_error, 'x', color='black', label="Barycentric Form 1")
+#         plt.legend(loc='best')
+#         plt.grid(True)
+#         plt.show()
+#
+#         plt.title("Relative Error Between 'Exact' and 'Approximate' Solutions")
+#         plt.plot(x_values, rel_err_bary_2, 'x', color='black', label="Barycentric Form 2")
+#         plt.legend(loc='best')
+#         plt.grid(True)
+#         plt.show()
+#
+#
+#         plt.title("Pointwise Error between f(x) and Barycentric Form 1")
+#         #plt.yscale('log')
+#         plt.plot(x_values, pointwise_bary1, color='black', label="Barycentric Form 1")
+#         plt.legend(loc='best')
+#         plt.grid(True)
+#         plt.show()
+#
+#         plt.title("Pointwise Error between f(x) and Barycentric Form 2")
+#         plt.plot(x_values, pointwise_bary2, color='black', label="Barycentric Form 2")
+#         plt.legend(loc='best')
+#         plt.grid(True)
+#         plt.show()
+#
+#
+#         bary_2_sol.append(bary_2)
+#
+#
+#
+#
+#
+#     return bary_2_sol
+#
+# if __name__ == '__main__':
+#     while True:
+#         bary_2_sol = task_2_driver()
+#
+#         user_input = input("\nRun another problem? (y/n) [default=n]: ").strip().lower()
+#         if user_input != 'y':
+#             break
+#
+#     print("\nThank you for using the Interpolation Driver!")
 
-    x_min = int(input("Please enter the minimum value for x values to be tested [default = -1]: ") or "-1")
-    x_max = int(input("Please enter the maximum value for x values to be tested [default = 1]: ") or "1")
-
-    num_tests = int(input("Please enter the number of tests wanted to run [default = 10]: ") or "10")
-
-    return m, rho, d, x_min, x_max, num_tests
-
-
-def task_2_driver():
-    inputs = get_user_inputs()
-
-    m, rho, d, x_min, x_max, num_tests = inputs
-
-    # Setting up the initial mesh's using the user inputs
-    x_mesh_uniform = np.linspace(-1, 1, m)
-    x_mesh_cheb1 = ifs.chebyshev_points(x_min, x_max, m, flag=2, dtype=np.float32)
-    x_mesh_cheb1_inc = ifs.x_mesh_order(x_mesh_cheb1, 2)
-    x_mesh_cheb2 = ifs.chebyshev_points(x_min, x_max, m, flag=3, dtype=np.float32)
-    #f = functions_1_to_4.p_1(d, rho)
-    f = functions_1_to_4.p_4(2)
-
-    bary_2_sol = []
-
-
-    for i in range(num_tests):
-        x_values = np.linspace(x_min, x_max, 100)
-        exact = f(x_values)
-
-        ### CHEBYSHEV 1 POINTS
-
-        # Barycentric Form 1 Approximate (float32)
-        g, func_val_1 = ifs.coef_gamma(x_mesh_cheb1_inc, m, f, dtype=np.float32)
-        bary_1 = ifs.bary_1_interpolation(g, x_mesh_cheb1_inc, x_values, func_val_1, m, dtype=np.float32)
-
-        #print(bary_1)
-
-        # Barycentric Form 1 Exact (float64)
-
-
-        # Barycentric Form 1 Error
-
-
-        # Barycentric Form 2 Approximate (float32)
-        c, func_val_2 = ifs.coef_beta(x_mesh_cheb1_inc, m, f, flag=2, dtype=np.float32)
-        bary_2 = ifs.bary_2_interpolation(c, x_mesh_cheb1_inc, x_values, func_val_2, m, dtype=np.float32)
-
-        error = np.subtract(exact, bary_1)
-        error = abs(error)
-        rel_error = np.divide(error, exact)
-
-        # Barycentric Form 2 Exact (float64)
+eps = 2 * np.finfo(float).eps
+shift = 1e3 * eps
+d = 9
+a = 1
+b = 3
+rho = 2
+f = functions_1_to_4.p_1(d, rho)
+x_eval = np.linspace(a, b, 1000)
+exact = f(x_eval)
 
 
 
-
-        # Plot Barycentric Form
-        plt.title("Barycentric Form 1 and 2 with Chebyshev Points of the First Kind")
-        plt.plot(x_mesh_cheb1_inc, func_val_2, '*', label="Interpolation Points")
-        #plt.plot(x_values, bary_2, label="Barycentric 2")
-        plt.plot(x_values, bary_1, label="Barycentric 1")
-        plt.plot(x_values, exact, 'black', label="f(x)")
-        plt.legend()
-        plt.grid(True)
-        plt.show()
-
-        plt.title("Error")
-        plt.plot(x_values, rel_error, 'x', label="Error")
-        plt.grid(True)
-        plt.show()
-
-        bary_2_sol.append(bary_2)
+m = [3, 6, 9, 20]
 
 
+x_mesh = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+func_vals = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+bc1 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+bc2 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+newt = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+condition_xny_b1 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+condition_xny_b2 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+condition_xn1_b1 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+condition_xn1_b2 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+Lambda_n_b1 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+Lambda_n_b2 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+relative_error_b2 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+relative_error_newt_inc = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+relative_error_newt_dec = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+relative_error_newt_leja = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
 
 
 
-    return bary_2_sol
+for d in m:
+    """ CREATING MESHES """
 
-if __name__ == '__main__':
-    while True:
-        bary_2_sol = task_2_driver()
+    for type in ['uniform', 'chebyshev_first', 'chebyshev_second']:
+        if type == 'uniform':
+            # Single
+            x_mesh_32_u = ifs.chebyshev_points(a, b, d, flag=1, dtype=np.float32)
+            x_mesh_dec_32_u = ifs.x_mesh_order(x_mesh_32_u, flag=1)
+            x_mesh_inc_32_u = ifs.x_mesh_order(x_mesh_32_u, flag=2)
+            x_mesh_leja_32_u = ifs.x_mesh_order(x_mesh_32_u, flag=3)
 
-        user_input = input("\nRun another problem? (y/n) [default=n]: ").strip().lower()
-        if user_input != 'y':
-            break
+            x_mesh[type].append(x_mesh_inc_32_u)
 
-    print("\nThank you for using the Interpolation Driver!")
+            # BARYCENTRIC 1
+            gamma_vec_32, func_val_b1_32 = ifs.coef_gamma(x_mesh_32_u, f, dtype=np.float32)
+            b1_32, cond_xn1_32_b1, cond_numer_xny_32_b1 = ifs.bary_1_interpolation(gamma_vec_32,
+                                                                                   x_mesh_32_u, x_eval, func_val_b1_32,
+                                                                                   dtype=np.float32)
+
+            func_vals[type].append(func_val_b1_32)
+            bc1[type].append(b1_32)
+
+            # BARYCENTRIC 2
+            beta_vec_32_c1, func_val_b2_32_c1 = ifs.coef_beta(x_mesh_32_u, f, flag=1, dtype=np.float32)
+            b2_32_c1, cond_xn1_32_b2_c1, cond_xny_32_b2_c1 = ifs.bary_2_interpolation(beta_vec_32_c1, x_mesh_32_u,
+                                                                                      x_eval, func_val_b2_32_c1,
+                                                                                      dtype=np.float32)
+
+            bc2[type].append(b2_32_c1)
+
+            # NEWTON
+            func_val_newt_32, div_coeff_32 = ifs.newton_divdiff(x_mesh_inc_32_u, f, dtype=np.float32)
+            n_32 = ifs.horner_interpolation(x_mesh_inc_32_u, x_eval, div_coeff_32, dtype=np.float32)
+
+            newt[type].append(n_32)
+
+            # Double
+            x_mesh_64_u = ifs.chebyshev_points(a, b, d, flag=1, dtype=np.float64)
+            x_mesh_dec_64_u = ifs.x_mesh_order(x_mesh_64_u, flag=1)
+            x_mesh_inc_64_u = ifs.x_mesh_order(x_mesh_64_u, flag=2)
+            x_mesh_leja_64_u = ifs.x_mesh_order(x_mesh_64_u, flag=3)
+
+            # BARYCENTRIC 1
+            gamma_vec_64, func_val_b1_64 = ifs.coef_gamma(x_mesh_64_u, f, dtype=np.float64)
+            b1_64, cond_xn1_64, cond_numer_xny_64 = ifs.bary_1_interpolation(gamma_vec_64, x_mesh_64_u, x_eval,
+                                                                             func_val_b1_64,
+                                                                             dtype=np.float64)
+
+            # Relative Error
+            num_err_b1 = np.abs(b1_64 - b1_32)
+            denom_err_b1 = np.abs(b1_64)
+            rel_err_b1 = num_err_b1 / denom_err_b1
+
+            # Conditioning
+            cond_xny_64_b1_c1 = cond_numer_xny_64 / denom_err_b1
+            condition_xny_b1[type].append(cond_xny_64_b1_c1)
+            condition_xn1_b1[type].append(cond_xn1_64)
+            Lambda_n_b1[type].append(np.nanmax(cond_xn1_64))
+
+            # BARYCENTRIC 2
+            beta_vec_64_c1, func_val_b2_64 = ifs.coef_beta(x_mesh_64_u, f, flag=1, dtype=np.float64)
+            b2_64_c1, cond_xn1_64_b2_c1, cond_xny_64_b2_c1 = ifs.bary_2_interpolation(beta_vec_64_c1, x_mesh_64_u,
+                                                                                      x_eval, func_val_b2_64,
+                                                                                      dtype=np.float64)
+
+            # Relative Error
+            num_err_b2 = np.abs(b2_64_c1 - b2_32_c1)
+            denom_err_b2 = np.abs(b2_64_c1)
+            rel_err_b2 = num_err_b2 / denom_err_b2
+            relative_error_b2[type].append(rel_err_b2)
+
+            # Conditioning
+            condition_xny_b2[type].append(cond_xny_64_b2_c1)
+            condition_xn1_b2[type].append(cond_xn1_64_b2_c1)
+            Lambda_n_b2[type].append(np.max(cond_xn1_64_b2_c1))
+
+
+            # NEWTON
+            func_val_newt_64, div_coeff_64 = ifs.newton_divdiff(x_mesh_inc_64_u, f, dtype=np.float64)
+            n_64 = ifs.horner_interpolation(x_mesh_inc_64_u, x_eval, div_coeff_64, dtype=np.float64)
+
+            # Relative Error
+            num_err_newt = np.abs(n_64 - n_32)
+            denom_err_newt = np.abs(n_64)
+            rel_err_newt = num_err_newt / denom_err_newt
+            relative_error_newt_inc[type].append(rel_err_newt)
+
+        elif type == 'chebyshev_first':
+            ### SINGLE ###
+            x_mesh_32_c1 = ifs.chebyshev_points(a, b, d, flag=2, dtype=np.float32)
+            x_mesh_dec_32_c1 = ifs.x_mesh_order(x_mesh_32_c1, flag=1)
+            x_mesh_inc_32_c1 = ifs.x_mesh_order(x_mesh_32_c1, flag=2)
+            x_mesh_leja_32_c1 = ifs.x_mesh_order(x_mesh_32_c1, flag=3)
+
+            x_mesh[type].append(x_mesh_32_c1)
+
+            # BARYCENTRIC 1
+            gamma_vec_32, func_val_b1_32 = ifs.coef_gamma(x_mesh_32_c1, f, dtype=np.float32)
+            b1_32, cond_xn1_32_b1, cond_numer_xny_32_b1 = ifs.bary_1_interpolation(gamma_vec_32,
+                                                                                   x_mesh_32_c1, x_eval, func_val_b1_32,
+                                                                                   dtype=np.float32)
+            func_vals[type].append(func_val_b1_32)
+            bc1[type].append(b1_32)
+
+            # BARYCENTRIC 2
+            beta_vec_32_c1, func_val_b2_32_c1 = ifs.coef_beta(x_mesh_32_c1, f, flag=2, dtype=np.float32)
+            b2_32_c1, cond_xn1_32_b2_c1, cond_xny_32_b2_c1 = ifs.bary_2_interpolation(beta_vec_32_c1, x_mesh_32_c1,
+                                                                                      x_eval, func_val_b2_32_c1,
+                                                                                      dtype=np.float32)
+
+            bc2[type].append(b2_32_c1)
+
+            # NEWTON
+            func_val_newt_32, div_coeff_32 = ifs.newton_divdiff(x_mesh_inc_32_c1, f, dtype=np.float32)
+            n_32 = ifs.horner_interpolation(x_mesh_inc_32_c1, x_eval, div_coeff_32, dtype=np.float32)
+
+            newt[type].append(n_32)
+
+            ### DOUBLE ###
+            x_mesh_64_c1 = ifs.chebyshev_points(a, b, d, flag=2, dtype=np.float64)
+            x_mesh_dec_64_c1 = ifs.x_mesh_order(x_mesh_64_c1, flag=1)
+            x_mesh_inc_64_c1 = ifs.x_mesh_order(x_mesh_64_c1, flag=2)
+            x_mesh_leja_64_c1 = ifs.x_mesh_order(x_mesh_64_c1, flag=3)
+
+            # BARYCENTRIC 1
+            gamma_vec_64, func_val_b1_64 = ifs.coef_gamma(x_mesh_64_c1, f, dtype=np.float64)
+            b1_64, cond_xn1_64, cond_numer_xny_64 = ifs.bary_1_interpolation(gamma_vec_64, x_mesh_64_c1, x_eval,
+                                                                             func_val_b1_64,
+                                                                             dtype=np.float64)
+
+            # Relative Error
+            num_err_b1 = np.abs(b1_64 - b1_32)
+            denom_err_b1 = np.abs(b1_64)
+            rel_err_b1 = num_err_b1 / denom_err_b1
+
+            # Conditioning
+            cond_xny_64_b1_c1 = cond_numer_xny_64 / denom_err_b1
+            condition_xny_b1[type].append(cond_xny_64_b1_c1)
+            condition_xn1_b1[type].append(cond_xn1_64)
+            Lambda_n_b1[type].append(np.nanmax(cond_xn1_64))
+
+
+            # BARYCENTRIC 2
+            beta_vec_64_c1, func_val_b2_64 = ifs.coef_beta(x_mesh_64_c1, f, flag=2, dtype=np.float64)
+            b2_64_c1, cond_xn1_64_b2_c1, cond_xny_64_b2_c1 = ifs.bary_2_interpolation(beta_vec_64_c1, x_mesh_64_c1,
+                                                                                      x_eval, func_val_b2_64,
+                                                                                      dtype=np.float64)
+
+            # Relative Error
+            num_err_b2 = np.abs(b2_64_c1 - b2_32_c1)
+            denom_err_b2 = np.abs(b2_64_c1)
+            rel_err_b2 = num_err_b2 / denom_err_b2
+            relative_error_b2[type].append(rel_err_b2)
+
+            # Conditioning
+            condition_xny_b2[type].append(cond_xny_64_b2_c1)
+            condition_xn1_b2[type].append(cond_xn1_64_b2_c1)
+            Lambda_n_b2[type].append(np.max(cond_xn1_64_b2_c1))
+
+            # NEWTON
+            func_val_newt_64, div_coeff_64 = ifs.newton_divdiff(x_mesh_inc_64_c1, f, dtype=np.float64)
+            n_64 = ifs.horner_interpolation(x_mesh_inc_64_c1, x_eval, div_coeff_64, dtype=np.float64)
+
+            # Relative Error
+            num_err_newt = np.abs(n_64 - n_32)
+            denom_err_newt = np.abs(n_64)
+            rel_err_newt = num_err_newt / denom_err_newt
+            relative_error_newt_inc[type].append(rel_err_newt)
+
+
+        else: # type == 'chebyshev_second'
+            ### Single ###
+            x_mesh_32_c2 = ifs.chebyshev_points(a, b, d, flag=3, dtype=np.float32)
+            x_mesh_dec_32_c2 = ifs.x_mesh_order(x_mesh_32_c2, flag=1)
+            x_mesh_inc_32_c2 = ifs.x_mesh_order(x_mesh_32_c2, flag=2)
+            x_mesh_leja_32_c2 = ifs.x_mesh_order(x_mesh_32_c2, flag=3)
+
+            x_mesh[type].append(x_mesh_32_c2)
+
+            # BARYCENTRIC 1
+            gamma_vec_32, func_val_b1_32 = ifs.coef_gamma(x_mesh_32_c2, f, dtype=np.float32)
+            b1_32, cond_xn1_32_b1, cond_numer_xny_32_b1 = ifs.bary_1_interpolation(gamma_vec_32,
+                                                                                   x_mesh_32_c2, x_eval, func_val_b1_32,
+                                                                                   dtype=np.float32)
+
+            func_vals[type].append(func_val_b1_32)
+            bc1[type].append(b1_32)
+
+            # BARYCENTRIC 2
+            beta_vec_32_c1, func_val_b2_32_c1 = ifs.coef_beta(x_mesh_32_c2, f, flag=3, dtype=np.float32)
+            b2_32_c1, cond_xn1_32_b2_c1, cond_xny_32_b2_c1 = ifs.bary_2_interpolation(beta_vec_32_c1, x_mesh_32_c2,
+                                                                                      x_eval, func_val_b2_32_c1,
+                                                                                      dtype=np.float32)
+
+            bc2[type].append(b2_32_c1)
+
+            # NEWTON
+            func_val_newt_32, div_coeff_32 = ifs.newton_divdiff(x_mesh_inc_32_c2, f, dtype=np.float32)
+            n_32 = ifs.horner_interpolation(x_mesh_inc_32_c2, x_eval, div_coeff_32, dtype=np.float32)
+
+            newt[type].append(n_32)
+
+            ### Double ###
+            x_mesh_64_c2 = ifs.chebyshev_points(a, b, d, flag=3, dtype=np.float64)
+            x_mesh_dec_64_c2 = ifs.x_mesh_order(x_mesh_64_c2, flag=1)
+            x_mesh_inc_64_c2 = ifs.x_mesh_order(x_mesh_64_c2, flag=2)
+            x_mesh_leja_64_c2 = ifs.x_mesh_order(x_mesh_64_c2, flag=3)
+
+            gamma_vec_64, func_val_b1_64 = ifs.coef_gamma(x_mesh_64_c2, f, dtype=np.float64)
+            b1_64, cond_xn1_64, cond_numer_xny_64 = ifs.bary_1_interpolation(gamma_vec_64, x_mesh_64_c2, x_eval,
+                                                                             func_val_b1_64,
+                                                                             dtype=np.float64)
+
+            # Relative Error
+            num_err_b1 = np.abs(b1_64 - b1_32)
+            denom_err_b1 = np.abs(b1_64)
+            rel_err_b1 = num_err_b1 / denom_err_b1
+
+            # Conditioning
+            cond_xny_64_b1_c1 = cond_numer_xny_64 / denom_err_b1
+            condition_xny_b1[type].append(cond_xny_64_b1_c1)
+            condition_xn1_b1[type].append(cond_xn1_64)
+            Lambda_n_b1[type].append(np.nanmax(cond_xn1_64))
+
+            # BARYCENTRIC 2
+            beta_vec_64_c1, func_val_b2_64 = ifs.coef_beta(x_mesh_64_c2, f, flag=3, dtype=np.float64)
+            b2_64_c1, cond_xn1_64_b2_c1, cond_xny_64_b2_c1 = ifs.bary_2_interpolation(beta_vec_64_c1, x_mesh_64_c2,
+                                                                                      x_eval, func_val_b2_64,
+                                                                                      dtype=np.float64)
+
+            # Relative Error
+            num_err_b2 = np.abs(b2_64_c1 - b2_32_c1)
+            denom_err_b2 = np.abs(b2_64_c1)
+            rel_err_b2 = num_err_b2 / denom_err_b2
+            relative_error_b2[type].append(rel_err_b2)
+
+            # Conditioning
+            condition_xny_b2[type].append(cond_xny_64_b2_c1)
+            condition_xn1_b2[type].append(cond_xn1_64_b2_c1)
+            Lambda_n_b2[type].append(np.max(cond_xn1_64_b2_c1))
+
+            # NEWTON
+            func_val_newt_64, div_coeff_64 = ifs.newton_divdiff(x_mesh_inc_64_c2, f, dtype=np.float64)
+            n_64 = ifs.horner_interpolation(x_mesh_inc_64_c2, x_eval, div_coeff_64, dtype=np.float64)
+
+            # Relative Error
+            num_err_newt = np.abs(n_64 - n_32)
+            denom_err_newt = np.abs(n_64)
+            rel_err_newt = num_err_newt / denom_err_newt
+            relative_error_newt_inc[type].append(rel_err_newt)
+
+
+
+
+type = ['uniform', 'chebyshev_first', 'chebyshev_second']
+
+plt.figure(figsize=(18, 6))
+plt.suptitle(f'Interpolation Methods vs. Exact Function for {m[1]} Mesh Points')
+plt.subplot(1, 3, 1)
+plt.plot(x_mesh['uniform'][1], func_vals['uniform'][1], '*', label='Interpolation Points')
+plt.plot(x_eval, bc1['uniform'][1], label='Barycentric 1')
+plt.plot(x_eval, bc2['uniform'][1], label='Barycentric 2')
+plt.plot(x_eval, newt['uniform'][1], label='Newton')
+plt.plot(x_eval, exact, label='f(x)')
+plt.xlabel('x values')
+plt.ylabel('Function Values')
+plt.title(f'Uniform Mesh for m = {m[1]}')
+plt.legend(loc='best')
+plt.grid(True)
+
+plt.subplot(1, 3, 2)
+plt.plot(x_mesh['chebyshev_first'][1], func_vals['chebyshev_first'][1], '*', label='Interpolation Points')
+plt.plot(x_eval, bc1['chebyshev_first'][1], label='Barycentric 1')
+plt.plot(x_eval, bc2['chebyshev_first'][1], label='Barycentric 2')
+plt.plot(x_eval, newt['chebyshev_first'][1], label='Newton')
+plt.plot(x_eval, exact, label='f(x)')
+plt.xlabel('x values')
+plt.ylabel('Function Values')
+plt.title(f'Chebyshev First Kind Mesh for m = {m[1]}')
+plt.legend(loc='best')
+plt.grid(True)
+
+plt.subplot(1, 3, 3)
+plt.plot(x_mesh['chebyshev_second'][1], func_vals['chebyshev_second'][1], '*', label='Interpolation Points')
+plt.plot(x_eval, bc1['chebyshev_second'][1], label='Barycentric 1')
+plt.plot(x_eval, bc2['chebyshev_second'][1], label='Barycentric 2')
+plt.plot(x_eval, newt['chebyshev_second'][1], label='Newton')
+plt.plot(x_eval, exact, label='f(x)')
+plt.xlabel('x values')
+plt.ylabel('Function Values')
+plt.title(f'Chebyshev Second Kind Mesh for m = {m[1]}')
+plt.legend(loc='best')
+plt.grid(True)
+
+plt.show()
+
+plt.figure(figsize=(18, 6))
+plt.suptitle(f'Interpolation Methods vs. Exact Function for {m[3]} Mesh Points')
+plt.subplot(1, 3, 1)
+plt.plot(x_mesh['uniform'][3], func_vals['uniform'][3], '*', label='Interpolation Points')
+plt.plot(x_eval, bc1['uniform'][3], label='Barycentric 1')
+plt.plot(x_eval, bc2['uniform'][3], label='Barycentric 2')
+plt.plot(x_eval, newt['uniform'][3], label='Newton')
+plt.plot(x_eval, exact, label='f(x)')
+plt.xlabel('x values')
+plt.ylabel('Function Values')
+plt.title(f'Uniform Mesh for m = {m[3]}')
+plt.legend(loc='best')
+plt.grid(True)
+
+plt.subplot(1, 3, 2)
+plt.plot(x_mesh['chebyshev_first'][3], func_vals['chebyshev_first'][3], '*', label='Interpolation Points')
+plt.plot(x_eval, bc1['chebyshev_first'][3], label='Barycentric 1')
+plt.plot(x_eval, bc2['chebyshev_first'][3], label='Barycentric 2')
+plt.plot(x_eval, newt['chebyshev_first'][3], label='Newton')
+plt.plot(x_eval, exact, label='f(x)')
+plt.xlabel('x values')
+plt.ylabel('Function Values')
+plt.title(f'Chebyshev First Kind Mesh for m = {m[3]}')
+plt.legend(loc='best')
+plt.grid(True)
+
+plt.subplot(1, 3, 3)
+plt.plot(x_mesh['chebyshev_second'][3], func_vals['chebyshev_second'][3], '*', label='Interpolation Points')
+plt.plot(x_eval, bc1['chebyshev_second'][3], label='Barycentric 1')
+plt.plot(x_eval, bc2['chebyshev_second'][3], label='Barycentric 2')
+plt.plot(x_eval, newt['chebyshev_second'][3], label='Newton')
+plt.plot(x_eval, exact, label='f(x)')
+plt.xlabel('x values')
+plt.ylabel('Function Values')
+plt.title(f'Chebyshev Second Kind Mesh for m = {m[3]}')
+plt.legend(loc='best')
+plt.grid(True)
+
+plt.show()
+
+
+"""BARYCENTRIC 1 K(X,N,Y) PLOT"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Condition Number k(x,n,y) for Barycentric 1 with Different Meshes')
+plt.subplot(1, 3, 1)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b1['uniform'][i], label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Condition Number k(x,n,y)')
+plt.title('Uniform Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b1['chebyshev_first'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the First Kind Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b1['chebyshev_second'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the Second Kind Mesh')
+plt.legend(loc='best')
+
+plt.show()
+
+
+"""BARYCENTRIC 2 K(X,N,Y) PLOT"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Condition Number k(x,n,y) for Barycentric 2 with Different Meshes')
+plt.subplot(1, 3, 1)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b2['uniform'][i], label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Condition Number k(x,n,y)')
+plt.title('Uniform Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b2['chebyshev_first'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the First Kind Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b2['chebyshev_second'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the Second Kind Mesh')
+plt.legend(loc='best')
+
+plt.show()
+
+"""RELATIVE ERROR PLOT FOR BARYCENTRIC 2"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Relative Error for Barycentric 2 with Different Type and Size Meshes')
+plt.subplot(1, 3, 1)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_b2['uniform'][i], label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Uniform Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_b2['chebyshev_first'][i], label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev of the First Kind Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_b2['chebyshev_second'][i], label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev of the Second Kind Relative Error')
+plt.legend(loc='best')
+
+plt.show()
+
+"""RELATIVE ERROR PLOT FOR NEWTON"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Increasing Ordering')
+plt.subplot(1, 3, 1)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_inc['uniform'][i], '*', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Increasing Uniform Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_inc['chebyshev_first'][i], '*', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Increasing Chebyshev First Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_inc['chebyshev_second'][i], '*', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Increasing Chebyshev Second Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.show()
