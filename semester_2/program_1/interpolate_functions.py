@@ -316,11 +316,11 @@ def horner_interpolation(x_mesh, x_values, div_coeff, dtype=np.float32):
     for x in x_values:
         s = alpha[-1]
         for i in range(n-1, -1, -1):
-            s = dtype(s * (x - x_mesh[i]) + alpha[i])
+            s = s * (x - x_mesh[i]) + alpha[i]
 
         p_eval.append(s)
 
-    p_eval = np.array(p_eval)
+    p_eval = np.array(p_eval, dtype=dtype)
 
     return p_eval
 
