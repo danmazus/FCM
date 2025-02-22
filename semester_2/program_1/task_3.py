@@ -28,7 +28,7 @@ This task will perform the subtasks for the f_2 function:
 
 eps = 2 * np.finfo(float).eps
 shift = 1e3 * eps
-d = 9
+d = 25
 a = 1
 b = 3
 f = functions_1_to_4.p_2(d)
@@ -37,7 +37,8 @@ exact = f(x_eval)
 
 
 
-m = [3, 6, 9, 12]
+#m = [3, 6, 9, 12]
+m = [15, 20, 25, 30]
 
 
 x_mesh = {
@@ -373,8 +374,6 @@ for d in m:
 
 
 type = ['uniform', 'chebyshev_first', 'chebyshev_second']
-
-print(x_mesh)
 
 plt.figure(figsize=(18, 6))
 plt.suptitle(f'Interpolation Methods vs. Exact Function for {m[1]} Mesh Points')
