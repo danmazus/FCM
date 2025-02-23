@@ -1,11 +1,13 @@
 import numpy as np
+from numpy.core.numeric import newaxis
+
 
 # Defining Functions
 def p_1(d, rho):
     return lambda x: (x - rho) ** d
 
 def p_2(d):
-    return lambda x: np.prod(x[:, np.newaxis] - np.arange(1, d+1), axis=1)
+    return lambda x: np.prod(x[:, None] - np.arange(1, d+1), axis=1)
 
 def p_3(x_mesh, x_values):
     y = np.zeros(len(x_values))

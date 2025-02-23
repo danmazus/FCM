@@ -312,13 +312,14 @@ def newton_divdiff(x_mesh, f, dtype=np.float32):
 def horner_interpolation(x_mesh, x_values, div_coeff, dtype=np.float32):
     n = len(x_mesh) - 1
     alpha = copy.deepcopy(div_coeff)
-    p_eval = []
-    for x in x_values:
+    p_eval = np.zeros(len(x_values), dtype=dtype)
+    for j in range(len(x_values)):
         s = alpha[-1]
         for i in range(n-1, -1, -1):
-            s = s * (x - x_mesh[i]) + alpha[i]
+            s = dtype(s * (x_values[j] - x_mesh[i]) + alpha[i])
 
-        p_eval.append(s)
+        #p_eval.append(s)
+        p_eval[j] = s
 
     p_eval = np.array(p_eval, dtype=dtype)
 
