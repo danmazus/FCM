@@ -505,8 +505,9 @@ for d in m:
 
 type = ['uniform', 'chebyshev_first', 'chebyshev_second']
 
+"""INTERPOLATION PLOTS"""
 plt.figure(figsize=(18, 6))
-plt.suptitle(f'Interpolation Methods vs. Exact Function Specific Number Mesh Points')
+plt.suptitle(f'Newton Method vs. f(x) for Given Degree')
 plt.subplot(1, 3, 1)
 for i in range(len(m)):
     plt.plot(x_eval, newt_inc['uniform'][i], label=f'm = {m[i]}')
@@ -539,6 +540,7 @@ plt.grid(True)
 plt.show()
 
 plt.figure(figsize=(18,6))
+plt.suptitle(f'Barycentric 1 Method vs. f(x) for Given Degree')
 plt.subplot(1, 3, 1)
 for i in range(len(m)):
     plt.plot(x_eval, bc1['uniform'][i], label=f'm = {m[i]}')
@@ -571,6 +573,7 @@ plt.grid(True)
 plt.show()
 
 plt.figure(figsize=(18,6))
+plt.suptitle(f'Barycentric 2 Method vs. f(x) for Given Degree')
 plt.subplot(1, 3, 1)
 for i in range(len(m)):
     plt.plot(x_eval, bc2['uniform'][i], label=f'm = {m[i]}')
@@ -603,188 +606,188 @@ plt.grid(True)
 
 plt.show()
 
-#
-# """BARYCENTRIC 1 K(X,N,Y) PLOT"""
-# plt.figure(figsize=(18, 6))
-# plt.suptitle('Condition Number k(x,n,y) for Barycentric 1 with Different Meshes')
-# plt.subplot(1, 3, 1)
-# for i in range(len(m)):
-#     plt.plot(x_eval, condition_xny_b1['uniform'][i], label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Condition Number k(x,n,y)')
-# plt.title('Uniform Mesh')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 2)
-# for i in range(len(m)):
-#     plt.plot(x_eval, condition_xny_b1['chebyshev_first'][i], label=f'm = {m[i]}')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.title('Chebyshev of the First Kind Mesh')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 3)
-# for i in range(len(m)):
-#     plt.plot(x_eval, condition_xny_b1['chebyshev_second'][i], label=f'm = {m[i]}')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.title('Chebyshev of the Second Kind Mesh')
-# plt.legend(loc='best')
-#
-# plt.show()
-#
-#
-# """BARYCENTRIC 2 K(X,N,Y) PLOT"""
-# plt.figure(figsize=(18, 6))
-# plt.suptitle('Condition Number k(x,n,y) for Barycentric 2 with Different Meshes')
-# plt.subplot(1, 3, 1)
-# for i in range(len(m)):
-#     plt.plot(x_eval, condition_xny_b2['uniform'][i], label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Condition Number k(x,n,y)')
-# plt.title('Uniform Mesh')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 2)
-# for i in range(len(m)):
-#     plt.plot(x_eval, condition_xny_b2['chebyshev_first'][i], label=f'm = {m[i]}')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.title('Chebyshev of the First Kind Mesh')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 3)
-# for i in range(len(m)):
-#     plt.plot(x_eval, condition_xny_b2['chebyshev_second'][i], label=f'm = {m[i]}')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.title('Chebyshev of the Second Kind Mesh')
-# plt.legend(loc='best')
-#
-# plt.show()
-#
-# """RELATIVE ERROR PLOT FOR BARYCENTRIC 2"""
-# plt.figure(figsize=(18, 6))
-# plt.suptitle('Relative Error for Barycentric 2 with Different Type and Size Meshes')
-# plt.subplot(1, 3, 1)
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_b2['uniform'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Uniform Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 2)
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_b2['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Chebyshev of the First Kind Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 3)
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_b2['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Chebyshev of the Second Kind Relative Error')
-# plt.legend(loc='best')
-#
-# plt.show()
-#
-# """RELATIVE ERROR PLOT FOR NEWTON"""
-# plt.figure(figsize=(18, 6))
-# plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Increasing Ordering')
-# plt.subplot(1, 3, 1)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_inc['uniform'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Increasing Uniform Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 2)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_inc['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Increasing Chebyshev First Kind Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 3)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_inc['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Increasing Chebyshev Second Kind Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.show()
-#
-# plt.figure(figsize=(18, 6))
-# plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Decreasing Ordering')
-# plt.subplot(1, 3, 1)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_dec['uniform'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Uniform Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 2)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_dec['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Chebyshev First Kind Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 3)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_dec['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Chebyshev Second Kind Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.show()
-#
-# plt.figure(figsize=(18, 6))
-# plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Leja Ordering')
-# plt.subplot(1, 3, 1)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_leja['uniform'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Uniform Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 2)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_leja['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Chebyshev First Kind Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.subplot(1, 3, 3)
-# plt.yscale('log')
-# for i in range(len(m)):
-#     plt.plot(x_eval, relative_error_newt_leja['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
-# plt.xlabel('x values')
-# plt.ylabel('Relative Error')
-# plt.title('Chebyshev Second Kind Mesh Relative Error')
-# plt.legend(loc='best')
-#
-# plt.show()
+
+"""BARYCENTRIC 1 K(X,N,Y) PLOT"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Condition Number k(x,n,y) for Barycentric 1 with Different Meshes')
+plt.subplot(1, 3, 1)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b1['uniform'][i], label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Condition Number k(x,n,y)')
+plt.title('Uniform Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b1['chebyshev_first'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the First Kind Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b1['chebyshev_second'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the Second Kind Mesh')
+plt.legend(loc='best')
+
+plt.show()
+
+
+"""BARYCENTRIC 2 K(X,N,Y) PLOT"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Condition Number k(x,n,y) for Barycentric 2 with Different Meshes')
+plt.subplot(1, 3, 1)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b2['uniform'][i], label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Condition Number k(x,n,y)')
+plt.title('Uniform Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b2['chebyshev_first'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the First Kind Mesh')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+for i in range(len(m)):
+    plt.plot(x_eval, condition_xny_b2['chebyshev_second'][i], label=f'm = {m[i]}')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Chebyshev of the Second Kind Mesh')
+plt.legend(loc='best')
+
+plt.show()
+
+"""RELATIVE ERROR PLOT FOR BARYCENTRIC 2"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Relative Error for Barycentric 2 with Different Type and Size Meshes')
+plt.subplot(1, 3, 1)
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_b2['uniform'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Uniform Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_b2['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev of the First Kind Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_b2['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev of the Second Kind Relative Error')
+plt.legend(loc='best')
+
+plt.show()
+
+"""RELATIVE ERROR PLOT FOR NEWTON"""
+plt.figure(figsize=(18, 6))
+plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Increasing Ordering')
+plt.subplot(1, 3, 1)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_inc['uniform'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Increasing Uniform Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_inc['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Increasing Chebyshev First Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_inc['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Increasing Chebyshev Second Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.show()
+
+plt.figure(figsize=(18, 6))
+plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Decreasing Ordering')
+plt.subplot(1, 3, 1)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_dec['uniform'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Uniform Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_dec['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev First Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_dec['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev Second Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.show()
+
+plt.figure(figsize=(18, 6))
+plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Leja Ordering')
+plt.subplot(1, 3, 1)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_leja['uniform'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Uniform Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 2)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_leja['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev First Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.subplot(1, 3, 3)
+plt.yscale('log')
+for i in range(len(m)):
+    plt.plot(x_eval, relative_error_newt_leja['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Chebyshev Second Kind Mesh Relative Error')
+plt.legend(loc='best')
+
+plt.show()
 
 print(Lambda_n_b2)
 
