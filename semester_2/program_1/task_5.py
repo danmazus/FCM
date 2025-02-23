@@ -3,14 +3,12 @@ import matplotlib.pyplot as plt
 import interpolate_functions as ifs
 import functions_1_to_4
 
-#m = 29
+
 eps = 2 * np.finfo(float).eps
 shift = 1e3 * eps
 f = functions_1_to_4.p_4(2)
 x_eval = np.linspace(-1 + shift, 1 - shift, 100)
 exact = f(x_eval)
-
-
 
 m = [6, 12, 20, 29, 39]
 
