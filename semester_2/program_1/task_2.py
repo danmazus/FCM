@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import interpolate_functions as ifs
 import functions_1_to_4
+import pandas as pd
 
 """
 This task will perform the subtasks for the f_1 function:
@@ -33,8 +34,6 @@ rho = 2
 f = functions_1_to_4.p_1(d, rho)
 x_eval = np.linspace(a + shift, b - shift, 100)
 exact = f(x_eval)
-
-
 
 m = [3, 6, 9, 12, 15]
 
@@ -253,7 +252,7 @@ for d in m:
             # Conditioning
             condition_xny_b2[type].append(cond_xny_64_b2_c1)
             condition_xn1_b2[type].append(cond_xn1_64_b2_c1)
-            Lambda_n_b2[type].append(np.max(np.abs(cond_xn1_64_b2_c1)))
+            Lambda_n_b2[type].append(np.max(cond_xn1_64_b2_c1))
 
 
             # NEWTON
@@ -487,7 +486,7 @@ for d in m:
             # Relative Error
             num_err_b2 = np.abs(b2_64_c1 - b2_32_c1)
             denom_err_b2 = np.abs(b2_64_c1)
-            rel_err_b2 = num_err_b2 / denom_err_b2
+            rel_err_b2 = np.where(denom_err_b2 != 0, num_err_b2 / denom_err_b2, 0)
             relative_error_b2[type].append(rel_err_b2)
 
             # Conditioning
@@ -511,17 +510,17 @@ for d in m:
             # Relative Error
             num_err_newt_inc = np.abs(n_64_inc - n_32_inc)
             denom_err_newt_inc = np.abs(n_64_inc)
-            rel_err_newt_inc = num_err_newt_inc / denom_err_newt_inc
+            rel_err_newt_inc = np.where(denom_err_newt_inc != 0, num_err_newt_inc / denom_err_newt_inc, 0)
             relative_error_newt_inc[type].append(rel_err_newt_inc)
 
             num_err_newt_dec = np.abs(n_64_dec - n_32_dec)
             denom_err_newt_dec = np.abs(n_64_dec)
-            rel_err_newt_dec = num_err_newt_dec / denom_err_newt_dec
+            rel_err_newt_dec = np.where(denom_err_newt_dec != 0, num_err_newt_dec / denom_err_newt_dec, 0)
             relative_error_newt_dec[type].append(rel_err_newt_dec)
 
             num_err_newt_leja = np.abs(n_64_leja - n_32_leja)
             denom_err_newt_leja = np.abs(n_64_leja)
-            rel_err_newt_leja = num_err_newt_leja / denom_err_newt_leja
+            rel_err_newt_leja = np.where(denom_err_newt_leja != 0, num_err_newt_leja / denom_err_newt_leja, 0)
             relative_error_newt_leja[type].append(rel_err_newt_leja)
 
 
@@ -814,3 +813,12 @@ plt.title('Chebyshev Second Kind Mesh Relative Error')
 plt.legend(loc='best')
 
 plt.show()
+
+lamb_tab_b1 = pd.DataFrame(Lambda_n_b1)
+lamb_tab_b2 = pd.DataFrame(Lambda_n_b2)
+
+lamb_tab_b1['Mesh Size'] = m
+lamb_tab_b2['Mesh Size'] = m
+
+print(lamb_tab_b1)
+print(lamb_tab_b2)

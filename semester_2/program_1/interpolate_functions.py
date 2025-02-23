@@ -247,6 +247,8 @@ def bary_2_interpolation(beta_vec, x_mesh, x_values, y, dtype=np.float32):
     n = len(x_mesh) - 1
 
     p_eval = np.zeros(len(x_values), dtype=dtype)
+    condition_1 = np.zeros(len(x_values))
+    condition_y = np.zeros(len(x_values))
 
     for j in range(len(x_values)):
         numerical_stab = np.isclose(x_values[j], x_mesh, atol=np.finfo(dtype).eps).any()
@@ -258,24 +260,15 @@ def bary_2_interpolation(beta_vec, x_mesh, x_values, y, dtype=np.float32):
 
         numer = dtype(0)
         denom = dtype(0)
-
-        for i in range(n+1):
-            numer += dtype((y[i] * beta_vec[i]) / (x_values[j] - x_mesh[i]))
-            denom += dtype(beta_vec[i] / (x_values[j] - x_mesh[i]))
-
-        p_eval[j] = dtype(numer / denom)
-
-    condition_1 = np.zeros(len(x_values))
-    condition_y = np.zeros(len(x_values))
-
-    for j in range(len(x_values)):
-
         sum_numer_cond_1 = 0
         sum_denom_cond_1 = 0
         sum_numer_cond_y = 0
         sum_denom_cond_y = 0
 
         for i in range(n+1):
+            numer += dtype((y[i] * beta_vec[i]) / (x_values[j] - x_mesh[i]))
+            denom += dtype(beta_vec[i] / (x_values[j] - x_mesh[i]))
+
             frac = beta_vec[i] / (x_values[j] - x_mesh[i])
             frac_y = frac * y[i]
             sum_numer_cond_1 += np.abs(frac)
@@ -285,8 +278,30 @@ def bary_2_interpolation(beta_vec, x_mesh, x_values, y, dtype=np.float32):
             sum_denom_cond_y += frac_y
             sum_denom_cond_y = np.abs(sum_denom_cond_y)
 
+        p_eval[j] = dtype(numer / denom)
+
         condition_1[j] = sum_numer_cond_1 / sum_denom_cond_1
         condition_y[j] = sum_numer_cond_y / sum_denom_cond_y
+
+    # for j in range(len(x_values)):
+    #
+    #     sum_numer_cond_1 = 0
+    #     sum_denom_cond_1 = 0
+    #     sum_numer_cond_y = 0
+    #     sum_denom_cond_y = 0
+    #
+    #     for i in range(n+1):
+    #         frac = beta_vec[i] / (x_values[j] - x_mesh[i])
+    #         frac_y = frac * y[i]
+    #         sum_numer_cond_1 += np.abs(frac)
+    #         sum_denom_cond_1 += frac
+    #         sum_denom_cond_1 = np.abs(sum_denom_cond_1)
+    #         sum_numer_cond_y += np.abs(frac_y)
+    #         sum_denom_cond_y += frac_y
+    #         sum_denom_cond_y = np.abs(sum_denom_cond_y)
+    #
+    #     condition_1[j] = sum_numer_cond_1 / sum_denom_cond_1
+    #     condition_y[j] = sum_numer_cond_y / sum_denom_cond_y
 
 
 
