@@ -6,11 +6,13 @@ import functions_1_to_4
 
 eps = 2 * np.finfo(float).eps
 shift = 1e3 * eps
+a = -1
+b = 1
 f = functions_1_to_4.p_4(2)
-x_eval = np.linspace(-1 + shift, 1 - shift, 100)
+x_eval = np.linspace(a + shift, b - shift, 100)
 exact = f(x_eval)
 
-m = [6, 12, 20, 29, 39]
+m = [6, 12, 20, 29]
 
 x_mesh = {
     'uniform': [],
@@ -141,7 +143,7 @@ for d in m:
     for type in ['uniform', 'chebyshev_first', 'chebyshev_second']:
         if type == 'uniform':
             # Single
-            x_mesh_32_u = ifs.chebyshev_points(-1, 1, d, flag=1, dtype=np.float32)
+            x_mesh_32_u = ifs.chebyshev_points(a, b, d, flag=1, dtype=np.float32)
             x_mesh_dec_32_u = ifs.x_mesh_order(x_mesh_32_u, flag=1)
             x_mesh_inc_32_u = ifs.x_mesh_order(x_mesh_32_u, flag=2)
             x_mesh_leja_32_u = ifs.x_mesh_order(x_mesh_32_u, flag=3)
@@ -190,7 +192,7 @@ for d in m:
             func_vals_leja[type].append(func_val_newt_leja_32)
 
             # Double
-            x_mesh_64_u = ifs.chebyshev_points(-1, 1, d, flag=1, dtype=np.float64)
+            x_mesh_64_u = ifs.chebyshev_points(a, b, d, flag=1, dtype=np.float64)
             x_mesh_dec_64_u = ifs.x_mesh_order(x_mesh_64_u, flag=1)
             x_mesh_inc_64_u = ifs.x_mesh_order(x_mesh_64_u, flag=2)
             x_mesh_leja_64_u = ifs.x_mesh_order(x_mesh_64_u, flag=3)
@@ -262,7 +264,7 @@ for d in m:
 
         elif type == 'chebyshev_first':
             ### SINGLE ###
-            x_mesh_32_c1 = ifs.chebyshev_points(-1, 1, d, flag=2, dtype=np.float32)
+            x_mesh_32_c1 = ifs.chebyshev_points(a, b, d, flag=2, dtype=np.float32)
             x_mesh_dec_32_c1 = ifs.x_mesh_order(x_mesh_32_c1, flag=1)
             x_mesh_inc_32_c1 = ifs.x_mesh_order(x_mesh_32_c1, flag=2)
             x_mesh_leja_32_c1 = ifs.x_mesh_order(x_mesh_32_c1, flag=3)
@@ -311,7 +313,7 @@ for d in m:
             func_vals_leja[type].append(func_val_newt_leja_32)
 
             ### DOUBLE ###
-            x_mesh_64_c1 = ifs.chebyshev_points(-1, 1, d, flag=2, dtype=np.float64)
+            x_mesh_64_c1 = ifs.chebyshev_points(a, b, d, flag=2, dtype=np.float64)
             x_mesh_dec_64_c1 = ifs.x_mesh_order(x_mesh_64_c1, flag=1)
             x_mesh_inc_64_c1 = ifs.x_mesh_order(x_mesh_64_c1, flag=2)
             x_mesh_leja_64_c1 = ifs.x_mesh_order(x_mesh_64_c1, flag=3)
@@ -383,7 +385,7 @@ for d in m:
 
         elif type == 'chebyshev_second': # type == 'chebyshev_second'
             ### Single ###
-            x_mesh_32_c2 = ifs.chebyshev_points(-1, 1, d, flag=3, dtype=np.float32)
+            x_mesh_32_c2 = ifs.chebyshev_points(a, b, d, flag=3, dtype=np.float32)
             x_mesh_dec_32_c2 = ifs.x_mesh_order(x_mesh_32_c2, flag=1)
             x_mesh_inc_32_c2 = ifs.x_mesh_order(x_mesh_32_c2, flag=2)
             x_mesh_leja_32_c2 = ifs.x_mesh_order(x_mesh_32_c2, flag=3)
@@ -431,7 +433,7 @@ for d in m:
             func_vals_leja[type].append(func_val_newt_leja_32)
 
             ### Double ###
-            x_mesh_64_c2 = ifs.chebyshev_points(-1, 1, d, flag=3, dtype=np.float64)
+            x_mesh_64_c2 = ifs.chebyshev_points(a, b, d, flag=3, dtype=np.float64)
             x_mesh_dec_64_c2 = ifs.x_mesh_order(x_mesh_64_c2, flag=1)
             x_mesh_inc_64_c2 = ifs.x_mesh_order(x_mesh_64_c2, flag=2)
             x_mesh_leja_64_c2 = ifs.x_mesh_order(x_mesh_64_c2, flag=3)
