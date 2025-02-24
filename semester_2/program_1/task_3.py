@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import interpolate_functions as ifs
 import functions_1_to_4
+import pandas as pd
 
 """
 This task will perform the subtasks for the f_2 function:
@@ -25,6 +26,8 @@ This task will perform the subtasks for the f_2 function:
         and compared to "exact" values from Matlab's 50 digit symbolic arithmetic toolbox, so you will not see exactly
         the same behavior.
 """
+
+"""CREATION OF ALL DICTIONARIES USED FOR STORAGE OF VALUES AND FUNCTION"""
 
 eps = 2 * np.finfo(float).eps
 shift = 1e3 * eps
@@ -357,7 +360,7 @@ for d in m:
             cond_xny_64_b1_c1 = cond_numer_xny_64 / denom_err_b1
             condition_xny_b1[type].append(cond_xny_64_b1_c1)
             condition_xny_b1[type].append(cond_xn1_64)
-            Lambda_n_b1[type].append(np.max(np.abs(cond_xn1_64)))
+            Lambda_n_b1[type].append(np.nanmax(np.abs(cond_xn1_64)))
 
 
             # BARYCENTRIC 2
@@ -526,6 +529,46 @@ for d in m:
 
 
 type = ['uniform', 'chebyshev_first', 'chebyshev_second']
+
+mean_u_b1 = np.mean(Lambda_n_b1['uniform'])
+mean_u_b2 = np.mean(Lambda_n_b2['uniform'])
+mean_c1_b1 = np.mean(Lambda_n_b1['chebyshev_first'])
+mean_c1_b2 = np.mean(Lambda_n_b2['chebyshev_first'])
+mean_c2_b1 = np.mean(Lambda_n_b1['chebyshev_second'])
+mean_c2_b2 = np.mean(Lambda_n_b2['chebyshev_second'])
+
+H_n_b1 = pd.DataFrame({
+    'Uniform': [mean_u_b1, mean_u_b2],
+    'Chebyshev First Kind': [mean_c1_b1, mean_c1_b2],
+    'Chebyshev Second Kind': [mean_c2_b1, mean_c2_b2]
+}, index=['Barycentric 1', 'Barycentric 2'])
+print(H_n_b1)
+
+lamb_tab_b1 = pd.DataFrame(Lambda_n_b1)
+lamb_tab_b2 = pd.DataFrame(Lambda_n_b2)
+
+lamb_tab_b1['Mesh Size'] = m
+lamb_tab_b2['Mesh Size'] = m
+
+print(lamb_tab_b1)
+print(lamb_tab_b2)
+
+u = np.finfo(np.float32).eps
+
+n = m[2]
+
+bound = ((((3 * n) + 4) * u) * condition_xny_b2['uniform'][2]) + ((((3 * n) + 2) * u) * Lambda_n_b2['uniform'][2])
+
+"""RELATIVE ERROR PLOT WITH BOUND FOR CHEBYSHEV FIRST FOR BARYCENTRIC 2"""
+plt.figure(figsize=(12, 6))
+plt.yscale('log')
+plt.plot(x_eval, relative_error_b2['chebyshev_first'][2], 'x', label=f'm = {m[2]}')
+plt.plot(x_eval, bound, label='bound')
+plt.xlabel('x values')
+plt.ylabel('Log Relative Error')
+plt.title('Chebyshev First Kind Points Relative Error Bound')
+plt.legend(loc='best')
+plt.show()
 
 """INTERPOLATION PLOTS"""
 plt.figure(figsize=(18, 6))

@@ -25,6 +25,8 @@ This task will perform the subtasks for the f_1 function:
         the same behavior.
 """
 
+"""CREATION OF ALL DICTIONARIES USED FOR STORAGE OF VALUES AND FUNCTION"""
+
 eps = 2 * np.finfo(float).eps
 shift = 1e3 * eps
 d = 9
@@ -528,6 +530,46 @@ for d in m:
 
 type = ['uniform', 'chebyshev_first', 'chebyshev_second']
 
+mean_u_b1 = np.mean(Lambda_n_b1['uniform'])
+mean_u_b2 = np.mean(Lambda_n_b2['uniform'])
+mean_c1_b1 = np.mean(Lambda_n_b1['chebyshev_first'])
+mean_c1_b2 = np.mean(Lambda_n_b2['chebyshev_first'])
+mean_c2_b1 = np.mean(Lambda_n_b1['chebyshev_second'])
+mean_c2_b2 = np.mean(Lambda_n_b2['chebyshev_second'])
+
+H_n_b1 = pd.DataFrame({
+    'Uniform': [mean_u_b1, mean_u_b2],
+    'Chebyshev First Kind': [mean_c1_b1, mean_c1_b2],
+    'Chebyshev Second Kind': [mean_c2_b1, mean_c2_b2]
+}, index=['Barycentric 1', 'Barycentric 2'])
+print(H_n_b1)
+
+lamb_tab_b1 = pd.DataFrame(Lambda_n_b1)
+lamb_tab_b2 = pd.DataFrame(Lambda_n_b2)
+
+lamb_tab_b1['Mesh Size'] = m
+lamb_tab_b2['Mesh Size'] = m
+
+print(lamb_tab_b1)
+print(lamb_tab_b2)
+
+u = np.finfo(np.float32).eps
+
+n = m[2]
+
+bound = ((((3 * n) + 4) * u) * condition_xny_b2['uniform'][2]) + ((((3 * n) + 2) * u) * Lambda_n_b2['uniform'][2])
+
+"""RELATIVE ERROR PLOT WITH BOUND FOR UNIFORM FOR BARYCENTRIC 2"""
+plt.figure(figsize=(12, 6))
+plt.yscale('log')
+plt.plot(x_eval, relative_error_b2['uniform'][2], 'x', label=f'm = {m[2]}')
+plt.plot(x_eval, bound, label='bound')
+plt.xlabel('x values')
+plt.ylabel('Relative Error')
+plt.title('Uniform Mesh Relative Error')
+plt.legend(loc='best')
+plt.show()
+
 """INTERPOLATION PLOTS"""
 plt.figure(figsize=(18, 6))
 plt.suptitle(f'Newton Method vs. f(x) for Given Degree')
@@ -722,13 +764,14 @@ plt.show()
 
 """RELATIVE ERROR PLOT FOR NEWTON"""
 plt.figure(figsize=(18, 6))
-plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Increasing Ordering')
+plt.suptitle('Log Relative Error For Newton Divided Difference Across Different Meshes with Increasing Ordering')
 plt.subplot(1, 3, 1)
 plt.yscale('log')
 for i in range(len(m)):
     plt.plot(x_eval, relative_error_newt_inc['uniform'][i], 'x', label=f'm = {m[i]}')
+plt.yscale('log')
 plt.xlabel('x values')
-plt.ylabel('Relative Error')
+plt.ylabel('Log Relative Error')
 plt.title('Increasing Uniform Mesh Relative Error')
 plt.legend(loc='best')
 
@@ -736,8 +779,9 @@ plt.subplot(1, 3, 2)
 plt.yscale('log')
 for i in range(len(m)):
     plt.plot(x_eval, relative_error_newt_inc['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
+plt.yscale('log')
 plt.xlabel('x values')
-plt.ylabel('Relative Error')
+plt.ylabel('Log Relative Error')
 plt.title('Increasing Chebyshev First Kind Mesh Relative Error')
 plt.legend(loc='best')
 
@@ -745,21 +789,22 @@ plt.subplot(1, 3, 3)
 plt.yscale('log')
 for i in range(len(m)):
     plt.plot(x_eval, relative_error_newt_inc['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
+plt.yscale('log')
 plt.xlabel('x values')
-plt.ylabel('Relative Error')
+plt.ylabel('Log Relative Error')
 plt.title('Increasing Chebyshev Second Kind Mesh Relative Error')
 plt.legend(loc='best')
 
 plt.show()
 
 plt.figure(figsize=(18, 6))
-plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Decreasing Ordering')
+plt.suptitle('Log Relative Error For Newton Divided Difference Across Different Meshes with Decreasing Ordering')
 plt.subplot(1, 3, 1)
 plt.yscale('log')
 for i in range(len(m)):
     plt.plot(x_eval, relative_error_newt_dec['uniform'][i], 'x', label=f'm = {m[i]}')
 plt.xlabel('x values')
-plt.ylabel('Relative Error')
+plt.ylabel('Log Relative Error')
 plt.title('Uniform Mesh Relative Error')
 plt.legend(loc='best')
 
@@ -768,7 +813,7 @@ plt.yscale('log')
 for i in range(len(m)):
     plt.plot(x_eval, relative_error_newt_dec['chebyshev_first'][i], 'x', label=f'm = {m[i]}')
 plt.xlabel('x values')
-plt.ylabel('Relative Error')
+plt.ylabel('Log Relative Error')
 plt.title('Chebyshev First Kind Mesh Relative Error')
 plt.legend(loc='best')
 
@@ -777,20 +822,20 @@ plt.yscale('log')
 for i in range(len(m)):
     plt.plot(x_eval, relative_error_newt_dec['chebyshev_second'][i], 'x', label=f'm = {m[i]}')
 plt.xlabel('x values')
-plt.ylabel('Relative Error')
+plt.ylabel('Log Relative Error')
 plt.title('Chebyshev Second Kind Mesh Relative Error')
 plt.legend(loc='best')
 
 plt.show()
 
 plt.figure(figsize=(18, 6))
-plt.suptitle('Relative Error For Newton Divided Difference Across Different Meshes with Leja Ordering')
+plt.suptitle('Log Relative Error For Newton Divided Difference Across Different Meshes with Leja Ordering')
 plt.subplot(1, 3, 1)
 plt.yscale('log')
 for i in range(len(m)):
     plt.plot(x_eval, relative_error_newt_leja['uniform'][i], 'x', label=f'm = {m[i]}')
 plt.xlabel('x values')
-plt.ylabel('Relative Error')
+plt.ylabel('Log Relative Error')
 plt.title('Uniform Mesh Relative Error')
 plt.legend(loc='best')
 
@@ -813,12 +858,3 @@ plt.title('Chebyshev Second Kind Mesh Relative Error')
 plt.legend(loc='best')
 
 plt.show()
-
-lamb_tab_b1 = pd.DataFrame(Lambda_n_b1)
-lamb_tab_b2 = pd.DataFrame(Lambda_n_b2)
-
-lamb_tab_b1['Mesh Size'] = m
-lamb_tab_b2['Mesh Size'] = m
-
-print(lamb_tab_b1)
-print(lamb_tab_b2)

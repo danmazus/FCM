@@ -2,7 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import interpolate_functions as ifs
 import functions_1_to_4
+import pandas as pd
 
+
+"""CREATION OF ALL DICTIONARIES USED FOR STORAGE OF VALUES AND FUNCTION"""
 
 eps = 2 * np.finfo(float).eps
 shift = 1e3 * eps
@@ -134,6 +137,36 @@ relative_error_newt_leja = {
     'chebyshev_first': [],
     'chebyshev_second': []
 }
+pw_error_b1 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+pw_error_b2 = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+pw_error_newt = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+pw_error_newt_inc = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+pw_error_newt_dec = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
+pw_error_newt_leja = {
+    'uniform': [],
+    'chebyshev_first': [],
+    'chebyshev_second': []
+}
 
 
 
@@ -190,6 +223,22 @@ for d in m:
             func_vals_inc[type].append(func_val_newt_inc_32)
             func_vals_dec[type].append(func_val_newt_dec_32)
             func_vals_leja[type].append(func_val_newt_leja_32)
+
+            # Pointwise Error
+            pw_err_b1 = np.max(np.abs(exact - b1_32))
+            pw_err_b2 = np.max(np.abs(exact - b2_32_c1))
+            pw_err_newt = np.max(np.abs(exact - n_32))
+            pw_err_newt_inc = np.max(np.abs(exact - n_32_inc))
+            pw_err_newt_dec = np.max(np.abs(exact - n_32_dec))
+            pw_err_newt_leja = np.max(np.abs(exact - n_32_leja))
+
+            pw_error_b1[type].append(pw_err_b1)
+            pw_error_b2[type].append(pw_err_b2)
+            pw_error_newt[type].append(pw_err_newt)
+            pw_error_newt_inc[type].append(pw_err_newt_inc)
+            pw_error_newt_dec[type].append(pw_err_newt_dec)
+            pw_error_newt_leja[type].append(pw_err_newt_leja)
+
 
             # Double
             x_mesh_64_u = ifs.chebyshev_points(a, b, d, flag=1, dtype=np.float64)
@@ -312,6 +361,21 @@ for d in m:
             func_vals_dec[type].append(func_val_newt_dec_32)
             func_vals_leja[type].append(func_val_newt_leja_32)
 
+            # Pointwise Error
+            pw_err_b1 = np.max(np.abs(exact - b1_32))
+            pw_err_b2 = np.max(np.abs(exact - b2_32_c1))
+            pw_err_newt = np.max(np.abs(exact - n_32))
+            pw_err_newt_inc = np.max(np.abs(exact - n_32_inc))
+            pw_err_newt_dec = np.max(np.abs(exact - n_32_dec))
+            pw_err_newt_leja = np.max(np.abs(exact - n_32_leja))
+
+            pw_error_b1[type].append(pw_err_b1)
+            pw_error_b2[type].append(pw_err_b2)
+            pw_error_newt[type].append(pw_err_newt)
+            pw_error_newt_inc[type].append(pw_err_newt_inc)
+            pw_error_newt_dec[type].append(pw_err_newt_dec)
+            pw_error_newt_leja[type].append(pw_err_newt_leja)
+
             ### DOUBLE ###
             x_mesh_64_c1 = ifs.chebyshev_points(a, b, d, flag=2, dtype=np.float64)
             x_mesh_dec_64_c1 = ifs.x_mesh_order(x_mesh_64_c1, flag=1)
@@ -431,6 +495,21 @@ for d in m:
             func_vals_inc[type].append(func_val_newt_inc_32)
             func_vals_dec[type].append(func_val_newt_dec_32)
             func_vals_leja[type].append(func_val_newt_leja_32)
+
+            # Pointwise Error
+            pw_err_b1 = np.max(np.abs(exact - b1_32))
+            pw_err_b2 = np.max(np.abs(exact - b2_32_c1))
+            pw_err_newt = np.max(np.abs(exact - n_32))
+            pw_err_newt_inc = np.max(np.abs(exact - n_32_inc))
+            pw_err_newt_dec = np.max(np.abs(exact - n_32_dec))
+            pw_err_newt_leja = np.max(np.abs(exact - n_32_leja))
+
+            pw_error_b1[type].append(pw_err_b1)
+            pw_error_b2[type].append(pw_err_b2)
+            pw_error_newt[type].append(pw_err_newt)
+            pw_error_newt_inc[type].append(pw_err_newt_inc)
+            pw_error_newt_dec[type].append(pw_err_newt_dec)
+            pw_error_newt_leja[type].append(pw_err_newt_leja)
 
             ### Double ###
             x_mesh_64_c2 = ifs.chebyshev_points(a, b, d, flag=3, dtype=np.float64)
@@ -789,7 +868,66 @@ plt.legend(loc='best')
 
 plt.show()
 
-print(Lambda_n_b2)
+### PRINTING H_n AND TABLE OF LAMBDAS ###
+
+mean_u_b1 = np.mean(Lambda_n_b1['uniform'])
+mean_u_b2 = np.mean(Lambda_n_b2['uniform'])
+mean_c1_b1 = np.mean(Lambda_n_b1['chebyshev_first'])
+mean_c1_b2 = np.mean(Lambda_n_b2['chebyshev_first'])
+mean_c2_b1 = np.mean(Lambda_n_b1['chebyshev_second'])
+mean_c2_b2 = np.mean(Lambda_n_b2['chebyshev_second'])
+
+H_n_b1 = pd.DataFrame({
+    'Uniform': [mean_u_b1, mean_u_b2],
+    'Chebyshev First Kind': [mean_c1_b1, mean_c1_b2],
+    'Chebyshev Second Kind': [mean_c2_b1, mean_c2_b2]
+}, index=['Barycentric 1', 'Barycentric 2'])
+print(H_n_b1)
+
+lamb_tab_b1 = pd.DataFrame(Lambda_n_b1)
+lamb_tab_b2 = pd.DataFrame(Lambda_n_b2)
+
+lamb_tab_b1['Mesh Size'] = m
+lamb_tab_b2['Mesh Size'] = m
+
+print(lamb_tab_b1)
+print(lamb_tab_b2)
+
+u = np.finfo(np.float32).eps
+
+n = m[3]
+
+bound = ((((3 * n) + 4) * u) * condition_xny_b2['uniform'][3]) + ((((3 * n) + 2) * u) * Lambda_n_b2['uniform'][3])
+
+"""RELATIVE ERROR PLOT WITH BOUND FOR CHEBYSHEV FIRST FOR BARYCENTRIC 2"""
+plt.figure(figsize=(10, 6))
+plt.yscale('log')
+plt.plot(x_eval, relative_error_b2['chebyshev_first'][3], 'x', label=f'm = {m[3]}')
+plt.plot(x_eval, bound, label='bound')
+plt.xlabel('x values')
+plt.ylabel('Log Relative Error')
+plt.title('Chebyshev Second Kind Points Relative Error Bound')
+plt.legend(loc='best')
+plt.show()
+
+### POINTWISE ERROR ###
+pw_error_b1_df = pd.DataFrame(pw_error_b1)
+pw_error_b2_df = pd.DataFrame(pw_error_b2)
+pw_error_newt_df = pd.DataFrame(pw_error_newt)
+
+pw_error_b1_df['Method'] = 'Barycentric 1'
+pw_error_b2_df['Method'] = 'Barycentric 2'
+pw_error_newt_df['Method'] = 'Newton'
+
+pw_error_b1_df['m'] = m
+pw_error_b2_df['m'] = m
+pw_error_newt_df['m'] = m
+
+pw_error_df = pd.concat([pw_error_b1_df, pw_error_b2_df, pw_error_newt_df], axis=0, ignore_index=True)
+
+
+print(pw_error_df)
+
 
 # def get_user_inputs():
 #     m_low = int(input('Please Enter the Minimum Number of Mesh Points to be Used [default = 5]: ') or 5)
