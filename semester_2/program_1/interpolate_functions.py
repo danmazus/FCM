@@ -1,14 +1,5 @@
 import copy
 import numpy as np
-import matplotlib.pyplot as plt
-
-# def f(x):
-#     # f(x)=4+3x+2x^2+x^3
-#     return 4 + 3 * x + 2 * np.power(x,2) + np.power(x,3)
-#
-# def f_2(x):
-#     #return abs(x) + 0.5 * x - x ** 2
-#     return (x - 2)**2
 
 def chebyshev_points(a, b, n, flag, dtype=np.float32):
     """
@@ -225,21 +216,6 @@ def bary_1_interpolation(gamma_vec, x_mesh, x_values, y, dtype=np.float32):
 
         p_eval[j] = dtype(omega * term)
 
-    # ## CONDITIONING FOR BARYCENTRIC 1
-    # condition_1 = np.zeros(len(x_values))
-    # condition_y_numer = np.zeros(len(x_values))
-    #
-    # for j in range(len(x_values)):
-    #     sum_cond = 0
-    #     sum_cond_y = 0
-    #     for i in range(n+1):
-    #         sum_cond_l = (gamma_vec[i] * omega) / (x_values[j] - x_mesh[i])
-    #         sum_cond += np.abs(sum_cond_l)
-    #         sum_cond_ly = sum_cond_l * y[i]
-    #         sum_cond_y += np.abs(sum_cond_ly)
-    #     condition_1[j] = sum_cond
-    #     condition_y_numer[j] = sum_cond_y
-
 
     return p_eval.astype(dtype), condition_1, condition_y_numer
 
@@ -258,30 +234,37 @@ def bary_2_interpolation(beta_vec, x_mesh, x_values, y, dtype=np.float32):
             p_eval[j] = y[closest]
             continue
 
-        numer = dtype(0)
-        denom = dtype(0)
-        sum_numer_cond_1 = 0
-        sum_denom_cond_1 = 0
-        sum_numer_cond_y = 0
-        sum_denom_cond_y = 0
+        # numer = dtype(0)
+        # denom = dtype(0)
+        # sum_numer_cond_1 = 0
+        # sum_denom_cond_1 = 0
+        # sum_numer_cond_y = 0
+        # sum_denom_cond_y = 0
+
+        tau = 0
+        sigma = 0
 
         for i in range(n+1):
-            numer += dtype((y[i] * beta_vec[i]) / (x_values[j] - x_mesh[i]))
-            denom += dtype(beta_vec[i] / (x_values[j] - x_mesh[i]))
+            rho = beta_vec[i]/(x_values[j] - x_mesh[i])
+            sigma += y[i] * rho
+            tau += rho
+            # numer += dtype((y[i] * beta_vec[i]) / (x_values[j] - x_mesh[i]))
+            # denom += dtype(beta_vec[i] / (x_values[j] - x_mesh[i]))
+            #
+            # frac = beta_vec[i] / (x_values[j] - x_mesh[i])
+            # frac_y = frac * y[i]
+            # sum_numer_cond_1 += np.abs(frac)
+            # sum_denom_cond_1 += frac
+            # sum_denom_cond_1 = np.abs(sum_denom_cond_1)
+            # sum_numer_cond_y += np.abs(frac_y)
+            # sum_denom_cond_y += frac_y
+            # sum_denom_cond_y = np.abs(sum_denom_cond_y)
 
-            frac = beta_vec[i] / (x_values[j] - x_mesh[i])
-            frac_y = frac * y[i]
-            sum_numer_cond_1 += np.abs(frac)
-            sum_denom_cond_1 += frac
-            sum_denom_cond_1 = np.abs(sum_denom_cond_1)
-            sum_numer_cond_y += np.abs(frac_y)
-            sum_denom_cond_y += frac_y
-            sum_denom_cond_y = np.abs(sum_denom_cond_y)
+        p_eval[j] = dtype(sigma / tau)
+        #p_eval[j] = dtype(numer / denom)
 
-        p_eval[j] = dtype(numer / denom)
-
-        condition_1[j] = sum_numer_cond_1 / sum_denom_cond_1
-        condition_y[j] = sum_numer_cond_y / sum_denom_cond_y
+        #condition_1[j] = sum_numer_cond_1 / sum_denom_cond_1
+        #condition_y[j] = sum_numer_cond_y / sum_denom_cond_y
 
     # for j in range(len(x_values)):
     #
@@ -350,57 +333,5 @@ def product_func(x_values, x_mesh, alpha, dtype=np.float32):
 
 
     return np.array(d, dtype=dtype)
-# Testing functions
-# x_mesh = np.array([1,2,3,4])
-# y = np.array([10,26,58,112])
-# x_values = np.array([1.5, 2.5, 3.5, 4.5])
-# n=len(x_mesh)-1
-# gamma_vec, func_val = coef_gamma(x_mesh, n, f)
-# print(gamma_vec)
-# print(func_val)
-#
-## Testing Barycentric 1 function
-# m_curr, p_eval = bary_1_interpolation(gamma_vec, x_mesh, x_values, y, n)
-# print(m_curr)
-# print(p_eval)
-#
-# true_values = f(x_values)
-# print(true_values)
 
-# Testing Barycentric 2 example given in class
-# n = 1
-# x_mesh = chebyshev_points(n, flag=2, dtype=np.float32)
-# print(x_mesh)
-# c, func_val = coef_beta(x_mesh, n, f_2, 3)
-# print(c)
-# print(func_val)
-# x_values = np.linspace(-1, 1, 1000)
-# ft = f_2(x_values)
-# #
-# #
-# bary_2 = bary_2_interpolation(c, x_mesh, x_values, func_val, n)
-# print(bary_2)
-#
-#
-# plt.plot(x_mesh, func_val, '*')
-# plt.plot(x_values, bary_2, '-')
-# plt.plot(x_values, ft, '--')
-# plt.grid(True)
-# plt.show()
 
-# Testing Newton Divided Difference Table
-# x_mesh = [1, 2, 4, 7, 8]
-# def f_3(x):
-#     return x**3 - 4*x
-#
-# n = len(x_mesh) - 1
-#
-# func_val, div = newton_divdiff(x_mesh, f_3, n, dtype=np.float64)
-# print(func_val)
-# print(div)
-
-# Testing Leja Ordering to make sure ordering is correct
-# x_mesh = np.array([-1, -0.5, 0, 0.5, 1, 2, -2, 5, -3, 4, 10, -10])
-# x_mesh_ordered = x_mesh_order(x_mesh, 3)
-# print(x_mesh)
-# print(x_mesh_ordered)

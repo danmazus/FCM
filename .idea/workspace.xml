@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables" />
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semester_2/program_1/interpolate_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_1/interpolate_functions.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -137,6 +140,8 @@
       <workItem from="1740254547249" duration="13284000" />
       <workItem from="1740276407838" duration="160000" />
       <workItem from="1740276603598" duration="21145000" />
+      <workItem from="1740415739105" duration="1500000" />
+      <workItem from="1740488213285" duration="153000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
