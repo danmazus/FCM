@@ -1,8 +1,3 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import interpolate_functions as ifs
-import functions_1_to_4
-
 """
 This task will perform the subtasks for the f_3 function:
     1.  The interpolating problem that the given polynomial solves on the uniform mesh points and Chebyshev

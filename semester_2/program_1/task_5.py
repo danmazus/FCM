@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import interpolate_functions as ifs
+from semester_2 import interpolate_functions as ifs
 import functions_1_to_4
 import pandas as pd
 
