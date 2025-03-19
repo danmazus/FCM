@@ -189,3 +189,35 @@ plt.title('Barycentric 1 Interpolation with Chebyshev Points of the Second Kind'
 plt.legend(fontsize='x-small')
 plt.grid(True)
 plt.show()
+
+
+# Spline Interpolation
+piecewise=False
+flag = 1
+
+d = 5
+
+spline_interpolator = PolynomialInterpolation(a, b, n, M, d, dtype)
+
+spline_mesh = spline_interpolator.mesh_points(flag, piecewise)
+spline_order_mesh = spline_interpolator.ordered_mesh(flag)
+
+sp_deriv = spline_interpolator.spline_interpolation(f, df, 'quadratic')
+sp_a, sp_b, sp_c = spline_interpolator.get_spline_coefficients(sp_deriv, f, 'quadratic')
+
+sp = np.zeros_like(x_points)
+
+for i, x in enumerate(x_points):
+    result = spline_interpolator.evaluate_spline(x, sp_a, sp_b, sp_c)
+    sp[i] = result
+
+print(sp)
+
+plt.figure(figsize=(12, 8))
+plt.plot(x_points, exact_value, 'k', label = 'f(x)')
+plt.plot(x_points, sp, 'b--', label = 'spline')
+plt.xlabel('x')
+plt.ylabel('f(x)')
+plt.legend(fontsize='x-small')
+plt.grid(True)
+plt.show()

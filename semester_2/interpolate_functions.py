@@ -1108,6 +1108,11 @@ class PolynomialInterpolation:
 
         return self.dtype(result)
 
+
+
+
+
+
     # def cubic_spline(self, f, boundary = 2):
     #     n = len(self.x_mesh) - 1
     #

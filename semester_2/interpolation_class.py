@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+from my_package import *
 
 class PolynomialInterpolation:
     def __init__(self, a, b, n, M, d, dtype):
@@ -428,3 +429,104 @@ class PolynomialInterpolation:
                         x - b_i)
 
         return self.dtype(result)
+
+    def spline_interpolation(self, f, df, degree):
+        if degree not in ['quadratic', 'cubic']:
+            raise ValueError('Degree must be one of: "quadratic", "cubic"')
+
+        n = len(self.x_mesh) - 1
+
+        y = f(self.x_mesh)
+        dy = df(self.x_mesh)
+
+        rhs = np.zeros(n + 1, dtype=self.dtype)
+
+        if degree == 'quadratic':
+            rhs[0] = 2 * dy[0]
+            rhs[n] = 2 * dy[n]
+        elif degree == 'cubic':
+            rhs[0] = 0
+            rhs[n] = 0
+
+        L = np.zeros((n + 1, n + 1), dtype=self.dtype)
+
+        if degree == 'quadratic':
+            L[0, 0] = 1
+            L[n, n] = 1
+            for i in range(1, n):
+                h_i = self.x_mesh[i] - self.x_mesh[i - 1]
+
+                L[i, i] = 1
+
+                L[i, i - 1] = 1
+
+                rhs[i] = 2 * (y[i] - y[i-1]) / h_i
+
+            #first_derivatives = solve_Lb_np(L, rhs)
+            first_derivatives = np.linalg.solve(L, rhs)
+
+            return self.dtype(first_derivatives)
+
+        elif degree == 'cubic':
+            L[0, 0] = 1
+            L[n, n] = 1
+
+            for i in range(1, n):
+                h_i = self.x_mesh[i] - self.x_mesh[i - 1]
+                h_next = self.x_mesh[i + 1] - self.x_mesh[i]
+
+                L[i, i] = 2
+                L[i, i - 1] = h_i
+                L[i, i + 1] = h_next
+
+                rhs[i] = 6 * ((y[i + 1] - y[i]) / h_next - (y[i] - y[i - 1]) / h_i)
+
+            second_derivatives = np.linalg.solve(L, rhs)
+
+            return self.dtype(second_derivatives)
+
+
+    def get_spline_coefficients(self, derivatives, f, degree):
+        n = len(self.x_mesh) - 1
+
+        y = f(self.x_mesh)
+
+        a = np.zeros(n + 1, dtype=self.dtype)
+        b = np.zeros(n + 1, dtype=self.dtype)
+        c = np.zeros(n + 1, dtype=self.dtype)
+        d = np.zeros(n, dtype=self.dtype)
+
+        if degree == 'quadratic':
+            for i in range(n):
+                h_i = self.x_mesh[i + 1] - self.x_mesh[i]
+
+                c[i] = y[i]
+                b[i] = derivatives[i]
+                a[i] = (y[i+1] - y[i] - b[i] * h_i) / h_i ** 2
+
+
+            return a, b, c
+
+        # elif degree == 'cubic':
+        #     for i in range(n):
+        #         h_i = self.x_mesh[i + 1] - self.x_mesh[i]
+        #
+        #         c[i] = second_derivatives[i]
+        #         b[i] = derivatives[i]
+        #         a[i] =
+
+
+
+    def evaluate_spline(self, x_point, a, b, c):
+        n = len(self.x_mesh) - 1
+
+        i = 0
+        while i < n and x_point > self.x_mesh[i + 1]:
+            i += 1
+
+        diff_x = x_point - self.x_mesh[i]
+
+        return a[i] * diff_x ** 2 + b[i] * diff_x + c[i]
+
+
+
