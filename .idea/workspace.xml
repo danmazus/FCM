@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semester_2/interpolate_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/interpolate_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/semester_2/interpolation_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/interpolation_class.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/semester_2/program_2/driver_program_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_2/driver_program_2.py" afterDir="false" />
     </list>
@@ -49,40 +48,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "LaTeX.table_Standard_Newton's_Method_2_1.executor": "Run",
-    "Python.driver_program_2.executor": "Run",
-    "Python.functions_1_to_4.executor": "Run",
-    "Python.functions_storage.executor": "Run",
-    "Python.interpolate_functions.executor": "Run",
-    "Python.interpolation_class.executor": "Run",
-    "Python.least_squares_driver.executor": "Run",
-    "Python.part_1.executor": "Run",
-    "Python.part_2.executor": "Run",
-    "Python.part_3.executor": "Run",
-    "Python.root_finding.executor": "Run",
-    "Python.scratch.executor": "Run",
-    "Python.task_2.executor": "Run",
-    "Python.task_3.executor": "Run",
-    "Python.task_4.executor": "Run",
-    "Python.task_5.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/dannymazus/FCM/semester_2/program_1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;LaTeX.table_Standard_Newton's_Method_2_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.driver_program_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.functions_1_to_4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.functions_storage.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interpolate_functions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interpolation_class.executor&quot;: &quot;Run&quot;,
+    &quot;Python.least_squares_driver.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.root_finding.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_5.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/dannymazus/FCM/semester_2/program_1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/semester_2/program_1" />
@@ -153,6 +152,7 @@
       <workItem from="1740762946627" duration="331000" />
       <workItem from="1740764294931" duration="27718000" />
       <workItem from="1741277167865" duration="66096000" />
+      <workItem from="1742407962408" duration="5973000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
@@ -585,7 +585,7 @@
     <SUITE FILE_PATH="coverage/FCM$interpolate_functions.coverage" NAME="interpolate_functions Coverage Results" MODIFIED="1742299854914" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
     <SUITE FILE_PATH="coverage/FCM$part_1.coverage" NAME="part_1 Coverage Results" MODIFIED="1732664666686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
     <SUITE FILE_PATH="coverage/FCM$root_finding.coverage" NAME="root_finding Coverage Results" MODIFIED="1733802512334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/programming_assign_4" />
-    <SUITE FILE_PATH="coverage/FCM$driver_program_2.coverage" NAME="driver_program_2 Coverage Results" MODIFIED="1742407774681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_2" />
+    <SUITE FILE_PATH="coverage/FCM$driver_program_2.coverage" NAME="driver_program_2 Coverage Results" MODIFIED="1742476004429" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_2" />
     <SUITE FILE_PATH="coverage/FCM$interpolation_class.coverage" NAME="interpolation_class Coverage Results" MODIFIED="1742399864405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2" />
     <SUITE FILE_PATH="coverage/FCM$task_5.coverage" NAME="task_5 Coverage Results" MODIFIED="1742320906391" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
     <SUITE FILE_PATH="coverage/FCM$task_4.coverage" NAME="task_4 Coverage Results" MODIFIED="1740069119917" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />

@@ -25,15 +25,17 @@ d = 3
 # What precision to use
 dtype = np.float64
 
+
+"""PIECEWISE INTERPOLATION"""
 # Which point type to use
-flag = 3
+flag = 1
 
 # Setting States of Interpolation
 piecewise = True
 hermite = True
 
 # Number of Subintervals
-M = [6]
+M = [5]
 
 # Initializing dictionary for different number of intervals
 interp_all = {m: [] for m in M}
@@ -92,84 +94,10 @@ plt.legend(fontsize='x-small')
 plt.grid(True)
 plt.show()
 
-# # Create the interpolater
-# interpolater = PolynomialInterpolation(a, b, n, M, d, dtype)
-#
-# # Generate the mesh
-# interpolater.local_mesh(flag)
-# interpolater.mesh_points(flag, piecewise)
-#
-# # Computing the divided differences
-# interpolater.newton_divdiff(f, df, piecewise, hermite)
-#
-# # Create the points to evaluate at
-# x_eval = np.linspace(a, b, 100)
-#
-# # Get the interpolated values for x_eval
-# interp_values = np.zeros_like(x_eval)
-# for i, x in enumerate(x_eval):
-#     result = interpolater.piecewise_interpolation(x, flag, hermite)
-#     if result is not None:
-#         interp_values[i] = result
-#
-#
-# # The exact function values of x
-# exact_values = f(x_eval)
-#
-#
-# # Getting error
-# max_error = np.max(np.abs(exact_values - interp_values))
-# print(f'Maximum interpolation error: {max_error}')
-#
-# # Plotting
-# plt.figure(figsize=(10, 6))
-# plt.plot(x_eval, exact_values, 'b', label = 'f(x)')
-# plt.plot(x_eval, interp_values, 'r--', label = 'Interpolation')
-# plt.scatter(interpolater.x_mesh, f(interpolater.x_mesh), c = 'k', s = 30, label = 'Mesh Points')
-# plt.legend(loc = 'best')
-# plt.grid(True)
-# plt.title('Piecewise Hermite Interpolation' if hermite else 'Piecewise Interpolation')
-# plt.show()
 
 
-# flag = 1
-# n = 20
-#
-# spline_interpolater = PolynomialInterpolation(a, b, n, M, d, dtype)
-#
-# spline_interpolater.mesh_points(flag, piecewise=False)
-#
-# spline_coeffs = spline_interpolater.cubic_spline(f, boundary=2)
-#
-# x_plot = np.linspace(a, b, 1000)
-# y_exact = f(x_plot)
-# y_spline = np.array([spline_interpolater.evaluate_spline(x, spline_coeffs) for x in x_plot])
-#
-# plt.figure(figsize=(10, 6))
-# plt.plot(x_plot, y_exact, 'b', label = 'f(x)')
-# plt.plot(x_plot, y_spline, 'r--', label = 'Spline')
-# plt.scatter(spline_interpolater.x_mesh, f(spline_interpolater.x_mesh), c = 'k', label = 'Mesh Points')
-# plt.legend(loc = 'best')
-# plt.grid(True)
-# plt.title('Cubic Spline Interpolation')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.show()
-#
-# x_derivative = np.linspace(a, b, 100)
-# y_derivative_exact = df(x_derivative)
-# y_derivative_spline = np.array([spline_interpolater.evaluate_spline_deriv(x, spline_coeffs, order=1) for x in x_derivative])
-# plt.figure(figsize=(10, 6))
-# plt.plot(x_derivative, y_derivative_exact, 'b', label = 'f(x)')
-# plt.plot(x_derivative, y_derivative_spline, 'r--', label = 'Spline')
-# plt.legend(loc = 'best')
-# plt.grid(True)
-# plt.title('Derivative')
-# plt.xlabel('x')
-# plt.ylabel('dy/dx')
-# plt.show()
 
-# Barycentric Interpolation
+"""Barycentric Interpolation"""
 piecewise=False
 hermite=False
 M = 0
@@ -177,12 +105,14 @@ M = 0
 bary_interpolator = PolynomialInterpolation(a, b, n, M, d, dtype)
 
 bary_mesh = bary_interpolator.mesh_points(flag, piecewise)
+y_mesh = f(bary_mesh)
 gamma_vec, func_vals = bary_interpolator.gamma_coefficients(f)
 bary_eval = bary_interpolator.bary_1_interpolation(gamma_vec, x_points, func_vals)
 
 plt.figure(figsize=(12, 8))
 plt.plot(x_points, exact_value, 'k', label = 'f(x)')
-plt.plot(x_points, bary_eval, 'b--', label = 'bary_1_interpolation')
+plt.plot(x_points, bary_eval, 'b--', label = 'Barycentric 1')
+plt.scatter(bary_mesh, y_mesh, label = 'Mesh Points')
 plt.xlabel('x')
 plt.ylabel('f(x)')
 plt.title('Barycentric 1 Interpolation with Chebyshev Points of the Second Kind')
@@ -191,31 +121,38 @@ plt.grid(True)
 plt.show()
 
 
-# Spline Interpolation
+"""Spline Interpolation"""
 piecewise=False
 flag = 1
 
-d = 5
+# Number of Intervals (d + 1 mesh points) used as piecewise is False
+d = 3
 
+# Setup the Interpolator
 spline_interpolator = PolynomialInterpolation(a, b, n, M, d, dtype)
 
+# Setting up the mesh
 spline_mesh = spline_interpolator.mesh_points(flag, piecewise)
+y_mesh = f(spline_mesh)
 spline_order_mesh = spline_interpolator.ordered_mesh(flag)
 
-sp_deriv = spline_interpolator.spline_interpolation(f, df, 'quadratic')
-sp_a, sp_b, sp_c = spline_interpolator.get_spline_coefficients(sp_deriv, f, 'quadratic')
+
+sp_second_deriv  = spline_interpolator.spline_interpolation(f, df, flag)
+sp_a, sp_b, sp_c, sp_d = spline_interpolator.get_spline_coefficients(sp_second_deriv, f, flag)
 
 sp = np.zeros_like(x_points)
 
 for i, x in enumerate(x_points):
-    result = spline_interpolator.evaluate_spline(x, sp_a, sp_b, sp_c)
+    result = spline_interpolator.evaluate_spline(x, sp_a, sp_b, sp_c, sp_d, flag)
     sp[i] = result
 
 print(sp)
 
 plt.figure(figsize=(12, 8))
 plt.plot(x_points, exact_value, 'k', label = 'f(x)')
-plt.plot(x_points, sp, 'b--', label = 'spline')
+plt.plot(x_points, sp, 'b--', label = 'Cubic Spline')
+plt.scatter(spline_mesh, y_mesh, label = 'Mesh Points')
+plt.title('Cubic Spline Interpolation with Uniform Mesh')
 plt.xlabel('x')
 plt.ylabel('f(x)')
 plt.legend(fontsize='x-small')
