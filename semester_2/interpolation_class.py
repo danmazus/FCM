@@ -1,9 +1,8 @@
 import numpy as np
 import copy
-from my_package import *
 
 class PolynomialInterpolation:
-    def __init__(self, a, b, n, M, d, dtype):
+    def __init__(self, a, b, d, dtype, M=None, x_mesh=None, y_values=None):
         """
         Defining global variables that are used throughout the class
 
@@ -16,12 +15,13 @@ class PolynomialInterpolation:
 
         self.a = a  # Left end point of global interval
         self.b = b  # Right end point of global interval
-        self.n = n  # Global number of mesh points to be used if not piecewise interpolation
-        self.M = M  # Number of subintervals to be used for piecewise interpolation
+        #self.n = n  # Global number of mesh points to be used if not piecewise interpolation
+        self.M = M if M is not None else None  # Number of subintervals to be used for piecewise interpolation
         self.d = d  # Degree using piecewise interpolation
         self.dtype = dtype  # Specifies what precision to be used
 
-        self.x_mesh = None  # Setting x_mesh to be used
+        self.x_mesh = x_mesh if x_mesh is not None else None # Setting x_mesh to be used
+        self.y_values = y_values if y_values is not None else None # Setting y_values incase given
         self.div_coeff = None  # Setting the coefficients for Newton
         self.subintervals = None
 
@@ -68,7 +68,7 @@ class PolynomialInterpolation:
                 self.x_mesh = np.zeros(self.d + 1)
                 for i in range(self.d + 1):
                     self.x_mesh[i] = self.dtype(
-                        0.5 * (self.b - self.a) * np.cos(((2 * i + 1) * np.pi) / (2 * self.n + 2)) + 0.5 * (
+                        0.5 * (self.b - self.a) * np.cos(((2 * i + 1) * np.pi) / (2 * self.d + 2)) + 0.5 * (
                                     self.b + self.a))
 
             # Looping over to create the mesh points for Chebyshev Points of the Second Kind
@@ -248,7 +248,7 @@ class PolynomialInterpolation:
 
         return p_eval
 
-    def newton_divdiff(self, f, piecewise=False):
+    def newton_divdiff(self, f, piecewise=False, specify=False):
         if not piecewise:
             ## Newton Divided Difference ##
             m = len(self.x_mesh)
@@ -271,26 +271,69 @@ class PolynomialInterpolation:
             self.div_coeff = []
             self.subintervals = []
 
-            for s in range(self.M):
-                # Setting left endpoint
-                start = s * (self.d + 1)
+            if not specify:
+                for s in range(self.M + 1):
+                    # Setting left endpoint
+                    start = s * (self.d + 1)
 
-                # Setting right endpoint
-                end = (s + 1) * (self.d + 1)
+                    # Setting right endpoint
+                    end = (s + 1) * (self.d + 1)
 
-                # Getting the mesh points in the given subinterval
-                x_sub = self.x_mesh[start:end]
+                    # Getting the mesh points in the given subinterval
+                    x_sub = self.x_mesh[start:end]
 
-                # Calculating the y-values of given subinterval
-                f_sub = f(x_sub)
+                    # Calculating the y-values of given subinterval
+                    if self.y_values is None:
+                        f_sub = f(x_sub)
+                    else:
+                        f_sub = self.y_values[start:end]
 
-                div_coeff = copy.deepcopy(f_sub)
-                for i in range(1, len(x_sub)):
-                    for j in range(len(x_sub) - 1, i - 1, -1):
-                        div_coeff[j] = self.dtype((div_coeff[j] - div_coeff[j - 1]) / (x_sub[j] - x_sub[j - i]))
+                    div_coeff = copy.deepcopy(f_sub)
+                    for i in range(1, len(x_sub)):
+                        for j in range(len(x_sub) - 1, i - 1, -1):
+                            div_coeff[j] = self.dtype((div_coeff[j] - div_coeff[j - 1]) / (x_sub[j] - x_sub[j - i]))
 
-                self.div_coeff.append(div_coeff)
-                self.subintervals.append(x_sub)
+                    self.div_coeff.append(div_coeff)
+                    self.subintervals.append(x_sub)
+
+            else:
+                for s in range(self.M + 1):
+                    start = s
+                    end = s + (self.d + 1)
+
+                    x_sub = self.x_mesh[start:end]
+
+                    if len(x_sub) < self.d + 1:
+                        missing_point_index = self.d + 1 - len(x_sub)
+
+                        x_sub = self.x_mesh[start - missing_point_index:end]
+
+                        if self.y_values is None:
+                            f_sub = f(x_sub)
+                        else:
+                            f_sub = self.y_values[start - missing_point_index:end]
+
+                        div_coeff = copy.deepcopy(f_sub)
+                        for i in range(1, len(x_sub)):
+                            for j in range(len(x_sub) - 1, i - 1, -1):
+                                div_coeff[j] = self.dtype((div_coeff[j] - div_coeff[j - 1]) / (x_sub[j] - x_sub[j - i]))
+
+                        self.div_coeff.append(div_coeff)
+                        self.subintervals.append(x_sub)
+
+                    else:
+                        if self.y_values is None:
+                            f_sub = f(x_sub)
+                        else:
+                            f_sub = self.y_values[start:end]
+
+                        div_coeff = copy.deepcopy(f_sub)
+                        for i in range(1, len(x_sub)):
+                            for j in range(len(x_sub) - 1, i - 1, -1):
+                                div_coeff[j] = self.dtype((div_coeff[j] - div_coeff[j - 1]) / (x_sub[j] - x_sub[j - i]))
+
+                        self.div_coeff.append(div_coeff)
+                        self.subintervals.append(x_sub)
 
                 # print(f"Subinterval {s}: x_sub = {x_sub}")  # Debugging output
                 # print(f"Divided Differences {s}: {div_coeff}\n")  # Debugging output
@@ -317,7 +360,7 @@ class PolynomialInterpolation:
 
         return p_eval
 
-    def piecewise_interpolation(self, x, f, df, flag, hermite=False):
+    def piecewise_interpolation(self, x, f, df, flag, hermite=False, specify=False):
         """
         Evaluates the piecewise polynomial interpolation at a given x using Newton's divided differences.
         """
@@ -340,18 +383,22 @@ class PolynomialInterpolation:
             return None
 
             # Option 2: Use the first subinterval for extrapolation
-            # s = 0
+            #s = 0
         elif x > mesh_max:
             # Option 1: Return None
             return None
 
             # Option 2: Use the last subinterval for extrapolation
-            # s = self.M - 1
+            #s = self.M - 1
         else:
             # Find which subinterval contains x
-            for s in range(self.M):
-                x_s = sorted_x_mesh[s * (self.d + 1)]
-                x_s_1 = sorted_x_mesh[(s + 1) * (self.d + 1)] if s < self.M - 1 else sorted_x_mesh[-1]
+            for s in range(self.M + 1):
+                if not specify:
+                    x_s = sorted_x_mesh[s * (self.d + 1)]
+                    x_s_1 = sorted_x_mesh[(s + 1) * (self.d + 1)] if s < self.M - 1 else sorted_x_mesh[-1]
+                else:
+                    x_s = sorted_x_mesh[s]
+                    x_s_1 = sorted_x_mesh[s + 1]
 
                 if x_s <= x <= x_s_1:
                     break
@@ -360,15 +407,35 @@ class PolynomialInterpolation:
 
         # Compute the Newton polynomial for this subinterval
         if not hermite:
-            idx_start = s * (self.d + 1)
-            # x_submesh = sorted_x_mesh[idx_start: idx_start + self.d + 1]
-            x_submesh = self.x_mesh[idx_start: idx_start + self.d + 1]
-            coeffs = self.div_coeff[s]
+            if not specify:
+                idx_start = s * (self.d + 1)
+                # x_submesh = sorted_x_mesh[idx_start: idx_start + self.d + 1]
+                x_submesh = self.x_mesh[idx_start: idx_start + self.d + 1]
+                coeffs = self.div_coeff[s]
 
-            # Perform Newton's nested evaluation
-            result = coeffs[-1]
-            for i in range(self.d - 1, -1, -1):
-                result = result * (x - x_submesh[i]) + coeffs[i]
+                # Perform Newton's nested evaluation
+                result = coeffs[-1]
+                for i in range(self.d - 1, -1, -1):
+                    result = result * (x - x_submesh[i]) + coeffs[i]
+            else:
+                x_submesh = sorted_x_mesh[s: s + self.d + 1]
+
+                if len(x_submesh) < self.d + 1:
+                    missing_point_index = self.d + 1 - len(x_submesh)
+
+                    x_submesh = self.x_mesh[s - missing_point_index:s + self.d + 1]
+                    coeffs = self.div_coeff[s]
+                    result = coeffs[-1]
+                    for i in range(self.d - 1, -1, -1):
+                        result = result * (x - x_submesh[i]) + coeffs[i]
+
+                else:
+                    coeffs = self.div_coeff[s]
+
+                    result = coeffs[-1]
+                    for i in range(self.d - 1, -1, -1):
+                        result = result * (x - x_submesh[i]) + coeffs[i]
+
 
         else:
             idx_start = s * (self.d + 1)
@@ -388,6 +455,25 @@ class PolynomialInterpolation:
 
         return self.dtype(result)
 
+    def tridiagonal_solve(self, lower, diag, upper, rhs, n):
+
+        # Forward Substitution
+        for i in range(1, n + 1):
+            m = lower[i - 1] / diag[i - 1] # The multiplier being used
+            diag[i] -= m * upper[i - 1] # Update the diagonal
+            rhs[i] -= m * rhs[i - 1] # Update the right-hand-side
+
+        # Back substitution
+        result = np.zeros(n + 1, dtype=self.dtype)
+
+        # Setting the last term
+        result[n] = rhs[n] / diag[n]
+
+        for i in range(n - 1, -1, -1):
+            result[i] = (rhs[i] - upper[i] * result[i + 1]) / diag[i]
+
+        return result
+
     def spline_interpolation(self, f, flag, second_deriv_0=None, second_deriv_n=None):
 
         if flag == 3:
@@ -397,36 +483,43 @@ class PolynomialInterpolation:
 
         n = len(sorted_x_mesh) - 1
 
-        y = f(sorted_x_mesh)
+        if self.y_values is None:
+            y = f(sorted_x_mesh)
+        else:
+            y = self.y_values
 
         rhs = np.zeros(n + 1, dtype=self.dtype)
-        L = np.zeros((n + 1, n + 1), dtype=self.dtype)
+        lower = np.zeros(n, dtype=self.dtype)
+        diag = np.zeros(n + 1, dtype=self.dtype)
+        upper = np.zeros(n, dtype=self.dtype)
 
         for i in range(1, n):
             h_i = sorted_x_mesh[i] - sorted_x_mesh[i - 1]
-            h_next = sorted_x_mesh[i + 1] - sorted_x_mesh[i]
+            h_i_1 = sorted_x_mesh[i + 1] - sorted_x_mesh[i]
 
-            L[i, i - 1] = h_i
-            L[i, i] = 2 * (h_i + h_next)
-            L[i, i + 1] = h_next
+            lower[i - 1] = h_i
+            diag[i] = 2 * (h_i + h_i_1)
+            upper[i] = h_i_1
 
-            rhs[i] = 6 * ((y[i + 1] - y[i]) / h_next - (y[i] - y[i - 1]) / h_i)
+            rhs[i] = 3 * ((y[i + 1] - y[i]) / h_i_1 - (y[i] - y[i - 1]) / h_i)
+
+
 
         if second_deriv_0 is not None:
-            L[0, 0] = 1
-            rhs[0] = second_deriv_0
+            diag[0] = 1
+            rhs[0] = second_deriv_0 / 2
         else:
-            L[0, 0] = 1
-            rhs[0] = 0
+            diag[0] = 1
+            rhs[0] = 0.0
 
         if second_deriv_n is not None:
-            L[n, n] = 1
-            rhs[n] = second_deriv_n
+            diag[n] = 1
+            rhs[n] = second_deriv_n / 2
         else:
-            L[n, n] = 1
-            rhs[n] = 0
+            diag[n] = 1
+            rhs[n] = 0.0
 
-        second_derivatives = np.linalg.solve(L, rhs)
+        second_derivatives = self.tridiagonal_solve(lower, diag, upper, rhs, n)
 
         return self.dtype(second_derivatives)
 
@@ -438,20 +531,23 @@ class PolynomialInterpolation:
 
         n = len(sorted_x_mesh) - 1
 
-        y = f(sorted_x_mesh)
+        if self.y_values is None:
+            y = f(sorted_x_mesh)
+        else:
+            y = self.y_values
 
-        a = np.zeros(n + 1, dtype=self.dtype)
-        b = np.zeros(n + 1, dtype=self.dtype)
-        c = np.zeros(n + 1, dtype=self.dtype)
+        a = np.zeros(n, dtype=self.dtype)
+        b = np.zeros(n, dtype=self.dtype)
+        c = np.zeros(n, dtype=self.dtype)
         d = np.zeros(n, dtype=self.dtype)
 
         for i in range(n):
             h_i = sorted_x_mesh[i + 1] - sorted_x_mesh[i]
 
             a[i] = y[i]
-            b[i] = (y[i + 1] - y[i]) / h_i - h_i * (2 * second_derivatives[i] + second_derivatives[i + 1]) / 6
-            c[i] = second_derivatives[i] / 2
-            d[i] = (second_derivatives[i + 1] - second_derivatives[i]) / (6 * h_i)
+            b[i] = (y[i + 1] - y[i]) / h_i - h_i * (2 * second_derivatives[i] + second_derivatives[i + 1]) / 3
+            c[i] = second_derivatives[i]
+            d[i] = (second_derivatives[i + 1] - second_derivatives[i]) / (3 * h_i)
 
 
         return a, b, c, d
@@ -468,9 +564,121 @@ class PolynomialInterpolation:
         while i < n and x_point > sorted_x_mesh[i + 1]:
             i += 1
 
+        if i >= n:  # Handle case where x_point is at or beyond the right boundary
+            i = n - 1
+
         diff_x = x_point - sorted_x_mesh[i]
 
         return d[i] * diff_x ** 3 + c[i] * diff_x ** 2 + b[i] * diff_x + a[i]
+
+    def evaluate_spline_derivative(self, x_point, a, b, c, d, flag):
+        if flag == 3:
+            sorted_x_mesh = sorted(self.x_mesh)
+        else:
+            sorted_x_mesh = self.x_mesh
+
+        n = len(sorted_x_mesh) - 1
+
+        i = 0
+        while i < n and x_point > sorted_x_mesh[i + 1]:
+            i += 1
+
+        diff_x = x_point - sorted_x_mesh[i]
+
+        return b[i] + 2 * c[i] * diff_x + 3 * d[i] * diff_x **2
+
+    def B_spline_interpolation(self, f, df):
+        n = len(self.x_mesh) - 1
+        h = np.diff(self.x_mesh)
+
+        L = np.zeros((n + 3, n + 3))
+        rhs = np.zeros(n + 3)
+
+        rhs[0] = df(self.x_mesh[0])
+        rhs[n + 2] = df(self.x_mesh[-1])
+
+        for i in range(n + 1):
+            rhs[i + 1] = f(self.x_mesh[i])
+
+
+
+        for i in range(1, n + 2):
+            L[i, i - 1] = 1
+            L[i, i] = 4
+            L[i, i + 1] = 1
+
+        L[0, 0] = -3 / h[0]
+        L[0, 1] = 0
+        L[0, 2] = 3/ h[0]
+
+        L[-1, -1] = 3 / h[-1]
+        L[-1, -2] = 0
+        L[-1, -3] = -3 / h[-1]
+
+        alpha = np.linalg.solve(L, rhs)
+
+        return alpha
+
+    def B_spline_basis_K(self, x_point, i):
+
+        if i < 0 or i >= len(self.x_mesh):
+            return 0
+
+        #h = np.diff(self.x_mesh)
+        h = self.x_mesh[1] - self.x_mesh[0] if len(self.x_mesh) > 1 else 1
+
+        # Handle extended mesh points
+        def get_x(idx):
+            if idx < 0:
+                return self.x_mesh[0] - h * abs(idx)
+            elif idx >= len(self.x_mesh):
+                return self.x_mesh[-1] + h * (idx - len(self.x_mesh) + 1)
+            return self.x_mesh[idx]
+
+        x0 = get_x(i - 2)
+        x1 = get_x(i - 1)
+        x2 = get_x(i)
+        x3 = get_x(i + 1)
+        x4 = get_x(i + 2)
+
+        if x_point < x0 or x_point > x4:
+            return 0
+
+        if x0 <= x_point <= x1:
+            return (1 / h ** 3) * (x_point - x0)
+        elif x1 <= x_point <= x2:
+            return (1 / h ** 3) * (h ** 3 + 3 * h ** 2 * (x_point - x1) + 3 * h * (x_point - x1) ** 2 - 3 * (x_point - x1) ** 3)
+        elif x2 <= x_point <= x3:
+            return (1 / h ** 3) * (h ** 3 + 3 * h ** 2 * (x3 - x_point) + 3 * h * (x3 - x_point) ** 2 - 3 * (x3 - x_point) ** 3)
+        elif x3 <= x_point <= x4:
+            return (1 / h ** 3) * (x4 - x_point) ** 3
+
+
+        return 0.0
+
+    def evaluate_B_Spline(self, x_point, alpha):
+
+        if x_point < self.x_mesh[0] or x_point > self.x_mesh[-1]:
+            return 0.0
+
+        
+        i = 0
+        while i < len(self.x_mesh) - 1 and x_point > self.x_mesh[i + 1]:
+            i += 1
+
+        result = 0
+
+        for j in range(i-1, i+3):
+            alpha_idx = j + 1
+
+            if 0 <= alpha_idx < len(alpha):
+                basis_val = self.B_spline_basis_K(x_point, j)
+                result += alpha[alpha_idx] * basis_val
+
+        return result
+
+
+
 
 
 
