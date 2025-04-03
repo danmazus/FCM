@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semester_2/quadrature_funcs.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/quadrature_funcs.py" afterDir="false" />
-    </list>
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,12 +27,12 @@
     &quot;assignee&quot;: &quot;danmazus&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/danmazus/FCM.git&quot;,
-    &quot;accountId&quot;: &quot;d5d8acdc-4189-47fa-bff2-6c1a3c206cac&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/danmazus/FCM",
+    "accountId": "d388c7fc-c4a1-4d5f-be82-f4cefa53db42"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
@@ -47,47 +44,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;LaTeX.table_Standard_Newton's_Method_2_1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Barycentric_task.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Task_1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Task_2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.driver_program_2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.functions_1_to_4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.functions_storage.executor&quot;: &quot;Run&quot;,
-    &quot;Python.interpolate_functions.executor&quot;: &quot;Run&quot;,
-    &quot;Python.interpolation_class.executor&quot;: &quot;Run&quot;,
-    &quot;Python.least_squares_driver.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.part_3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.piecewise_task.executor&quot;: &quot;Run&quot;,
-    &quot;Python.quadrature_funcs.executor&quot;: &quot;Run&quot;,
-    &quot;Python.root_finding.executor&quot;: &quot;Run&quot;,
-    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
-    &quot;Python.scratch_3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.spline_task.executor&quot;: &quot;Run&quot;,
-    &quot;Python.task_2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.task_3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.task_4.executor&quot;: &quot;Run&quot;,
-    &quot;Python.task_5.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/dannymazus/FCM/semester_2/program_1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "LaTeX.table_Standard_Newton's_Method_2_1.executor": "Run",
+    "Python.Barycentric_task.executor": "Run",
+    "Python.Task_1.executor": "Run",
+    "Python.Task_2.executor": "Run",
+    "Python.driver_program_2.executor": "Run",
+    "Python.functions_1_to_4.executor": "Run",
+    "Python.functions_storage.executor": "Run",
+    "Python.interpolate_functions.executor": "Run",
+    "Python.interpolation_class.executor": "Run",
+    "Python.least_squares_driver.executor": "Run",
+    "Python.part_1.executor": "Run",
+    "Python.part_2.executor": "Run",
+    "Python.part_3.executor": "Run",
+    "Python.piecewise_task.executor": "Run",
+    "Python.quadrature_funcs.executor": "Run",
+    "Python.root_finding.executor": "Run",
+    "Python.scratch.executor": "Run",
+    "Python.scratch_3.executor": "Run",
+    "Python.spline_task.executor": "Run",
+    "Python.task_2.executor": "Run",
+    "Python.task_3.executor": "Run",
+    "Python.task_4.executor": "Run",
+    "Python.task_5.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/dannymazus/FCM/semester_2/program_1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Python&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/semester_2/program_1" />
@@ -102,8 +100,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.25659.43" />
-        <option value="bundled-python-sdk-181015f7ab06-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.25659.43" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23339.19" />
+        <option value="bundled-python-sdk-0029f7779945-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23339.19" />
       </set>
     </attachedChunks>
   </component>
