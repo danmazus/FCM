@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 class NumericalQuadrature:
     def __init__(self, a, b, f):
@@ -20,7 +21,7 @@ class NumericalQuadrature:
         self.f = f
         self.f_double_prime = None
 
-    def compute_H_m(self, epsilon, f_deriv_max, method):
+    def compute_H_m(self, epsilon, f_deriv_max, method: str):
         """
         Computes the required subinterval size H_m for a desired error tolerance level, denoted as epsilon. This function
         uses different formulas based on the method given (i.e. Composite Trapezoidal, Composite Midpoint, etc.)
@@ -202,7 +203,7 @@ def dff(x):
 a = 0
 b = 3
 m = 10
-epsilon = 1e-6
+epsilon = 1e-16
 f4_max = np.exp(3)
 f2_max = np.exp(3)
 
@@ -213,7 +214,7 @@ quad_midpoint = NumericalQuadrature(a, b, f)
 result = quad_midpoint.composite_midpoint(epsilon, f2_max)
 print(f'\nThe integral value from Composite Midpoint Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_midpoint.H_m}, m = {quad_midpoint.m}')
-error_estimate = (1/24) * quad_midpoint.H_m**2 * f2_max
+error_estimate = ((b-a)/24) * quad_midpoint.H_m**2 * f2_max
 print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
@@ -228,7 +229,7 @@ quad_trapezoid = NumericalQuadrature(a, b, f)
 result = quad_trapezoid.composite_trapezoid(epsilon, f2_max)
 print(f'\nThe integral value from Composite Trapezoidal Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_trapezoid.H_m} and m = {quad_trapezoid.m}')
-error_estimate = (1/12) * quad_trapezoid.H_m**2 * f2_max
+error_estimate = ((b-a)/12) * quad_trapezoid.H_m**2 * f2_max
 print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
@@ -238,7 +239,7 @@ quad_simpson_first = NumericalQuadrature(a, b, f)
 result = quad_simpson_first.composite_simpson_first(epsilon, f4_max)
 print(f'\nThe integral value from Composite Simpsons First Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_simpson_first.H_m} and m = {quad_simpson_first.m}')
-error_estimate = (1 / 2880) * quad_simpson_first.H_m**2 * f4_max
+error_estimate = ((b-a) / 2880) * quad_simpson_first.H_m**4 * f4_max
 print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
