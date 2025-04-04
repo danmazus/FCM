@@ -2,26 +2,22 @@ import numpy as np
 import math
 
 class NumericalQuadrature:
-    def __init__(self, a, b, f):
+    def __init__(self, a, b, m, f, epsilon=None, f_deriv_max=None):
         self.a = a  # Left-endpoint of global interval
         self.b = b  # Right-endpoint of global interval
-        #self.m = m  # Number of subintervals to be taken
-        self.m = None
+        self.m = m  # Number of subintervals to be taken
 
-        # Initialize H_m
-        #self.H_m = (self.b - self.a) / self.m
-        self.H_m = None
+        self.epsilon = epsilon
+        self.f_deriv_max = f_deriv_max
 
         # Initialize the global mesh which splits the global interval of integration into m subintervals
-        #self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
-        self.global_mesh = None
         self.x_mesh = None
 
         # Set the function to be used and the 2nd derivative if given
         self.f = f
         self.f_double_prime = None
 
-    def compute_H_m(self, epsilon, f_deriv_max, method: str):
+    def compute_H_m(self, method: str):
         """
         Computes the required subinterval size H_m for a desired error tolerance level, denoted as epsilon. This function
         uses different formulas based on the method given (i.e. Composite Trapezoidal, Composite Midpoint, etc.)
@@ -44,11 +40,11 @@ class NumericalQuadrature:
         """
 
         if method == 'trapezoidal':
-            self.H_m = np.sqrt((12 * epsilon) / ((self.b - self.a) * f_deriv_max))
+            self.H_m = np.sqrt((12 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max))
         elif method == 'midpoint':
-            self.H_m = np.sqrt((24 * epsilon) / ((self.b - self.a) * f_deriv_max))
+            self.H_m = np.sqrt((24 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max))
         elif method == 'simpson':
-            self.H_m = ((2880 * epsilon) / ((self.b - self.a) * f_deriv_max)) ** 0.25
+            self.H_m = ((2880 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max)) ** 0.25
         elif method == 'left_rectangle':
             ...
         elif method == 'gauss_leg_two_point':
@@ -65,16 +61,21 @@ class NumericalQuadrature:
         if self.H_m is None:
             raise ValueError("H_m must be computed before computing m.")
 
-        self.m = int((self.b - self.a) / self.H_m)
+        self.m = math.ceil((self.b - self.a) / self.H_m)
 
         return self.m
 
-    def composite_midpoint(self, epsilon, f2_max) -> float:
-        # Compute the optimal H_m
-        self.compute_H_m(epsilon, f2_max, method='midpoint')
+    def composite_midpoint(self, optimal_H_m=False) -> float:
 
-        # Compute m from H_m
-        self.compute_m()
+        if optimal_H_m:
+            if self.epsilon is None or self.f_deriv_max is None:
+                raise ValueError("Both epsilon and f_deriv_max must be defined.")
+
+            self.compute_H_m(method='midpoint')
+
+            self.compute_m()
+
+        self.H_m = (self.b - self.a) / self.m
 
         # Define global mesh
         self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
@@ -86,12 +87,25 @@ class NumericalQuadrature:
         self.x_mesh = np.array([self.global_mesh[i] + h_mp for i in range(self.m)])
 
         # Computing the approximation
-        I_m = self.H_m * sum(self.f(self.x_mesh))
+        I_m = self.H_m * np.sum(self.f(self.x_mesh))
 
 
         return I_m
 
-    def composite_2_point(self) -> float:
+    def composite_2_point(self, optimal_H_m=False) -> float:
+        if optimal_H_m:
+            if self.epsilon is None or self.f_deriv_max is None:
+                raise ValueError("Both epsilon and f_deriv_max must be defined.")
+
+            self.compute_H_m(method='two_point')
+
+            self.compute_m()
+
+        self.H_m = (self.b - self.a) / self.m
+
+
+        self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
+
         # Defining the local step size
         h_2p = self.H_m / 3
 
@@ -99,18 +113,24 @@ class NumericalQuadrature:
         self.x_mesh = np.array([[self.global_mesh[i] + j * h_2p for j in range(1, 3)] for i in range(self.m)]).flatten()
 
         # Computing the approximation
-        I_m = (self.H_m / 2) * sum(self.f(self.x_mesh))
+        I_m = (self.H_m / 2) * np.sum(self.f(self.x_mesh))
 
         return I_m
 
-    def composite_trapezoid(self, epsilon, f2_max, adaptive=False) -> float | None:
+    def composite_trapezoid(self, optimal_H_m=False, adaptive=False) -> float | None:
         # Choosing whether adaptive is being used or not (default of not)
         if not adaptive:
-            # Compute the optimal H_m
-            self.compute_H_m(epsilon, f2_max, method='trapezoidal')
+            if optimal_H_m:
+                if self.epsilon is None or self.f_deriv_max is None:
+                    raise ValueError("Both epsilon and f_deriv_max must be defined.")
 
-            # Compute m subintervals from H_m
-            self.compute_m()
+                # Compute the optimal H_m
+                self.compute_H_m(method='trapezoidal')
+
+                # Compute m subintervals from H_m
+                self.compute_m()
+
+            self.H_m = (self.b - self.a) / self.m
 
             # Split the interval into m subintervals
             self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
@@ -119,7 +139,7 @@ class NumericalQuadrature:
             self.x_mesh = np.array([self.global_mesh[0] + i * self.H_m for i in range(self.m + 1)])
 
             # Compute the approximation
-            I_m = (self.H_m / 2) * (self.f(self.x_mesh[0]) + self.f(self.x_mesh[-1]) + 2 * sum(self.f(self.x_mesh[1:self.m])))
+            I_m = (self.H_m / 2) * (self.f(self.x_mesh[0]) + self.f(self.x_mesh[-1]) + 2 * np.sum(self.f(self.x_mesh[1:-1])))
 
             return I_m
         # else:
@@ -138,12 +158,20 @@ class NumericalQuadrature:
         #     return I_m
         return None
 
-    def composite_simpson_first(self, epsilon, f4_max) -> float:
-        # Compute the optimal H_m
-        self.compute_H_m(epsilon, f4_max, method='simpson')
+    def composite_simpson_first(self, optimal_H_m=False) -> float:
+        if optimal_H_m:
+            if self.epsilon is None or self.f_deriv_max is None:
+                raise ValueError("Both epsilon and f_deriv_max must be defined.")
 
-        # Compute number of subintervals m from H_m
-        self.compute_m()
+            # Compute the optimal H_m
+            self.compute_H_m(method='simpson')
+
+            # Compute number of subintervals m from H_m
+            self.compute_m()
+
+
+        self.H_m = (self.b - self.a) / self.m
+
 
         # Split the given interval [a,b] into m subintervals
         self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
@@ -155,17 +183,44 @@ class NumericalQuadrature:
         self.x_mesh = np.array([self.global_mesh[i] + h_sf for i in range(self.m)])
 
         # Compute the approximation
-        I_m = (self.H_m / 6) * (self.f(self.global_mesh[0]) + self.f(self.global_mesh[-1]) + 2 * sum(self.f(self.global_mesh[1:self.m])) + 4 * sum(self.f(self.x_mesh)))
+        I_m = (self.H_m / 6) * (self.f(self.global_mesh[0]) + self.f(self.global_mesh[-1]) + 2 *
+                                np.sum(self.f(self.global_mesh[1:self.m])) + 4 * np.sum(self.f(self.x_mesh)))
 
         return I_m
 
-    def composite_left_rectangle(self) -> float:
+    def composite_left_rectangle(self, optimal_H_m=False) -> float:
+        if optimal_H_m:
+            if self.epsilon is None or self.f_deriv_max is None:
+                raise ValueError("Both epsilon and f_deriv_max must be defined.")
+
+            self.compute_H_m(method='left_rectangle')
+
+            self.compute_m()
+
+
+        self.H_m = (self.b - self.a) / self.m
+
+        self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
+
         # Compute the approximation (don't need local mesh as we take the left endpoints of the subintervals
-        I_m = (self.H_m) * sum((self.f(self.global_mesh[0:self.m])))
+        I_m = (self.H_m) * np.sum((self.f(self.global_mesh[0:self.m])))
 
         return I_m
 
-    def gauss_2_point_quadrature(self) -> float:
+    def gauss_2_point_quadrature(self, optimal_H_m=False) -> float:
+        if optimal_H_m:
+            if self.epsilon is None or self.f_deriv_max is None:
+                raise ValueError("Both epsilon and f_deriv_max must be defined.")
+
+            self.compute_H_m(method='gauss_leg_two_point')
+
+            self.compute_m()
+
+
+        self.H_m = (self.b - self.a) / self.m
+
+        self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
+
         # Define the positive x
         x_pos = 1 / (np.sqrt(3))
 
@@ -193,25 +248,22 @@ def f(x):
     return np.exp(x)
     #return np.exp(np.sin(2 * x)) * np.cos(2 * x)
     #return np.power(x, 3) + np.power(x, 2) + x + 1
-
-def df(x):
-    return np.exp(x)
-
-def dff(x):
-    return np.exp(x)
+    #return x ** 4
 
 a = 0
 b = 3
-m = 10
-epsilon = 1e-16
+m = 3
+epsilon = 1e-9
 f4_max = np.exp(3)
 f2_max = np.exp(3)
 
-#y_true = (1/2)*(-1 + np.exp(np.sqrt(3)/2))
+
 y_true = np.exp(3) - 1
 print(f'The true value for f(x) is: {y_true}')
-quad_midpoint = NumericalQuadrature(a, b, f)
-result = quad_midpoint.composite_midpoint(epsilon, f2_max)
+
+
+quad_midpoint = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
+result = quad_midpoint.composite_midpoint(optimal_H_m=True)
 print(f'\nThe integral value from Composite Midpoint Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_midpoint.H_m}, m = {quad_midpoint.m}')
 error_estimate = ((b-a)/24) * quad_midpoint.H_m**2 * f2_max
@@ -219,36 +271,40 @@ print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
 
-
-# quad_2_point = NumericalQuadrature(a, b, m, f)
-# result = quad_2_point.composite_2_point()
-# print(result)
-#
-#
-quad_trapezoid = NumericalQuadrature(a, b, f)
-result = quad_trapezoid.composite_trapezoid(epsilon, f2_max)
+quad_trapezoid = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
+result = quad_trapezoid.composite_trapezoid(optimal_H_m=True)
 print(f'\nThe integral value from Composite Trapezoidal Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_trapezoid.H_m} and m = {quad_trapezoid.m}')
 error_estimate = ((b-a)/12) * quad_trapezoid.H_m**2 * f2_max
 print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
-#
-#
-quad_simpson_first = NumericalQuadrature(a, b, f)
-result = quad_simpson_first.composite_simpson_first(epsilon, f4_max)
+
+
+quad_simpson_first = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f4_max)
+result = quad_simpson_first.composite_simpson_first(optimal_H_m=True)
 print(f'\nThe integral value from Composite Simpsons First Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_simpson_first.H_m} and m = {quad_simpson_first.m}')
 error_estimate = ((b-a) / 2880) * quad_simpson_first.H_m**4 * f4_max
 print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
-#
-#
-# quad_left_rectangle = NumericalQuadrature(a, b, m, f)
-# result = quad_left_rectangle.composite_left_rectangle()
-# print(result)
-#
-# quad_gauss = NumericalQuadrature(a, b, m, f)
-# result = quad_gauss.gauss_2_point_quadrature()
-# print(result)
+
+
+quad_2_point = NumericalQuadrature(a, b, m, f)
+result = quad_2_point.composite_2_point()
+print(f'\nThe integral value from Composite 2-Point Rule is: {result}')
+print(f'The H_m and m being used are: H_m = {quad_2_point.H_m}, m = {quad_2_point.m}')
+
+
+quad_left_rectangle = NumericalQuadrature(a, b, m, f)
+result = quad_left_rectangle.composite_left_rectangle()
+print(f'\nThe integral value from Composite Left-Rectangle Rule is: {result}')
+print(f'The H_m and m being used are: H_m = {quad_left_rectangle.H_m}, m = {quad_left_rectangle.m}')
+
+
+quad_gauss = NumericalQuadrature(a, b, m, f)
+result = quad_gauss.gauss_2_point_quadrature()
+print(f'\nThe integral value from Composite Gauss-Legendre 2-Point Rule is: {result}')
+print(f'The H_m and m being used are: H_m = {quad_gauss.H_m}, m = {quad_gauss.m}')
+
