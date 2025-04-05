@@ -253,7 +253,7 @@ def f(x):
 a = 0
 b = 3
 m = 3
-epsilon = 1e-9
+epsilon = 1e-14
 f4_max = np.exp(3)
 f2_max = np.exp(3)
 

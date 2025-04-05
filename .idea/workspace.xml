@@ -47,48 +47,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "LaTeX.table_Standard_Newton's_Method_2_1.executor": "Run",
-    "Python.Barycentric_task.executor": "Run",
-    "Python.Task_1.executor": "Run",
-    "Python.Task_2.executor": "Run",
-    "Python.driver_program_2.executor": "Run",
-    "Python.functions_1_to_4.executor": "Run",
-    "Python.functions_storage.executor": "Run",
-    "Python.interpolate_functions.executor": "Run",
-    "Python.interpolation_class.executor": "Run",
-    "Python.least_squares_driver.executor": "Run",
-    "Python.part_1.executor": "Run",
-    "Python.part_2.executor": "Run",
-    "Python.part_3.executor": "Run",
-    "Python.piecewise_task.executor": "Run",
-    "Python.quadrature_funcs.executor": "Run",
-    "Python.root_finding.executor": "Run",
-    "Python.scratch.executor": "Run",
-    "Python.scratch_3.executor": "Run",
-    "Python.spline_task.executor": "Run",
-    "Python.task_2.executor": "Run",
-    "Python.task_3.executor": "Run",
-    "Python.task_4.executor": "Run",
-    "Python.task_5.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/dannymazus/FCM/semester_2/program_1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;LaTeX.table_Standard_Newton's_Method_2_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Barycentric_task.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Task_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Task_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.driver_program_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.functions_1_to_4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.functions_storage.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interpolate_functions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interpolation_class.executor&quot;: &quot;Run&quot;,
+    &quot;Python.least_squares_driver.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.part_3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.piecewise_task.executor&quot;: &quot;Run&quot;,
+    &quot;Python.quadrature_funcs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.root_finding.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scratch_3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.spline_task.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_4.executor&quot;: &quot;Run&quot;,
+    &quot;Python.task_5.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/dannymazus/FCM/semester_2/program_1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/semester_2/program_1" />
@@ -103,8 +103,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23339.19" />
-        <option value="bundled-python-sdk-0029f7779945-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23339.19" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.26053.29" />
+        <option value="bundled-python-sdk-b1dbf8ef85a6-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.26053.29" />
       </set>
     </attachedChunks>
   </component>
@@ -169,6 +169,7 @@
       <workItem from="1743088418558" duration="13999000" />
       <workItem from="1743377076263" duration="1118000" />
       <workItem from="1743521476671" duration="8485000" />
+      <workItem from="1743780420758" duration="1592000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
@@ -626,7 +627,7 @@
     <SUITE FILE_PATH="coverage/FCM$task_2.coverage" NAME="task_2 Coverage Results" MODIFIED="1740336603655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
     <SUITE FILE_PATH="coverage/FCM$spline_task.coverage" NAME="spline_task Coverage Results" MODIFIED="1742614043004" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_2" />
     <SUITE FILE_PATH="coverage/FCM$piecewise_task.coverage" NAME="piecewise_task Coverage Results" MODIFIED="1742614047086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_2" />
-    <SUITE FILE_PATH="coverage/FCM$quadrature_funcs.coverage" NAME="quadrature_funcs Coverage Results" MODIFIED="1743780345975" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2" />
+    <SUITE FILE_PATH="coverage/FCM$quadrature_funcs.coverage" NAME="quadrature_funcs Coverage Results" MODIFIED="1743781340784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2" />
     <SUITE FILE_PATH="coverage/FCM$part_3.coverage" NAME="part_3 Coverage Results" MODIFIED="1732678450071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
     <SUITE FILE_PATH="coverage/FCM$least_squares_driver.coverage" NAME="least_squares_driver Coverage Results" MODIFIED="1731367886066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/least_squares" />
     <SUITE FILE_PATH="coverage/FCM$functions_1_to_4.coverage" NAME="functions_1_to_4 Coverage Results" MODIFIED="1740104242013" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
