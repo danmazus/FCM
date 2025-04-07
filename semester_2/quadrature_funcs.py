@@ -248,17 +248,19 @@ def f(x):
     return np.exp(x)
     #return np.exp(np.sin(2 * x)) * np.cos(2 * x)
     #return np.power(x, 3) + np.power(x, 2) + x + 1
-    #return x ** 4
+    #return x ** 2 + 6
+    #return np.sin(x)
+    #return 1 / x
 
 a = 0
 b = 3
-m = 3
-epsilon = 1e-14
+m = 4
+epsilon = 1e-10
 f4_max = np.exp(3)
 f2_max = np.exp(3)
 
 
-y_true = np.exp(3) - 1
+y_true = np.exp(3)-1
 print(f'The true value for f(x) is: {y_true}')
 
 
@@ -271,8 +273,8 @@ print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
 
-quad_trapezoid = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
-result = quad_trapezoid.composite_trapezoid(optimal_H_m=True)
+quad_trapezoid = NumericalQuadrature(a, b, m, f)
+result = quad_trapezoid.composite_trapezoid()
 print(f'\nThe integral value from Composite Trapezoidal Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_trapezoid.H_m} and m = {quad_trapezoid.m}')
 error_estimate = ((b-a)/12) * quad_trapezoid.H_m**2 * f2_max
@@ -281,8 +283,8 @@ error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
 
 
-quad_simpson_first = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f4_max)
-result = quad_simpson_first.composite_simpson_first(optimal_H_m=True)
+quad_simpson_first = NumericalQuadrature(a, b, m, f)
+result = quad_simpson_first.composite_simpson_first()
 print(f'\nThe integral value from Composite Simpsons First Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_simpson_first.H_m} and m = {quad_simpson_first.m}')
 error_estimate = ((b-a) / 2880) * quad_simpson_first.H_m**4 * f4_max
