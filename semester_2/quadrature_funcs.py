@@ -135,11 +135,9 @@ class NumericalQuadrature:
             # Split the interval into m subintervals
             self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
 
-            # Create the mesh (don't need local step size)
-            self.x_mesh = np.array([self.global_mesh[0] + i * self.H_m for i in range(self.m + 1)])
-
             # Compute the approximation
-            I_m = (self.H_m / 2) * (self.f(self.x_mesh[0]) + self.f(self.x_mesh[-1]) + 2 * np.sum(self.f(self.x_mesh[1:-1])))
+            I_m = (self.H_m / 2) * (self.f(self.global_mesh[0]) + self.f(self.global_mesh[-1]) +
+                                    2 * np.sum(self.f(self.global_mesh[1:-1])))
 
             return I_m
         # else:
@@ -254,7 +252,7 @@ def f(x):
 
 a = 0
 b = 3
-m = 4
+m = 10
 epsilon = 1e-10
 f4_max = np.exp(3)
 f2_max = np.exp(3)
@@ -264,8 +262,8 @@ y_true = np.exp(3)-1
 print(f'The true value for f(x) is: {y_true}')
 
 
-quad_midpoint = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
-result = quad_midpoint.composite_midpoint(optimal_H_m=True)
+quad_midpoint = NumericalQuadrature(a, b, m, f)
+result = quad_midpoint.composite_midpoint()
 print(f'\nThe integral value from Composite Midpoint Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_midpoint.H_m}, m = {quad_midpoint.m}')
 error_estimate = ((b-a)/24) * quad_midpoint.H_m**2 * f2_max
