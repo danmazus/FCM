@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 
 class NumericalQuadrature:
     def __init__(self, a, b, m, f, epsilon=None, f_deriv_max=None):
@@ -249,6 +250,7 @@ def f(x):
     #return x ** 2 + 6
     #return np.sin(x)
     #return 1 / x
+
 
 a = 0
 b = 3
