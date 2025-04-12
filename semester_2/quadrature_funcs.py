@@ -257,9 +257,9 @@ b = 3
 m = 10
 epsilon = 1e-6
 
-def f_max(flag):
-    if flag 'f1':
-        f1_max = 
+# def f_max(flag):
+#     if flag 'f1':
+#         f1_max =
 f1_max = np.exp(3)
 f2_max = np.exp(3)
 f4_max = np.exp(3)
