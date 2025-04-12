@@ -66,32 +66,68 @@ class NumericalQuadrature:
 
         return self.m
 
-    def composite_midpoint(self, optimal_H_m=False) -> float:
+    def composite_midpoint(self, optimal_H_m=False, adaptive=False, tol=1e-6, max_iter=2000, y_true=None) -> float:
+        if not adaptive:
+            if optimal_H_m:
+                if self.epsilon is None or self.f_deriv_max is None:
+                    raise ValueError("Both epsilon and f_deriv_max must be defined.")
 
-        if optimal_H_m:
-            if self.epsilon is None or self.f_deriv_max is None:
-                raise ValueError("Both epsilon and f_deriv_max must be defined.")
+                self.compute_H_m(method='midpoint')
 
-            self.compute_H_m(method='midpoint')
+                self.compute_m()
 
-            self.compute_m()
+            self.H_m = (self.b - self.a) / self.m
 
-        self.H_m = (self.b - self.a) / self.m
+            # Define global mesh
+            self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
 
-        # Define global mesh
-        self.global_mesh = np.linspace(self.a, self.b, self.m + 1)
+            # Defining the local step size
+            h_mp = self.H_m / 2
 
-        # Defining the local step size
-        h_mp = self.H_m / 2
+            # Creating the mesh
+            self.x_mesh = np.array([self.global_mesh[i] + h_mp for i in range(self.m)])
 
-        # Creating the mesh
-        self.x_mesh = np.array([self.global_mesh[i] + h_mp for i in range(self.m)])
-
-        # Computing the approximation
-        I_m = self.H_m * np.sum(self.f(self.x_mesh))
+            # Computing the approximation
+            I_m = self.H_m * np.sum(self.f(self.x_mesh))
 
 
-        return I_m
+            return I_m
+
+        else:
+            alpha = 1 / 3
+            I_old = self.composite_midpoint(adaptive=False)
+
+            H_m = self.H_m
+            iter_count = 0
+
+            while iter_count < max_iter:
+                old_H_m = H_m
+                H_m *= alpha
+
+                f_new_sum = 0
+
+                x_mid = self.a + (H_m / 2)
+                while x_mid < self.b:
+                    f_new_sum += self.f(x_mid)
+                    x_mid += old_H_m
+
+                x_mid = self.a + ((5 * H_m) / 2)
+                while x_mid < self.b:
+                    f_new_sum += self.f(x_mid)
+                    x_mid += old_H_m
+
+                I_new = (1 / 3) * I_old + H_m * f_new_sum
+
+                if abs(y_true - I_new) < tol:
+                    self.m = (self.b - self.a) / H_m
+                    self.H_m = H_m
+                    return I_new
+
+                I_old = I_new
+                iter_count += 1
+
+            return I_old
+
 
     def composite_2_point(self, optimal_H_m=False) -> float:
         if optimal_H_m:
@@ -118,7 +154,7 @@ class NumericalQuadrature:
 
         return I_m
 
-    def composite_trapezoid(self, optimal_H_m=False, adaptive=False) -> float | None:
+    def composite_trapezoid(self, optimal_H_m=False, adaptive=False, tol=1e-6, max_iter=2000, y_true=None) -> float | None:
         # Choosing whether adaptive is being used or not (default of not)
         if not adaptive:
             if optimal_H_m:
@@ -141,21 +177,38 @@ class NumericalQuadrature:
                                     2 * np.sum(self.f(self.global_mesh[1:-1])))
 
             return I_m
-        # else:
-        #     alpha = 1 / 2
-        #     I_old = self.composite_trapezoid(adaptive=False)
-        #
-        #     if I_old < tol:
-        #         return I_old
-        #
-        #     m = self.m
-        #     H_m = self.H_m
-        #
-        #
-        #
-        #
-        #     return I_m
-        return None
+        else:
+            alpha = 1 / 2
+            I_old = self.composite_trapezoid(adaptive=False)
+
+            if abs(y_true - I_old) < tol:
+                return I_old
+
+            H_m = self.H_m
+            iter_count = 0
+
+            while iter_count < max_iter:
+                H_m *= alpha
+
+                x_mid = self.a + H_m
+                f_new_sum = 0
+
+                while x_mid < self.b:
+                    f_new_sum += self.f(x_mid)
+                    x_mid += 2 * H_m
+
+                I_new = 0.5 * I_old + H_m * f_new_sum
+
+                if abs(y_true - I_new) < tol:
+                    self.m = (self.b - self.a) / H_m
+                    self.H_m = H_m
+                    return I_new
+
+
+                I_old = I_new
+                iter_count += 1
+
+            return I_old
 
     def composite_simpson_first(self, optimal_H_m=False) -> float:
         if optimal_H_m:
@@ -241,86 +294,3 @@ class NumericalQuadrature:
             I_m += ((self.global_mesh[i + 1] - self.global_mesh[i]) / 2) * (self.f(x1) + self.f(x2))
 
         return I_m
-
-
-def f(x):
-    return np.exp(x)
-    #return np.exp(np.sin(2 * x)) * np.cos(2 * x)
-    #return np.tanh(x)
-    #return x * np.cos(2 * np.pi * x)
-    #return x + (1 / x)
-    #return np.power(x, 3) + np.power(x, 2) + x + 1
-
-
-a = 0
-b = 3
-m = 10
-epsilon = 1e-6
-
-# def f_max(flag):
-#     if flag 'f1':
-#         f1_max =
-f1_max = np.exp(3)
-f2_max = np.exp(3)
-f4_max = np.exp(3)
-
-
-
-y_true = np.exp(3)-1
-print(f'The true value for f(x) is: {y_true}')
-
-
-quad_midpoint = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
-result = quad_midpoint.composite_midpoint(optimal_H_m=True)
-print(f'\nThe integral value from Composite Midpoint Rule is: {result}')
-print(f'The optimal H_m and m are: H_m = {quad_midpoint.H_m}, m = {quad_midpoint.m}')
-error_estimate = ((b-a)/24) * quad_midpoint.H_m**2 * f2_max
-print(f'Estimated Error: {error_estimate}')
-error = np.abs(y_true - result)
-print(f'Resulting Error is: {error}')
-
-quad_trapezoid = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
-result = quad_trapezoid.composite_trapezoid(optimal_H_m=True)
-print(f'\nThe integral value from Composite Trapezoidal Rule is: {result}')
-print(f'The optimal H_m and m are: H_m = {quad_trapezoid.H_m} and m = {quad_trapezoid.m}')
-error_estimate = ((b-a)/12) * quad_trapezoid.H_m**2 * f2_max
-print(f'Estimated Error: {error_estimate}')
-error = np.abs(y_true - result)
-print(f'Resulting Error is: {error}')
-
-
-quad_simpson_first = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f4_max)
-result = quad_simpson_first.composite_simpson_first(optimal_H_m=True)
-print(f'\nThe integral value from Composite Simpsons First Rule is: {result}')
-print(f'The optimal H_m and m are: H_m = {quad_simpson_first.H_m} and m = {quad_simpson_first.m}')
-error_estimate = ((b-a) / 2880) * quad_simpson_first.H_m**4 * f4_max
-print(f'Estimated Error: {error_estimate}')
-error = np.abs(y_true - result)
-print(f'Resulting Error is: {error}')
-
-
-quad_2_point = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
-result = quad_2_point.composite_2_point(optimal_H_m=True)
-print(f'\nThe integral value from Composite 2-Point Rule is: {result}')
-print(f'The H_m and m being used are: H_m = {quad_2_point.H_m}, m = {quad_2_point.m}')
-error_estimate = ((b - a) / 36) * quad_2_point.H_m**2 * f2_max
-print(f'Estimated Error: {error_estimate}')
-error = np.abs(y_true - result)
-print(f'Resulting Error is: {error}')
-
-
-quad_left_rectangle = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f1_max)
-result = quad_left_rectangle.composite_left_rectangle(optimal_H_m=True)
-print(f'\nThe integral value from Composite Left-Rectangle Rule is: {result}')
-print(f'The H_m and m being used are: H_m = {quad_left_rectangle.H_m}, m = {quad_left_rectangle.m}')
-error_estimate = ((b - a) / 2) * quad_left_rectangle.H_m * f1_max
-print(f'Estimated Error: {error_estimate}')
-error = np.abs(y_true - result)
-print(f'Resulting Error is: {error}')
-
-
-quad_gauss = NumericalQuadrature(a, b, m, f)
-result = quad_gauss.gauss_2_point_quadrature()
-print(f'\nThe integral value from Composite Gauss-Legendre 2-Point Rule is: {result}')
-print(f'The H_m and m being used are: H_m = {quad_gauss.H_m}, m = {quad_gauss.m}')
-
