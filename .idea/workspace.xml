@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables" />
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semester_2/quadrature_funcs.py" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/quadrature_funcs.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -169,6 +172,7 @@
       <workItem from="1743780420758" duration="6202000" />
       <workItem from="1743986461650" duration="8340000" />
       <workItem from="1744150724755" duration="1000" />
+      <workItem from="1744328901818" duration="3111000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
@@ -626,7 +630,7 @@
     <SUITE FILE_PATH="coverage/FCM$task_2.coverage" NAME="task_2 Coverage Results" MODIFIED="1740336603655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />
     <SUITE FILE_PATH="coverage/FCM$spline_task.coverage" NAME="spline_task Coverage Results" MODIFIED="1742614043004" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_2" />
     <SUITE FILE_PATH="coverage/FCM$piecewise_task.coverage" NAME="piecewise_task Coverage Results" MODIFIED="1742614047086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_2" />
-    <SUITE FILE_PATH="coverage/FCM$quadrature_funcs.coverage" NAME="quadrature_funcs Coverage Results" MODIFIED="1743993513648" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2" />
+    <SUITE FILE_PATH="coverage/FCM$quadrature_funcs.coverage" NAME="quadrature_funcs Coverage Results" MODIFIED="1744387305594" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2" />
     <SUITE FILE_PATH="coverage/FCM$part_3.coverage" NAME="part_3 Coverage Results" MODIFIED="1732678450071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/progamming_assign_3" />
     <SUITE FILE_PATH="coverage/FCM$least_squares_driver.coverage" NAME="least_squares_driver Coverage Results" MODIFIED="1731367886066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/least_squares" />
     <SUITE FILE_PATH="coverage/FCM$functions_1_to_4.coverage" NAME="functions_1_to_4 Coverage Results" MODIFIED="1740104242013" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semester_2/program_1" />

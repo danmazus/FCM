@@ -47,11 +47,11 @@ class NumericalQuadrature:
         elif method == 'simpson':
             self.H_m = ((2880 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max)) ** 0.25
         elif method == 'left_rectangle':
-            ...
+            self.H_m = ((2 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max))
         elif method == 'gauss_leg_two_point':
             ...
         elif method == 'two_point':
-            ...
+            self.H_m = np.sqrt((36 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max))
         else:
             raise ValueError("Method is not supported and defined. Use 'trapezoidal', 'midpoint', 'simpson', "
                              "'left_rectangle', 'gauss_leg_two_point', 'two_point'")
@@ -246,26 +246,32 @@ class NumericalQuadrature:
 def f(x):
     return np.exp(x)
     #return np.exp(np.sin(2 * x)) * np.cos(2 * x)
+    #return np.tanh(x)
+    #return x * np.cos(2 * np.pi * x)
+    #return x + (1 / x)
     #return np.power(x, 3) + np.power(x, 2) + x + 1
-    #return x ** 2 + 6
-    #return np.sin(x)
-    #return 1 / x
 
 
 a = 0
 b = 3
 m = 10
-epsilon = 1e-10
-f4_max = np.exp(3)
+epsilon = 1e-6
+
+def f_max(flag):
+    if flag 'f1':
+        f1_max = 
+f1_max = np.exp(3)
 f2_max = np.exp(3)
+f4_max = np.exp(3)
+
 
 
 y_true = np.exp(3)-1
 print(f'The true value for f(x) is: {y_true}')
 
 
-quad_midpoint = NumericalQuadrature(a, b, m, f)
-result = quad_midpoint.composite_midpoint()
+quad_midpoint = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
+result = quad_midpoint.composite_midpoint(optimal_H_m=True)
 print(f'\nThe integral value from Composite Midpoint Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_midpoint.H_m}, m = {quad_midpoint.m}')
 error_estimate = ((b-a)/24) * quad_midpoint.H_m**2 * f2_max
@@ -273,8 +279,8 @@ print(f'Estimated Error: {error_estimate}')
 error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
 
-quad_trapezoid = NumericalQuadrature(a, b, m, f)
-result = quad_trapezoid.composite_trapezoid()
+quad_trapezoid = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
+result = quad_trapezoid.composite_trapezoid(optimal_H_m=True)
 print(f'\nThe integral value from Composite Trapezoidal Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_trapezoid.H_m} and m = {quad_trapezoid.m}')
 error_estimate = ((b-a)/12) * quad_trapezoid.H_m**2 * f2_max
@@ -283,8 +289,8 @@ error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
 
 
-quad_simpson_first = NumericalQuadrature(a, b, m, f)
-result = quad_simpson_first.composite_simpson_first()
+quad_simpson_first = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f4_max)
+result = quad_simpson_first.composite_simpson_first(optimal_H_m=True)
 print(f'\nThe integral value from Composite Simpsons First Rule is: {result}')
 print(f'The optimal H_m and m are: H_m = {quad_simpson_first.H_m} and m = {quad_simpson_first.m}')
 error_estimate = ((b-a) / 2880) * quad_simpson_first.H_m**4 * f4_max
@@ -293,16 +299,24 @@ error = np.abs(y_true - result)
 print(f'Resulting Error is: {error}')
 
 
-quad_2_point = NumericalQuadrature(a, b, m, f)
-result = quad_2_point.composite_2_point()
+quad_2_point = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f2_max)
+result = quad_2_point.composite_2_point(optimal_H_m=True)
 print(f'\nThe integral value from Composite 2-Point Rule is: {result}')
 print(f'The H_m and m being used are: H_m = {quad_2_point.H_m}, m = {quad_2_point.m}')
+error_estimate = ((b - a) / 36) * quad_2_point.H_m**2 * f2_max
+print(f'Estimated Error: {error_estimate}')
+error = np.abs(y_true - result)
+print(f'Resulting Error is: {error}')
 
 
-quad_left_rectangle = NumericalQuadrature(a, b, m, f)
-result = quad_left_rectangle.composite_left_rectangle()
+quad_left_rectangle = NumericalQuadrature(a, b, m, f, epsilon=epsilon, f_deriv_max=f1_max)
+result = quad_left_rectangle.composite_left_rectangle(optimal_H_m=True)
 print(f'\nThe integral value from Composite Left-Rectangle Rule is: {result}')
 print(f'The H_m and m being used are: H_m = {quad_left_rectangle.H_m}, m = {quad_left_rectangle.m}')
+error_estimate = ((b - a) / 2) * quad_left_rectangle.H_m * f1_max
+print(f'Estimated Error: {error_estimate}')
+error = np.abs(y_true - result)
+print(f'Resulting Error is: {error}')
 
 
 quad_gauss = NumericalQuadrature(a, b, m, f)
