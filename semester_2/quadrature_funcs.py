@@ -66,7 +66,7 @@ class NumericalQuadrature:
 
         return self.m
 
-    def composite_midpoint(self, optimal_H_m=False, adaptive=False, tol=1e-6, max_iter=2000, y_true=None) -> float:
+    def composite_midpoint(self, optimal_H_m=False, adaptive=False, tol=None, max_iter=2000, y_true=None) -> float:
         if not adaptive:
             if optimal_H_m:
                 if self.epsilon is None or self.f_deriv_max is None:
@@ -128,7 +128,6 @@ class NumericalQuadrature:
 
             return I_old
 
-
     def composite_2_point(self, optimal_H_m=False) -> float:
         if optimal_H_m:
             if self.epsilon is None or self.f_deriv_max is None:
@@ -154,7 +153,7 @@ class NumericalQuadrature:
 
         return I_m
 
-    def composite_trapezoid(self, optimal_H_m=False, adaptive=False, tol=1e-6, max_iter=2000, y_true=None) -> float | None:
+    def composite_trapezoid(self, optimal_H_m=False, adaptive=False, tol=None, max_iter=2000, y_true=None) -> float | None:
         # Choosing whether adaptive is being used or not (default of not)
         if not adaptive:
             if optimal_H_m:
