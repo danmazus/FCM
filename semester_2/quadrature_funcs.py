@@ -118,13 +118,17 @@ class NumericalQuadrature:
 
                 I_new = (1 / 3) * I_old + H_m * f_new_sum
 
+                r = 2
+
+                error_estimate = abs((I_new - I_old) / (2 ** r - 1))
+
                 if y_true is not None:
                     if abs(y_true - I_new) < tol:
                         self.m = (self.b - self.a) / H_m
                         self.H_m = H_m
                         return I_new
                 else:
-                    if abs(I_new - I_old) < tol:
+                    if error_estimate < tol:
                         self.m = (self.b - self.a) / H_m
                         self.H_m = H_m
                         return I_new
@@ -202,7 +206,11 @@ class NumericalQuadrature:
                     f_new_sum += self.f(x_mid)
                     x_mid += 2 * H_m
 
+                r = 2
+
                 I_new = 0.5 * I_old + H_m * f_new_sum
+
+                error_estimate = abs(I_new - I_old) / (2 ** r - 1)
 
                 if y_true is not None:
                     if abs(y_true - I_new) < tol:
@@ -210,7 +218,7 @@ class NumericalQuadrature:
                         self.H_m = H_m
                         return I_new
                 else:
-                    if abs(I_new - I_old) < tol:
+                    if error_estimate < tol:
                         self.m = (self.b - self.a) / H_m
                         self.H_m = H_m
                         return I_new
