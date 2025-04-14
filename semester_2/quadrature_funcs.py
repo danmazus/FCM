@@ -49,7 +49,7 @@ class NumericalQuadrature:
         elif method == 'left_rectangle':
             self.H_m = ((2 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max))
         elif method == 'gauss_leg_two_point':
-            ...
+            self.H_m = ((4320 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max)) ** 0.25
         elif method == 'two_point':
             self.H_m = np.sqrt((36 * self.epsilon) / ((self.b - self.a) * self.f_deriv_max))
         else:
@@ -118,10 +118,16 @@ class NumericalQuadrature:
 
                 I_new = (1 / 3) * I_old + H_m * f_new_sum
 
-                if abs(y_true - I_new) < tol:
-                    self.m = (self.b - self.a) / H_m
-                    self.H_m = H_m
-                    return I_new
+                if y_true is not None:
+                    if abs(y_true - I_new) < tol:
+                        self.m = (self.b - self.a) / H_m
+                        self.H_m = H_m
+                        return I_new
+                else:
+                    if abs(I_new - I_old) < tol:
+                        self.m = (self.b - self.a) / H_m
+                        self.H_m = H_m
+                        return I_new
 
                 I_old = I_new
                 iter_count += 1
@@ -198,10 +204,16 @@ class NumericalQuadrature:
 
                 I_new = 0.5 * I_old + H_m * f_new_sum
 
-                if abs(y_true - I_new) < tol:
-                    self.m = (self.b - self.a) / H_m
-                    self.H_m = H_m
-                    return I_new
+                if y_true is not None:
+                    if abs(y_true - I_new) < tol:
+                        self.m = (self.b - self.a) / H_m
+                        self.H_m = H_m
+                        return I_new
+                else:
+                    if abs(I_new - I_old) < tol:
+                        self.m = (self.b - self.a) / H_m
+                        self.H_m = H_m
+                        return I_new
 
 
                 I_old = I_new
