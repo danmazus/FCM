@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables">
-      <change beforePath="$PROJECT_DIR$/semester_2/program_4/figures/cubic_function.png" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_4/figures/verification/cubic_function.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semester_2/program_4/figures/linear_function.png" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_4/figures/verification/linear_function.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semester_2/program_4/figures/quadratic_function.png" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_4/figures/verification/quadratic_function.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semester_2/program_4/figures/quartic_function.png" beforeDir="false" afterPath="$PROJECT_DIR$/semester_2/program_4/figures/verification/quartic_function.png" afterDir="false" />
-    </list>
+    <list default="true" id="85121639-2f7f-4437-824c-9159d66373d6" name="Changes" comment="Added new tables" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -97,6 +92,7 @@
       <recent name="$PROJECT_DIR$/semester_2/program_1" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/semester_2/program_4/figures/verification" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/semester_2" />
       <recent name="$PROJECT_DIR$/programming_assign_4/Tables/Part_1_Prob_1" />
@@ -177,7 +173,7 @@
       <workItem from="1744150724755" duration="1000" />
       <workItem from="1744328901818" duration="3121000" />
       <workItem from="1744477310725" duration="7819000" />
-      <workItem from="1744490020529" duration="42043000" />
+      <workItem from="1744490020529" duration="42059000" />
     </task>
     <task id="LOCAL-00034" summary="updated upper solve">
       <option name="closed" value="true" />
