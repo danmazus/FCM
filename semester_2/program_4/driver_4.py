@@ -129,10 +129,10 @@ for f_data in functions:
 
         quad_midpoint = NumericalQuadrature(a, b, m, f_counter, epsilon=epsilon, f_deriv_max=f2_max)
         result = quad_midpoint.composite_midpoint(optimal_H_m=True)
-        # print(f'\nThe integral value from Composite Midpoint Rule is: {result}')
-        # print(f'The optimal H_m and m are: H_m = {quad_midpoint.H_m}, m = {quad_midpoint.m}')
+        print(f'\nThe integral value from Composite Midpoint Rule is: {result}')
+        print(f'The optimal H_m and m are: H_m = {quad_midpoint.H_m}, m = {quad_midpoint.m}')
         error_estimate = ((b-a)/24) * quad_midpoint.H_m**2 * f2_max
-        # print(f'Estimated error is: {error_estimate}')
+        print(f'Estimated error is: {error_estimate}')
         error = np.abs(y_true-result)
         print(f'Resulting Error is: {error}')
         print(f'Number of Function Evaluations: {f_counter.counter}')
@@ -156,10 +156,10 @@ for f_data in functions:
         f_counter.counter = 0
         quad_trapezoid = NumericalQuadrature(a, b, m, f_counter, epsilon=epsilon, f_deriv_max=f2_max)
         result = quad_trapezoid.composite_trapezoid(optimal_H_m=True)
-        # print(f'\nThe integral value from Composite Trapezoid Rule is: {result}')
-        # print(f'The optimal H_m and m are: H_m = {quad_trapezoid.H_m}, m = {quad_trapezoid.m}')
+        print(f'\nThe integral value from Composite Trapezoid Rule is: {result}')
+        print(f'The optimal H_m and m are: H_m = {quad_trapezoid.H_m}, m = {quad_trapezoid.m}')
         error_estimate = ((b - a) / 12) * quad_trapezoid.H_m ** 2 * f2_max
-        # print(f'Estimated Error: {error_estimate}')
+        print(f'Estimated Error: {error_estimate}')
         error = np.abs(y_true - result)
         print(f'Resulting Error is: {error}')
         print(f'Number of Function Evaluations: {f_counter.counter}')
@@ -177,18 +177,18 @@ for f_data in functions:
         })
 
 
-        # print(f'\nComposite 2-Point Rule')
+        print(f'\nComposite 2-Point Rule')
 
         f_counter.counter = 0
         quad_2_point = NumericalQuadrature(a, b, m, f_counter, epsilon=epsilon, f_deriv_max=f2_max)
         result = quad_2_point.composite_2_point(optimal_H_m=True)
-        # print(f'\nThe integral value from Composite 2-Point Rule is: {result}')
-        # print(f'The optimal H_m and m are: H_m = {quad_2_point.H_m}, m = {quad_2_point.m}')
+        print(f'\nThe integral value from Composite 2-Point Rule is: {result}')
+        print(f'The optimal H_m and m are: H_m = {quad_2_point.H_m}, m = {quad_2_point.m}')
         error_estimate = ((b - a) / 36) * quad_2_point.H_m ** 2 * f2_max
-        # print(f'Estimated Error: {error_estimate}')
+        print(f'Estimated Error: {error_estimate}')
         error = np.abs(y_true - result)
-        # print(f'Resulting Error is: {error}')
-        # print(f'Number of Function Evaluations: {f_counter.counter}')
+        print(f'Resulting Error is: {error}')
+        print(f'Number of Function Evaluations: {f_counter.counter}')
 
         results_list.append({
             'function': name,
@@ -202,18 +202,18 @@ for f_data in functions:
             'epsilon': epsilon
         })
 
-        # print(f'\nComposite Simpsons First Rule')
+        print(f'\nComposite Simpsons First Rule')
 
         f_counter.counter = 0
         quad_simpson_first = NumericalQuadrature(a, b, m, f_counter, epsilon=epsilon, f_deriv_max=f4_max)
         result = quad_simpson_first.composite_simpson_first(optimal_H_m=True)
-        # print(f'\nThe integral value from Composite Simpsons First Rule is: {result}')
-        # print(f'The optimal H_m and m are: H_m = {quad_simpson_first.H_m} and m = {quad_simpson_first.m}')
+        print(f'\nThe integral value from Composite Simpsons First Rule is: {result}')
+        print(f'The optimal H_m and m are: H_m = {quad_simpson_first.H_m} and m = {quad_simpson_first.m}')
         error_estimate = ((b-a) / 2880) * quad_simpson_first.H_m**4 * f4_max
-        # print(f'Estimated Error: {error_estimate}')
+        print(f'Estimated Error: {error_estimate}')
         error = np.abs(y_true - result)
-        # print(f'Resulting Error is: {error}')
-        # print(f'Number of Function Evaluations: {f_counter.counter}')
+        print(f'Resulting Error is: {error}')
+        print(f'Number of Function Evaluations: {f_counter.counter}')
 
         results_list.append({
             'function': name,
@@ -227,18 +227,18 @@ for f_data in functions:
             'epsilon': epsilon
         })
 
-        # print(f'\nComposite Gauss-Legendre')
+        print(f'\nComposite Gauss-Legendre')
 
         f_counter.counter = 0
         quad_gauss = NumericalQuadrature(a, b, m, f_counter, epsilon=epsilon, f_deriv_max=f4_max)
         result = quad_gauss.gauss_2_point_quadrature(optimal_H_m=True)
-        # print(f'\nThe integral value from Composite Gauss-Legendre 2-Point Rule is: {result}')
-        # print(f'The optimal H_m and m are: H_m = {quad_gauss.H_m}, m = {quad_gauss.m}')
+        print(f'\nThe integral value from Composite Gauss-Legendre 2-Point Rule is: {result}')
+        print(f'The optimal H_m and m are: H_m = {quad_gauss.H_m}, m = {quad_gauss.m}')
         error_estimate = ((b-a) / 4320) * quad_gauss.H_m**4 * f4_max
-        # print(f'Estimated Error: {error_estimate}')
+        print(f'Estimated Error: {error_estimate}')
         error = np.abs(y_true - result)
-        # print(f'Resulting Error is: {error}')
-        # print(f'Number of Function Evaluations: {f_counter.counter}')
+        print(f'Resulting Error is: {error}')
+        print(f'Number of Function Evaluations: {f_counter.counter}')
 
         results_list.append({
             'function': name,
@@ -254,18 +254,18 @@ for f_data in functions:
 
 
         if epsilon >= 1e-6:
-            # print(f'\nComposite Left Rectangle')
+            print(f'\nComposite Left Rectangle')
 
             f_counter.counter = 0
             quad_left_rectangle = NumericalQuadrature(a, b, m, f_counter, epsilon=epsilon, f_deriv_max=f1_max)
             result = quad_left_rectangle.composite_left_rectangle(optimal_H_m=True)
-            # print(f'\nThe integral value from Composite Left-Rectangle Rule is: {result}')
-            # print(f'The H_m and m being used are: H_m = {quad_left_rectangle.H_m}, m = {quad_left_rectangle.m}')
+            print(f'\nThe integral value from Composite Left-Rectangle Rule is: {result}')
+            print(f'The H_m and m being used are: H_m = {quad_left_rectangle.H_m}, m = {quad_left_rectangle.m}')
             error_estimate = ((b - a) / 2) * quad_left_rectangle.H_m * f1_max
-            # print(f'Estimated Error: {error_estimate}')
+            print(f'Estimated Error: {error_estimate}')
             error = np.abs(y_true - result)
-            # print(f'Resulting Error is: {error}')
-            # print(f'Number of Function Evaluations: {f_counter.counter}')
+            print(f'Resulting Error is: {error}')
+            print(f'Number of Function Evaluations: {f_counter.counter}')
 
             results_list.append({
                 'function': name,
@@ -287,10 +287,10 @@ for f_data in functions:
         quad_mid_adapt = NumericalQuadrature(a, b, m, f_counter)
         result = quad_mid_adapt.composite_midpoint(optimal_H_m=False, adaptive=True, tol=epsilon, max_iter=2000,
                                                    y_true=y_true)
-        # print(f'\nAdaptive Refinement result for Composite Midpoint is: {result}')
-        # print(f'Adaptive Refinement H_m and m are: H_m = {quad_mid_adapt.H_m}, m = {int(np.ceil(quad_mid_adapt.m))}')
+        print(f'\nAdaptive Refinement result for Composite Midpoint is: {result}')
+        print(f'Adaptive Refinement H_m and m are: H_m = {quad_mid_adapt.H_m}, m = {int(np.ceil(quad_mid_adapt.m))}')
         error_estimate = ((b - a) / 24) * quad_mid_adapt.H_m ** 2 * f2_max
-        # print(f'Estimated error is: {error_estimate}')
+        print(f'Estimated error is: {error_estimate}')
         error = np.abs(y_true - result)
         print(f'Adaptive Refinement error is: {error}')
         print(f'Number of Function Evaluations: {f_counter.counter}')
@@ -313,10 +313,10 @@ for f_data in functions:
         quad_trap_adapt = NumericalQuadrature(a, b, m, f_counter)
         result = quad_trap_adapt.composite_trapezoid(optimal_H_m=False, adaptive=True, tol=epsilon, max_iter=2000,
                                                      y_true=y_true)
-        # print(f'\nAdaptive Refinement result for Composite Trapezoidal is: {result}')
-        # print(f'Adaptive Refinement H_m and m are: H_m = {quad_trap_adapt.H_m}, m = {int(np.ceil(quad_trap_adapt.m))}')
+        print(f'\nAdaptive Refinement result for Composite Trapezoidal is: {result}')
+        print(f'Adaptive Refinement H_m and m are: H_m = {quad_trap_adapt.H_m}, m = {int(np.ceil(quad_trap_adapt.m))}')
         error_estimate = ((b - a) / 12) * quad_trap_adapt.H_m ** 2 * f2_max
-        # print(f'Estimated Error: {error_estimate}')
+        print(f'Estimated Error: {error_estimate}')
         error = np.abs(y_true - result)
         print(f'Adaptive Refinement error is: {error}')
         print(f'Number of Function Evaluations: {f_counter.counter}')
